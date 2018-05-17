@@ -1,22 +1,49 @@
 <template>
-  <div id="app">
-    <header>
-      <span>Vue.js PWA</span>
-    </header>
+  <v-app>
+    
+    <v-toolbar dark class="primary">
+      <v-toolbar-side-icon @click.native.stop="sideNav = !sideNav"
+      class="hidden-sm-and-up"></v-toolbar-side-icon>
+      <v-toolbar-title>Vitasenior</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-xs-only">
+        <v-btn flat>
+          <v-icon left>mdi-view-dashboard</v-icon>
+          View Boards
+        </v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-navigation-drawer v-model="sideNav" temporary>
+      <v-list>
+        <v-list-title>
+          <v-list-title-action>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-title-action>
+          <v-list-title-content>View Boards</v-list-title-content>
+        </v-list-title>
+      </v-list>
+    </v-navigation-drawer>
     <main>
       <img src="./assets/logo.png" alt="Vue.js PWA">
       <router-view></router-view>
     </main>
-  </div>
+  </v-app>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data () {
+    return {
+      sideNav: false
+    }
+  }
 }
 </script>
 
 <style>
+@import "https://cdn.materialdesignicons.com/2.1.19/css/materialdesignicons.min.css";
+ 
 body {
   margin: 0;
 }
