@@ -10,11 +10,10 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   router,
+  el: '#app',
   template: '<App/>',
   components: { App }
 })
 
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
-import './stylus/main.styl'
