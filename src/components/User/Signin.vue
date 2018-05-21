@@ -8,6 +8,7 @@
                         <v-text-field v-model="register.email" label="Email" required></v-text-field>
                         <v-text-field v-model="register.password" label="Password" required></v-text-field>
                     </v-card-text>
+                    <v-btn class="mb-3" success @click='logItIn'>Login</v-btn>
                 </v-card>
             </v-flex>
         </v-layout>

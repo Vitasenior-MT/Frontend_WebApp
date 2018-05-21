@@ -10,12 +10,14 @@
                         <v-text-field v-model="register.password" label="Password" required></v-text-field>
                     </v-card-text>
                 </v-card>
+                 <v-btn class="mb-3" success @click='registerIt'>Register</v-btn>
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script>
+import { event_bus } from "@/plugins/bus.js";
     export default {
         data() {
             return {
@@ -25,6 +27,9 @@
                     password: ""
                 }
             }
+        },
+        mounted() {
+            axios.post('/register');
         }
     }
 </script>

@@ -4,7 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
+import axios from 'axios'
  
+window.axios=axios
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 

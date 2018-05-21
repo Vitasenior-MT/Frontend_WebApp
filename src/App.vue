@@ -24,7 +24,7 @@
     </v-navigation-drawer>
     <v-toolbar dark class="primary">
       <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">
+        <router-link to="/Home" tag="span" style="cursor: pointer">
           Vitasenior
         </router-link>
       </v-toolbar-title>
