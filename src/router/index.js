@@ -19,6 +19,10 @@ import UserDetail from '@/components/User/UserDetail'
 import UserCreate from '@/components/User/UserCreate'
 import UserEdit from '@/components/User/UserEdit'
 import UserDelete from '@/components/User/UserDelete'
+import ChangePass from '@/components/User/ChangePass'
+import ForgotPass from '@/components/User/ForgotPass'
+import ResetPass from '@/components/User/ResetPass'
+import UpdatePhoto from '@/components/User/UpdatePhoto'
 import Logout from '@/components/User/Logout'
 import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
@@ -26,8 +30,7 @@ import Signup from '@/components/User/Signup'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/',
       name: 'Home',
       component: Home
@@ -106,6 +109,26 @@ export default new Router({
       path: '/user/delete',
       name: 'UserDelete',
       component: UserDelete
+    },
+    {
+      path: '/user/changepass',
+      name: 'ChangePass',
+      component: ChangePass
+    },
+    {
+      path: '/user/forgotpass',
+      name: 'ForgotPass',
+      component: ForgotPass
+    },
+    {
+      path: '/user/resetpass',
+      name: 'ResetPass',
+      component: ResetPass
+    },
+    {
+      path: '/user/updatephoto',
+      name: 'UpdatePhoto',
+      component: UpdatePhoto
     },
     {
       path: '/signin',
