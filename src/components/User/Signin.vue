@@ -12,6 +12,7 @@
                 </v-card>
             </v-flex>
         </v-layout>
+        <a @click="$router.go(-1)">back</a>
     </div>
 </template>
 
@@ -31,6 +32,7 @@ export default {
         .then(response => {
           let username = response.data.name;
           localStorage.setItem("token", response.data.token);
+          event_bus.$data.token = response.data.token;
           localStorage.setItem("username", username);
           event_bus.$emit("login", username);
           event_bus.$emit("toast", {

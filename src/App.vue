@@ -61,7 +61,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
+      <!--<img src="./assets/logo.png" alt="Vue.js PWA">-->
       <router-view></router-view>
     </main>
   </v-app>

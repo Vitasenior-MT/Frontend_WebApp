@@ -1,16 +1,5 @@
 <template>
-    <div>
-        <p>The Vitabox Detail Page</p>
-    <br>
-    <v-list>
-        <v-list-tile>
-          <v-list-tile-content>id: {{ box.id }}</v-list-tile-content>
-          <v-list-tile-content>address: {{ box.address }}</v-list-tile-content>
-          <v-list-tile-content>registered: {{ box.registered }}</v-list-tile-content>
-          <v-list-tile-content>active: {{ box.active }}</v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    <div>
+  <div>
     <br>
     <gmap-map
       :center="center"
@@ -25,34 +14,26 @@
       ></gmap-marker>
     </gmap-map>
   </div>
-  </div>
 </template>
 
 <script>
-import GoogleMap from "@/components/Utils/GoogleMap";
-import { event_bus } from "@/plugins/bus.js";
 export default {
   name: "GoogleMap",
-  props: {
-    box: Object
-  },
   data() {
     return {
-      center: { lat: null, lng: null },
+      // default to Montreal to keep it simple
+      // change this to whatever makes sense
+      center: { lat: 45.508, lng: -73.587 },
       markers: [],
       places: [],
       currentPlace: null
     };
   },
-  components: {
-    GoogleMap
-  },
+
   mounted() {
-    this.center = {
-          lat: Number(this.box.latitude),
-          lng: Number(this.box.longitude)
-        };
+    this.geolocate();
   },
+
   methods: {
     // receives a place object via the autocomplete component
     setPlace(place) {
@@ -69,6 +50,14 @@ export default {
         this.center = marker;
         this.currentPlace = null;
       }
+    },
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
     }
   }
 };

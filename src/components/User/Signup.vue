@@ -13,6 +13,7 @@
                  <v-btn class="mb-3" success @click='registerUser'>Register</v-btn>
             </v-flex>
         </v-layout>
+        <a @click="$router.go(-1)">back</a>
     </div>
 </template>
 

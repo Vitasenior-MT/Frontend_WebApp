@@ -29,6 +29,15 @@ import Signup from '@/components/User/Signup'
 
 Vue.use(Router)
 
+function requireAuth (to, from, next) {
+  var logged = localStorage.getItem("token")? true : false;
+  if(logged == true){
+    next();
+  } else {
+    next('/');
+  }
+}
+
 export default new Router({
   routes: [{
       path: '/',
@@ -38,82 +47,100 @@ export default new Router({
     {
       path: '/vitabox',
       name: 'VitaboxHome',
-      component: VitaboxHome
+      component: VitaboxHome,
+      beforeEnter: requireAuth,
+      props: true
     },
     {
       path: '/vitabox/detail',
       name: 'VitaboxDetail',
-      component: VitaboxDetail
+      component: VitaboxDetail,
+      beforeEnter: requireAuth,
+      props: true
     },
     {
       path: '/vitabox/create',
       name: 'VitaboxCreate',
-      component: VitaboxCreate
+      component: VitaboxCreate,
+      beforeEnter: requireAuth
     },
     {
       path: '/vitabox/edit',
       name: 'VitaboxEdit',
-      component: VitaboxEdit
+      component: VitaboxEdit,
+      beforeEnter: requireAuth
     },
     {
       path: '/vitabox/delete',
       name: 'VitaboxDelete',
-      component: VitaboxDelete
+      component: VitaboxDelete,
+      beforeEnter: requireAuth
     },
     {
       path: '/sensor',
       name: 'SensorHome',
-      component: SensorHome
+      component: SensorHome,
+      beforeEnter: requireAuth
     },
     {
       path: '/sensor/detail',
       name: 'SensorDetail',
-      component: SensorDetail
+      component: SensorDetail,
+      beforeEnter: requireAuth
     },
     {
       path: '/sensor/create',
       name: 'SensorCreate',
-      component: SensorCreate
+      component: SensorCreate,
+      beforeEnter: requireAuth
     },
     {
       path: '/sensor/edit',
       name: 'SensorEdit',
-      component: SensorEdit
+      component: SensorEdit,
+      beforeEnter: requireAuth
     },
     {
       path: '/sensor/delete',
       name: 'SensorDelete',
-      component: SensorDelete
+      component: SensorDelete,
+      beforeEnter: requireAuth
     },
     {
       path: '/user',
       name: 'UserHome',
-      component: UserHome
+      component: UserHome,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/detail',
       name: 'UserDetail',
-      component: UserDetail
+      component: UserDetail,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/create',
       name: 'UserCreate',
-      component: UserCreate
+      component: UserCreate,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/edit',
       name: 'UserEdit',
-      component: UserEdit
+      component: UserEdit,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/delete',
       name: 'UserDelete',
-      component: UserDelete
+      component: UserDelete,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/changepass',
       name: 'ChangePass',
-      component: ChangePass
+      component: ChangePass,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/forgotpass',
@@ -123,12 +150,14 @@ export default new Router({
     {
       path: '/user/resetpass',
       name: 'ResetPass',
-      component: ResetPass
+      component: ResetPass,
+      beforeEnter: requireAuth
     },
     {
       path: '/user/updatephoto',
       name: 'UpdatePhoto',
-      component: UpdatePhoto
+      component: UpdatePhoto,
+      beforeEnter: requireAuth
     },
     {
       path: '/signin',
