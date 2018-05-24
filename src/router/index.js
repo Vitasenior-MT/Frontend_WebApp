@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
+import NotFoundView from '@/components/404.vue'
 
 import VitaboxHome from '@/components/Vitabox/VitaboxHome'
 import VitaboxDetail from '@/components/Vitabox/VitaboxDetail'
@@ -8,11 +9,11 @@ import VitaboxCreate from '@/components/Vitabox/VitaboxCreate'
 import VitaboxEdit from '@/components/Vitabox/VitaboxEdit'
 import VitaboxDelete from '@/components/Vitabox/VitaboxDelete'
 
-import SensorHome from '@/components/Sensor/SensorHome'
-import SensorDetail from '@/components/Sensor/SensorDetail'
-import SensorCreate from '@/components/Sensor/SensorCreate'
-import SensorEdit from '@/components/Sensor/SensorEdit'
-import SensorDelete from '@/components/Sensor/SensorDelete'
+import BoardHome from '@/components/Board/BoardHome'
+import BoardDetail from '@/components/Board/BoardDetail'
+import BoardCreate from '@/components/Board/BoardCreate'
+import BoardEdit from '@/components/Board/BoardEdit'
+import BoardDelete from '@/components/Board/BoardDelete'
 
 import UserHome from '@/components/User/UserHome'
 import UserDetail from '@/components/User/UserDetail'
@@ -34,7 +35,13 @@ function requireAuth (to, from, next) {
   if(logged == true){
     next();
   } else {
-    next('/');
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    window.console.log('Not authenticated')
+    next({
+      path: '/signin',
+      query: { redirect: to.fullPath }
+    })
   }
 }
 
@@ -49,14 +56,12 @@ export default new Router({
       name: 'VitaboxHome',
       component: VitaboxHome,
       beforeEnter: requireAuth,
-      props: true
     },
     {
       path: '/vitabox/detail',
       name: 'VitaboxDetail',
       component: VitaboxDetail,
       beforeEnter: requireAuth,
-      props: true
     },
     {
       path: '/vitabox/create',
@@ -77,33 +82,33 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/sensor',
-      name: 'SensorHome',
-      component: SensorHome,
+      path: '/board',
+      name: 'BoardHome',
+      component: BoardHome,
       beforeEnter: requireAuth
     },
     {
-      path: '/sensor/detail',
-      name: 'SensorDetail',
-      component: SensorDetail,
+      path: '/board/detail',
+      name: 'BoardDetail',
+      component: BoardDetail,
       beforeEnter: requireAuth
     },
     {
-      path: '/sensor/create',
-      name: 'SensorCreate',
-      component: SensorCreate,
+      path: '/board/create',
+      name: 'BoardCreate',
+      component: BoardCreate,
       beforeEnter: requireAuth
     },
     {
-      path: '/sensor/edit',
-      name: 'SensorEdit',
-      component: SensorEdit,
+      path: '/board/edit',
+      name: 'BoardEdit',
+      component: BoardEdit,
       beforeEnter: requireAuth
     },
     {
-      path: '/sensor/delete',
-      name: 'SensorDelete',
-      component: SensorDelete,
+      path: '/board/delete',
+      name: 'BoardDelete',
+      component: BoardDelete,
       beforeEnter: requireAuth
     },
     {
@@ -173,7 +178,11 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup
-    }
+    },{
+    // not found handler
+    path: '*',
+    component: NotFoundView
+  }
   ],
   mode: 'history'
 })

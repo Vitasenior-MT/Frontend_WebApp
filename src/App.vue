@@ -82,7 +82,6 @@ export default {
           title: "View Vitaboxs",
           link: "/vitabox"
         },
-        { icon: "mdi-remote", title: "View Sensors", link: "/sensor" },
         { icon: "mdi-account", title: "Profile", link: "/user/detail" }
       ],
       menuItemsNotLogged: [

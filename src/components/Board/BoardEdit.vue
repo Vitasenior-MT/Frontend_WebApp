@@ -1,5 +1,5 @@
 <template>
     <div>
-        <p>The Sensor Home Page</p>
+        <p>The Board Edit Page</p>
     </div>
 </template>

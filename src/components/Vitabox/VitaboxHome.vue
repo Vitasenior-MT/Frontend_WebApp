@@ -2,17 +2,15 @@
     <div>
         <p>The Vitabox Home Page</p>
         <v-list>
-        <v-list-tile v-for="item in results" :key="item.id">
+        <v-list-tile v-for="item in vitaboxes" :key="item.id">
           <v-list-tile-content>id: {{ item.id }}</v-list-tile-content>
           <v-list-tile-content>address: {{ item.address }}</v-list-tile-content>
           <v-list-tile-content>registered: {{ item.registered }}</v-list-tile-content>
           <v-list-tile-content>active: {{ item.active }}</v-list-tile-content>
           <v-list-tile-content> 
-            <router-link :to="{name: 'VitaboxDetail', params: { box:item } }">
-              <v-btn class="mb-3" success >
+              <v-btn @click='goToVitaboxDetails(item)'>
                 <v-icon >mdi-information-outline</v-icon>
               </v-btn>
-            </router-link>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -25,7 +23,7 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   data() {
     return {
-      results: []
+      vitaboxes: [],
     };
   },
   created() {
@@ -34,8 +32,12 @@ export default {
   methods: {
     getVitaboxes() {
       event_bus.$data.http.get("/vitabox").then(response => {
-        this.results = response.data.vitaboxes;
+        this.vitaboxes = response.data.vitaboxes;
       });
+    },
+    goToVitaboxDetails(vitaboxData) {
+      this.$store.commit("setVitaboxData", vitaboxData);
+      this.$router.push("/vitabox/detail");
     }
   }
 };
