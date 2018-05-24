@@ -1,5 +1,5 @@
 <template>
-    <div class="text-md-center">
+    <div class="text-md-center" style="margin-top: 70px">
         <h2>User Profile</h2>
         <v-layout>
             <v-flex xs6 offset-xs3>

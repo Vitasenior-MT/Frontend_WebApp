@@ -44,7 +44,7 @@ new Vue({
   store, // inject store to all children
   template: '<App/>',
   components: {
-    App
+    App,
   }
 })
 

@@ -30,9 +30,9 @@ import Signup from '@/components/User/Signup'
 
 Vue.use(Router)
 
-function requireAuth (to, from, next) {
-  var logged = localStorage.getItem("token")? true : false;
-  if(logged == true){
+function requireAuth(to, from, next) {
+  var logged = localStorage.getItem("token") ? true : false;
+  if (logged == true) {
     next();
   } else {
     // this route requires auth, check if logged in
@@ -40,7 +40,9 @@ function requireAuth (to, from, next) {
     window.console.log('Not authenticated')
     next({
       path: '/signin',
-      query: { redirect: to.fullPath }
+      query: {
+        redirect: to.fullPath
+      }
     })
   }
 }
@@ -178,11 +180,12 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup
-    },{
-    // not found handler
-    path: '*',
-    component: NotFoundView
-  }
+    },
+    {
+      // not found handler
+      path: '*',
+      component: NotFoundView
+    }
   ],
   mode: 'history'
 })

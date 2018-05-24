@@ -8,7 +8,12 @@ Vue.use(Vuex)
 const state = {
   vitabox: [],
   board: [],
-  sensor: []
+  sensor: [],
+  user: {
+    name: null,
+    email: null
+  },
+  photo: null
 }
 
 const mutations = {
@@ -21,18 +26,13 @@ const mutations = {
   setSensorData(state, sensorData) {
     state.sensor = sensorData;
   },
-  TOGGLE_LOADING (state) {
-    state.callingAPI = !state.callingAPI
+  setUserData(state, name, email) {
+    state.user.name = name;
+    state.user.email = email;
   },
-  TOGGLE_SEARCHING (state) {
-    state.searching = (state.searching === '') ? 'loading' : ''
+  setPhotoData(state, photoData) {
+    state.photo = photoData;
   },
-  SET_USER (state, user) {
-    state.user = user
-  },
-  SET_TOKEN (state, token) {
-    state.token = token
-  }
 }
 
 const actions = {
@@ -44,7 +44,13 @@ const actions = {
   }) => commit('setBoardData'),
   setSensorData: ({
     commit
-  }) => commit('setSensorData')
+  }) => commit('setSensorData'),
+  setUserData: ({
+    commit
+  }) => commit('setUserData'),
+  setPhotoData: ({
+    commit
+  }) => commit('setPhotoData')
 }
 
 

@@ -1,20 +1,36 @@
 <template>
-    <div class="text-md-center">
-        <h2>Register User</h2>
-        <v-layout>
-            <v-flex xs6 offset-xs3>
-                <v-card>
-                    <v-card-text>
-                        <v-text-field v-model="username" label="Username" required></v-text-field>
-                        <v-text-field v-model="email" label="Email" required></v-text-field>
-                        <v-text-field v-model="password" label="Password" required></v-text-field>
-                    </v-card-text>
-                </v-card>
-                 <v-btn class="mb-3" success @click='registerUser'>Register</v-btn>
-            </v-flex>
+    <v-content id="login">
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-card class="elevation-12">
+              <v-toolbar dark>
+                <v-toolbar-title>Register</v-toolbar-title>
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              <v-card-text>
+                <v-form>
+                  <v-text-field id="username" v-model="username" prepend-icon="mdi-account" name="username" label="Username" type="text" required></v-text-field>
+                  <v-text-field id="email" v-model="email" prepend-icon="mdi-email" name="email" label="Email" type="text" required></v-text-field>
+                  <v-text-field id="password" v-model="password" prepend-icon="mdi-lock" name="password" label="Password" type="password" required></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="$router.go(-1)" color="grey" >
+                  Return
+                  <v-icon dark right>mdi-keyboard-backspace</v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn type="submit" @click='registerUser' v-bind:class="loading">
+                  Register
+                  <v-icon dark right>mdi-account-plus</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
         </v-layout>
-        <a @click="$router.go(-1)">back</a>
-    </div>
+      </v-container>
+    </v-content>
 </template>
 
 <script>
@@ -56,3 +72,6 @@ export default {
   }
 };
 </script>
+
+<style>
+</style>
