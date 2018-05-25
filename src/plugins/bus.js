@@ -1,15 +1,18 @@
 import Vue from 'vue';
 import axios from "axios";
+import store from '@/store/store.js'
 
 export const event_bus = new Vue({
   data: {
     http: null,
-    token: localStorage.getItem("token")
+    token: store.state.user.token,
+    // url: process.env.NODE_ENV === "production" ? "https://" + location.hostname : "http://" + location.hostname + ":8080"
+     url: "https://vitasenior-test.eu-gb.mybluemix.net"
+    // url: "http://192.168.161.53:8080"
   },
   created() {
     this.http = axios.create({
-      // baseURL: process.env.NODE_ENV === "production" ? "https://" + location.hostname : "http://" + location.hostname + ":8080",
-      baseURL: "http://" + 'vitasenior-test.eu-gb.mybluemix.net',
+      baseURL: this.url,
       headers: this.token ? {
         "Authorization": this.token,
         "Content-Type": "application/json",
@@ -23,8 +26,7 @@ export const event_bus = new Vue({
   watch: {
     token(val) {
       this.http = axios.create({
-        // baseURL: process.env.NODE_ENV === "production" ? "https://" + location.hostname : "http://" + location.hostname + ":8080",
-        baseURL: "http://" + 'vitasenior-test.eu-gb.mybluemix.net',
+        baseURL: this.url,
         headers: val !== null ? {
           "Authorization": val,
           "Content-Type": "application/json",

@@ -1,128 +1,29 @@
 <template>
   <v-app dark>
-    <div>
-      <v-navigation-drawer id="sideNav" v-model="sideNav" clipped fixed app temporary>
-        <v-list v-if="logged" dense class="pa-0">
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <!--<img src = {{ $store.state.photo }} >-->
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>{{ $store.state.user.name }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      <v-list dense>
-        <v-list-tile v-if="!logged" v-for="item in menuItemsNotLogged" :key="item.title" :to="item.link">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>{{ item.title }}</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-if="logged" v-for="item in menuItemsLogged" :key="item.title" :to="item.link">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>{{ item.title }}</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile v-if="logged" flat @click.native="logout">
-          <v-list-tile-action>
-            <v-icon>mdi-logout</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>Logout</v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-       <v-toolbar app fixed clipped-left>
-      <v-toolbar-side-icon @click.native.stop="sideNav = !sideNav" >
-        <v-icon>mdi-menu</v-icon>
-      </v-toolbar-side-icon>
-      <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">
-        <v-avatar size="25px">
-          <img src="/static/img/icons/favicon-32x32.png">
-        </v-avatar>  
-        Vitasenior
-        </router-link>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items class="text-xs-center">
-        <v-btn v-if="!logged" flat v-for="item in menuItemsNotLogged" :key="item.title" :to="item.link">
-          <v-icon left>{{ item.icon }}</v-icon>
-          {{ item.title }}
-        </v-btn>
-        <v-btn v-if="logged" fab flat small >
-          <v-icon dark small>mdi-message-text</v-icon>
-        </v-btn>
-        <v-btn v-if="logged" fab flat small >
-          <v-icon dark small>mdi-bell</v-icon>
-        </v-btn>
-        <v-btn v-if="logged" flat v-for="item in menuItemsLogged" :key="item.title" :to="item.link">
-          <v-icon left>{{ item.icon }}</v-icon>
-          {{ item.title }}
-        </v-btn>
-        <v-btn v-if="logged" flat @click.native="logout">
-          <v-icon left>mdi-logout</v-icon>
-          Logout
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-    </div>
+    <navbar></navbar>
     <main>
       <router-view></router-view>
     </main>
     <v-footer app fixed>
-      <span>&copy; 2018</span>
+      <span>Copyright &copy; 2018 Vitasenior. All rights reserved</span>
     </v-footer>
     <log></log>
   </v-app>
 </template>
 
 <script>
-import Log from "@/components/Utils/Log.vue";
+import Log from "./components/Utils/Log.vue";
 import { event_bus } from "@/plugins/bus.js";
+import NavBar from './components/Utils/NavBar.vue';
 
 export default {
   name: "app",
   data() {
-    return {
-      logged: localStorage.getItem("token") ? true : false,
-      sideNav: false,
-      menuItemsLogged: [
-        {
-          icon: "mdi-view-dashboard",
-          title: "View Vitaboxs",
-          link: "/vitabox"
-        },
-        { icon: "mdi-account", title: "Profile", link: "/user/detail" }
-      ],
-      menuItemsNotLogged: [
-        {
-          icon: "mdi-account-multiple-plus",
-          title: "Sign up",
-          link: "/signup"
-        },
-        { icon: "mdi-login", title: "Sign in", link: "/signin" }
-      ]
-    };
+    return {};
   },
   components: {
-    log: Log
-  },
-  mounted() {
-    event_bus.$on("navigate", path => this.navigateTo(path));
-    event_bus.$on("login", () => (this.logged = true));
-  },
-  methods: {
-    logout() {
-      this.logged = false;
-      event_bus.$data.token = null;
-      localStorage.removeItem("token");
-      this.$router.push("logout");
-    },
-    navigateTo(path) {
-      this.$router.push(path);
-    }
+    log: Log,
+    navbar: NavBar
   }
 };
 </script>
@@ -144,11 +45,5 @@ body {
 main {
   text-align: center;
   margin-top: 20px;
-}
-
-#sideNav {
-  position: absolute;
-  width: 200px !important;
-  z-index: 1030;
 }
 </style>

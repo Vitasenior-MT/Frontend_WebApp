@@ -17,8 +17,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="$router.go(-1)" color="grey" >
-                  Return
-                  <v-icon dark right>mdi-keyboard-backspace</v-icon>
+                  <v-icon dark right>mdi-keyboard-return</v-icon>
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn type="submit" @click='registerUser' v-bind:class="loading">

@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store/store.js'
+
 import Home from '@/components/Home'
 import NotFoundView from '@/components/404.vue'
 
+import Dashboard from '@/components/Vitabox/Dashboard'
 import VitaboxHome from '@/components/Vitabox/VitaboxHome'
 import VitaboxDetail from '@/components/Vitabox/VitaboxDetail'
 import VitaboxCreate from '@/components/Vitabox/VitaboxCreate'
@@ -31,7 +34,7 @@ import Signup from '@/components/User/Signup'
 Vue.use(Router)
 
 function requireAuth(to, from, next) {
-  var logged = localStorage.getItem("token") ? true : false;
+  var logged = store.state.user.token ? true : false;
   if (logged == true) {
     next();
   } else {
@@ -47,11 +50,18 @@ function requireAuth(to, from, next) {
   }
 }
 
+
 export default new Router({
   routes: [{
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/vitabox/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+      beforeEnter: requireAuth,
     },
     {
       path: '/vitabox',

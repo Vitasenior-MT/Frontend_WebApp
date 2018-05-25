@@ -1,11 +1,22 @@
 <template>
-    <div style="margin-top:35px">
+    <div style="margin-top:35px; margin-left:10px; margin-right:10px">
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-    <v-list>
+      <v-list>
         <v-list-tile>
-          <v-list-tile-content>Location: {{ $store.state.vitabox.address }}</v-list-tile-content>
-          <v-list-tile-content>registered: {{ $store.state.vitabox.registered }}</v-list-tile-content>
-          <v-list-tile-content>active: {{ $store.state.vitabox.active }}</v-list-tile-content>
+          <v-list-tile-content>
+            <v-list-tile-title>Location</v-list-tile-title>
+            {{ $store.state.vitabox.address }}
+          </v-list-tile-content>
+          <v-list-tile-content >
+            <v-list-tile-title>Registered</v-list-tile-title>
+            <v-icon v-if="this.$store.state.vitabox.registered === true">mdi-check</v-icon> 
+            <v-icon v-else>mdi-close</v-icon>
+          </v-list-tile-content>
+          <v-list-tile-content>
+            <v-list-tile-title>Active</v-list-tile-title>
+            <v-icon v-if="this.$store.state.vitabox.active === true">mdi-check</v-icon> 
+            <v-icon v-else>mdi-close</v-icon> 
+          </v-list-tile-content>
         </v-list-tile>
       </v-list>
     <div>
@@ -34,8 +45,8 @@
         <td class="text-xs-left">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
         <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-        <td class="text-xs-left" v-if="props.item.active === false"><v-icon>mdi-close</v-icon></td>
         <td class="text-xs-left" v-if="props.item.active === true"><v-icon>mdi-check</v-icon></td>
+        <td class="text-xs-left" v-else><v-icon>mdi-close</v-icon></td>
         <td class="text-xs-left">{{ props.item.updated_at }}</td>
         <td class="justify-left layout px-0">
           <v-btn @click='goToBoardDetails(props.item)'>
@@ -47,9 +58,6 @@
         <v-alert :value="true" color="error" icon="mdi-alert">
           Sorry, nothing to display here :(
         </v-alert>
-      </template>
-      <template slot="pageText" slot-scope="props">
-        Lignes {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
       </template>
     </v-data-table>
     <v-flex style="margin-bottom: 40px">
@@ -67,7 +75,7 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Id", value: "id", sortable: false },
+        { text: "Board", value: "board", sortable: false },
         { text: "Location", value: "description", sortable: false },
         { text: "MAC", value: "mac_address", sortable: false },
         { text: "Active?", value: "active", sortable: false },

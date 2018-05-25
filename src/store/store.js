@@ -10,10 +10,15 @@ const state = {
   board: [],
   sensor: [],
   user: {
+    token: null,
     name: null,
-    email: null
-  },
-  photo: null
+    email: null,
+    photo: null
+  }
+}
+
+const getters = {
+  user: state => state.user
 }
 
 const mutations = {
@@ -26,13 +31,12 @@ const mutations = {
   setSensorData(state, sensorData) {
     state.sensor = sensorData;
   },
-  setUserData(state, name, email) {
-    state.user.name = name;
-    state.user.email = email;
-  },
-  setPhotoData(state, photoData) {
-    state.photo = photoData;
-  },
+  setUserData(state, userData) {
+    state.user.token = userData.token;
+    state.user.name = userData.name;
+    state.user.email = userData.email;
+    state.user.photo = userData.photo;
+  }
 }
 
 const actions = {

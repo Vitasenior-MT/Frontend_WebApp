@@ -8,9 +8,11 @@ import axios from 'axios'
 import store from './store/store'
 import * as VueGoogleMaps from 'vue2-google-maps'
 
+
 window.axios = axios
 Vue.use(Vuetify)
 Vue.config.productionTip = false
+
 
 Vue.use(VueGoogleMaps, {
   load: {

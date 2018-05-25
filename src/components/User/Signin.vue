@@ -16,8 +16,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="$router.go(-1)" color="grey" >
-                  Return
-                  <v-icon dark right>mdi-keyboard-backspace</v-icon>
+                  <v-icon dark right>mdi-keyboard-return</v-icon>
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn type="submit" @click='login' v-bind:class="loading">
@@ -41,7 +40,7 @@ export default {
       section: "Signin",
       loading: "",
       response: "",
-      email: "admin@a.aa",
+      email: "jose@a.aa",
       password: "123qweASD"
     };
   },
@@ -50,39 +49,18 @@ export default {
       event_bus.$data.http
         .post("/login", { password: this.password, email: this.email })
         .then(response => {
-          let username = response.data.name;
-          localStorage.setItem("token", response.data.token);
           event_bus.$data.token = response.data.token;
-          localStorage.setItem("username", username);
-          this.$store.commit(
-            "setUserData",
-            response.data.name,
-            response.data.email
-          );
-          event_bus.$emit("login", username);
+          this.$store.commit("setUserData", {
+            token: response.data.token,
+            name: response.data.name,
+            email: response.data.email,
+            photo: response.data.photo
+          });
+          event_bus.$emit("login", response.data.name);
           event_bus.$emit("toast", {
             message: "Successfully logged",
             type: "success"
           });
-          event_bus.$data.http
-            .get("/photo")
-            .then(response => {
-              this.$store.commit("setPhotoData", response.data.image);
-              console.log(response.data.image);
-            })
-            .catch(error => {
-              if (error.response) {
-                event_bus.$emit("toast", {
-                  message: error.response.data,
-                  type: "error"
-                });
-              } else {
-                event_bus.$emit("toast", {
-                  message: error.message,
-                  type: "error"
-                });
-              }
-            });
           this.$router.push("/");
         })
         .catch(error => {

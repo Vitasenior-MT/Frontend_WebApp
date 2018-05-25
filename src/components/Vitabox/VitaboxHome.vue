@@ -1,7 +1,7 @@
 <template>
-  <div style="margin-top: 80px;">
+  <div style="margin-top:80px; margin-left:10px; margin-right:10px">
     <v-data-table
-      :headers="headers"
+      :headers="headersVitabox"
       :items="vitaboxes"
       hide-actions
       class="elevation-1"
@@ -10,9 +10,9 @@
         <td class="text-xs-left">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.address }}</td>
         <td class="text-xs-left"  v-if="props.item.registered === true"><v-icon>mdi-check</v-icon></td>
-        <td class="text-xs-left"  v-if="props.item.registered === false"><v-icon>mdi-close</v-icon></td>
+        <td class="text-xs-left"  v-else><v-icon>mdi-close</v-icon></td>
         <td class="text-xs-left"  v-if="props.item.active === true"><v-icon>mdi-check</v-icon></td>
-        <td class="text-xs-left"  v-if="props.item.active === false"><v-icon>mdi-close</v-icon></td>
+        <td class="text-xs-left"  v-else><v-icon>mdi-close</v-icon></td>
         <td class="justify-left layout px-0">
           <v-btn @click='goToVitaboxDetails(props.item)'>
             <v-icon >mdi-information-outline</v-icon>
@@ -38,8 +38,8 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   data() {
     return {
-      headers: [
-        { text: "Id", value: "id", sortable: false },
+      headersVitabox: [
+        { text: "Vitabox", value: "vitabox", sortable: false },
         { text: "Location", value: "address", sortable: false },
         { text: "Registered?", value: "registered", sortable: false },
         { text: "Active?", value: "active", sortable: false },
@@ -57,6 +57,7 @@ export default {
         .get("/vitabox")
         .then(response => {
           this.vitaboxes = response.data.vitaboxes;
+          console.log(response.data.vitaboxes[0].active);
         })
         .catch(error => {
           if (error.response) {

@@ -1,23 +1,32 @@
 <template>
-    <div>
-        <p>The Board Detail Page</p>
-        <v-list>
+    <div style="margin-top:80px; margin-left:10px; margin-right:10px">
+      <v-list>
         <v-list-tile>
-          <v-list-tile-content>id: {{ $store.state.board.id }}</v-list-tile-content>
-          <v-list-tile-content>address: {{ $store.state.board.location }}</v-list-tile-content>
-          <v-list-tile-content>registered: {{ $store.state.board.mac_addr }}</v-list-tile-content>
-          <v-list-tile-content>active: {{ $store.state.board.active }}</v-list-tile-content>
-          <v-list-tile-content>active: {{ $store.state.board.updated_at }}</v-list-tile-content>
+          <v-list-tile-content>
+            <v-list-tile-title>Location</v-list-tile-title>
+            <v-icon v-if="this.$store.state.board.description == null">mdi-close</v-icon> 
+              {{ $store.state.board.description }}
+          </v-list-tile-content>
+          <v-list-tile-content >
+            <v-list-tile-title>MAC</v-list-tile-title>
+            {{ $store.state.board.mac_addr }}
+          </v-list-tile-content>
+          <v-list-tile-content>
+            <v-list-tile-title>Active</v-list-tile-title>
+            <v-icon v-if="this.$store.state.board.active === true">mdi-check</v-icon> 
+            <v-icon v-else>mdi-close</v-icon> 
+          </v-list-tile-content>
+          <v-list-tile-content >
+            <v-list-tile-title>Last Update</v-list-tile-title>
+            {{ $store.state.board.updated_at }}
+          </v-list-tile-content>
         </v-list-tile>
       </v-list>
-      <br>
-      <v-list-tile v-for="item in sensors" :key="item.id">
-          <v-list-tile-content>id: {{ item.id }}</v-list-tile-content>
-          <v-list-tile-content>last_commit: {{ item.last_commit }}</v-list-tile-content>
-          <v-list-tile-content>last_values: {{ item.last_values }}</v-list-tile-content>
-    </v-list-tile>
-    <br>
-    <a @click="$router.go(-1)">back</a>
+      <v-flex style="margin-bottom: 40px">
+        <v-btn @click="$router.go(-1)">
+          <v-icon >mdi-keyboard-return</v-icon>
+        </v-btn>
+      </v-flex>
     </div>
 </template>
 
@@ -36,6 +45,7 @@ export default {
     getSensors() {
       event_bus.$data.http.get("/board/" + this.$store.state.board.id + "/sensor").then(response => {
         this.sensors = response.data.sensors;
+        console.log(this.$store.state.board.location);
       });
     },
     goToSensorDetails(sensorData) {
