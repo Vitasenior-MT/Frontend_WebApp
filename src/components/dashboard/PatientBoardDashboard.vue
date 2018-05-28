@@ -1,24 +1,17 @@
 <template>
-    <v-container class="px-5">
-        <v-list>
-            <v-list-tile @click="goToPatientProfile($store.state.patient.id)">
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ $store.state.patient.name }}</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            <v-divider inset></v-divider>
-            <patientBoardDashboard v-for="item in patientBoards" :key="item" :selectedPatientBoard="selectedPatientBoard(item)"></patientBoardDashboard>
-            <v-divider inset></v-divider>
-        </v-list>
-    </v-container>
+    <v-list-tile @click="goToPatientProfile($store.state.patient.id)">
+        <v-list-tile-content>
+            <v-list-tile-title>{{ $store.state.patient.name }}</v-list-tile-title>
+        </v-list-tile-content>
+    </v-list-tile>
 </template>
+
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import PatientBoardDashboard from '@/components/dashboard/PatientBoardDashboard.vue';
 
 export default {
-  name: "patientDashboard",
+  name: "patientBoardDashboard",
   props: {
     selectedPatient: Object
   },
@@ -29,9 +22,6 @@ export default {
   },
   created() {
     this.getPatientBoards();
-  },
-  components: {
-    patientBoardDashboard: PatientBoardDashboard,
   },
   methods: {
     getPatientBoards() {
@@ -57,3 +47,4 @@ export default {
 
 <style>
 </style>
+

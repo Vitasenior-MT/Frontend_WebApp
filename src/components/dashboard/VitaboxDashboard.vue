@@ -8,7 +8,7 @@
               <v-card dark>
                 <v-card-title primary class="title">Patients</v-card-title>
                 <v-carousel>
-                    <patientDashboard v-for="item in patients" :key="item.id" :selectedPatient="item"></patientDashboard>
+                    <patientDashboard v-for="item in patients" :key="item.id" :selectedPatient="selectedPatient(item)"></patientDashboard>
                 </v-carousel>
               </v-card>
             </v-flex>
@@ -24,24 +24,7 @@
           <v-card color="grey" dark>
             <v-layout wrap>
               <v-flex>
-                <v-card dark tile flat>
-                   <v-card-text>asfsde</v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex>
-                <v-card dark tile flat>
-                   <v-card-text>asfsde</v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex>
-                <v-card dark tile flat>
-                   <v-card-text>asfsde</v-card-text>
-                </v-card>
-              </v-flex>
-              <v-flex>
-                <v-card dark tile flat>
-                   <v-card-text>asfsde</v-card-text>
-                </v-card>
+                <envBoardDashboard v-for="item in patientBoards" :key="item.id" :selectedPatientBoard="selectedPatientBoard(item)"></envBoardDashboard>
               </v-flex>
             </v-layout>
           </v-card>
@@ -50,10 +33,10 @@
     </v-container> 
 </template>
 
-
 <script>
 import { event_bus } from "@/plugins/bus.js";
 import PatientDashboard from '@/components/dashboard/PatientDashboard.vue';
+import EnvBoardDashboard from '@/components/dashboard/EnvBoardDashboard.vue';
 
 export default {
   name: "vitaboxDashboard",
@@ -62,27 +45,24 @@ export default {
   },
   data() {
     return {
-      tab: null,
-      boards: [],
+      patientBoards: [],
       patients: []
     };
   },
   components: {
-    patientDashboard: PatientDashboard
+    patientDashboard: PatientDashboard,
+    envBoardDashboard: EnvBoardDashboard
   },
   created() {
-    this.getBoards();
+    this.getPatientBoards();
     this.getPatients();
   },
-  mounted() {
-    this.$store.commit("setVitaboxData", this.selectedVitabox);  
-  },
   methods: {
-    getBoards() {
+    getPatientBoards() {
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
+        .get("/board/" + this.$store.state.patient.id + "/patient")
         .then(response => {
-          this.boards = response.data.boards;
+          this.patientBoards = response.data.boards;
         })
         .catch(error => {
           if (error.response) {
@@ -111,6 +91,14 @@ export default {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
         });
+    },
+    selectedPatient(patientData){
+      this.$store.commit("setPatientData", patientData); 
+      return patientData;
+    },
+    selectedPatientBoard(patientBoardData){
+      this.$store.commit("setPatientBoardData", patientBoardData); 
+      return patientBoardData;
     }
   }
 };

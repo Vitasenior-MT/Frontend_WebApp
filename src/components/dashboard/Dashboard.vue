@@ -6,7 +6,7 @@
       </v-tab>
     </v-tabs>
       <v-tabs-items v-model="vitabox">
-        <vitaboxDashboard v-for="item in vitaboxes" :key="item.id" :id="`tab-${item.id}`" lazy :selectedVitabox="item"></vitaboxDashboard>
+        <vitaboxDashboard v-for="item in vitaboxes" :key="item.id" :id="`tab-${item.id}`" lazy :selectedVitabox="selectedVitabox(item)"></vitaboxDashboard>
       </v-tabs-items>
   </v-container>  
 </template>
@@ -45,6 +45,10 @@ export default {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
         });
+    },
+    selectedVitabox(vitaboxData){
+      this.$store.commit("setVitaboxData", vitaboxData); 
+      return vitaboxData;
     }
   }
 };

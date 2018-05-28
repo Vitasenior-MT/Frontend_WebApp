@@ -123,7 +123,7 @@ export default {
         });
     },
     goToBoardDetails(boardData) {
-      this.$store.commit("setBoardData", boardData);
+      this.$store.commit("setVitaboxBoardData", boardData);
       this.$router.push("/board/detail");
     }
   }

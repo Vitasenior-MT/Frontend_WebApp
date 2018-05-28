@@ -4,21 +4,21 @@
         <v-list-tile>
           <v-list-tile-content>
             <v-list-tile-title>Location</v-list-tile-title>
-            <v-icon v-if="this.$store.state.board.description == null">mdi-close</v-icon> 
-              {{ $store.state.board.description }}
+            <v-icon v-if="this.$store.state.vitaboxBoard.description == null">mdi-close</v-icon> 
+              {{ $store.state.vitaboxBoard.description }}
           </v-list-tile-content>
           <v-list-tile-content >
             <v-list-tile-title>MAC</v-list-tile-title>
-            {{ $store.state.board.mac_addr }}
+            {{ $store.state.vitaboxBoard.mac_addr }}
           </v-list-tile-content>
           <v-list-tile-content>
             <v-list-tile-title>Active</v-list-tile-title>
-            <v-icon v-if="this.$store.state.board.active === true">mdi-check</v-icon> 
+            <v-icon v-if="this.$store.state.vitaboxBoard.active === true">mdi-check</v-icon> 
             <v-icon v-else>mdi-close</v-icon> 
           </v-list-tile-content>
           <v-list-tile-content >
             <v-list-tile-title>Last Update</v-list-tile-title>
-            {{ $store.state.board.updated_at }}
+            {{ $store.state.vitaboxBoard.updated_at }}
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     getSensors() {
-      event_bus.$data.http.get("/board/" + this.$store.state.board.id + "/sensor").then(response => {
+      event_bus.$data.http.get("/board/" + this.$store.state.vitaboxBoard.id + "/sensor").then(response => {
         this.sensors = response.data.sensors;
         console.log(this.$store.state.board.location);
       });
