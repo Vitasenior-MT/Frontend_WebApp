@@ -4,12 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
-import axios from 'axios'
 import store from './store/store'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
-
-window.axios = axios
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 
@@ -49,5 +47,3 @@ new Vue({
     App,
   }
 })
-
-import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader

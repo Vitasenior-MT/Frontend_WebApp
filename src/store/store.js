@@ -6,7 +6,9 @@ import Cookies from 'js-cookie';
 Vue.use(Vuex)
 
 const state = {
+  vitaboxes: [],
   vitabox: [],
+  patient: [],
   board: [],
   sensor: [],
   user: {
@@ -22,8 +24,14 @@ const getters = {
 }
 
 const mutations = {
+  setVitaboxesData(state, vitaboxesData) {
+    state.vitaboxes = vitaboxesData;
+  },
   setVitaboxData(state, vitaboxData) {
     state.vitabox = vitaboxData;
+  },
+  setPatientData(state, patientData) {
+    state.patient = patientData;
   },
   setBoardData(state, boardData) {
     state.board = boardData;
@@ -40,9 +48,15 @@ const mutations = {
 }
 
 const actions = {
+  setVitaboxesData: ({
+    commit
+  }) => commit('setVitaboxesData'),
   setVitaboxData: ({
     commit
   }) => commit('setVitaboxData'),
+  setPatientData: ({
+    commit
+  }) => commit('setPatientData'),
   setBoardData: ({
     commit
   }) => commit('setBoardData'),

@@ -5,7 +5,8 @@ import store from '@/store/store.js'
 import Home from '@/components/Home'
 import NotFoundView from '@/components/404.vue'
 
-import Dashboard from '@/components/Vitabox/Dashboard'
+import Dashboard from '@/components/dashboard/Dashboard'
+
 import VitaboxHome from '@/components/Vitabox/VitaboxHome'
 import VitaboxDetail from '@/components/Vitabox/VitaboxDetail'
 import VitaboxCreate from '@/components/Vitabox/VitaboxCreate'
@@ -58,7 +59,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/vitabox/dashboard',
+      path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
       beforeEnter: requireAuth,

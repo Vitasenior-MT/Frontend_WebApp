@@ -1,7 +1,7 @@
 <template>
     <div id="navbar">
-      <v-navigation-drawer id="sideNav" v-model="sideNav" clipped fixed app temporary>
-        <v-list v-if="logged" dense class="pa-0">
+      <v-navigation-drawer v-if="logged" id="sideNav" v-model="sideNav" clipped fixed app temporary>
+        <v-list dense class="pa-0">
           <v-list-tile avatar>
             <v-list-tile-avatar>
               <img class="avatar_pic" :src="photo" /> 
@@ -27,7 +27,7 @@
       </v-list>
     </v-navigation-drawer>
        <v-toolbar app fixed clipped-left>
-      <v-toolbar-side-icon @click.native.stop="sideNav = !sideNav" >
+      <v-toolbar-side-icon v-if="logged" @click.native.stop="sideNav = !sideNav" >
         <v-icon>mdi-menu</v-icon>
       </v-toolbar-side-icon>
       <v-toolbar-title>
@@ -70,6 +70,11 @@ export default {
       logged: false,
       sideNav: false,
       menuItemsLogged: [
+        {
+          icon: "mdi-view-dashboard",
+          title: "View Dashboard",
+          link: "/dashboard"
+        },
         {
           icon: "mdi-view-dashboard",
           title: "View Vitaboxs",

@@ -30,6 +30,8 @@ export default {
 
 <style>
 @import "https://cdn.materialdesignicons.com/2.1.19/css/materialdesignicons.min.css";
+@import "https://unpkg.com/vue/dist/vue.js";
+@import "https://unpkg.com/vuetify/dist/vuetify.js";
 
 body {
   margin: 0;
