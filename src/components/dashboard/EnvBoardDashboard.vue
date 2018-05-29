@@ -1,11 +1,8 @@
 <template>
-    <v-container>
-        <v-card dark tile flat >
+      <v-card dark tile flat >
         <v-card-title>{{ this.$store.state.sensor.Sensormodel.measure }}</v-card-title>
         <v-card-text>{{ this.$store.state.sensor.last_commit }}</v-card-text>
     </v-card>
-    </v-container>
-   
 </template>
 
 

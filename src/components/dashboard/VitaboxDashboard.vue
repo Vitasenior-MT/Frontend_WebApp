@@ -60,7 +60,7 @@ export default {
   methods: {
     getPatientBoards() {
       event_bus.$data.http
-        .get("/board/" + this.$store.state.patient.id + "/patient")
+        .get("/patient/" + this.$store.state.patient.id + "/board")
         .then(response => {
           this.patientBoards = response.data.boards;
         })

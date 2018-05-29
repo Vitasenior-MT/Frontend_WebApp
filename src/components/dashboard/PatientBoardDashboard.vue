@@ -1,9 +1,12 @@
 <template>
-    <v-list-tile @click="goToPatientProfile($store.state.patient.id)">
+  <v-container>
+    <v-list-tile v-for="item in patientBoards.Sensors" :key="item">
         <v-list-tile-content>
-            <v-list-tile-title>{{ $store.state.patient.name }}</v-list-tile-title>
+            <v-list-tile-title>{{ item.Sensormodel.measure }}</v-list-tile-title>
+            <v-list-tile-text>{{ item.last_commit }}</v-list-tile-text>
         </v-list-tile-content>
     </v-list-tile>
+  </v-container>
 </template>
 
 

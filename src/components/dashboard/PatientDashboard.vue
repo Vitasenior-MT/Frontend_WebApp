@@ -1,21 +1,24 @@
 <template>
     <v-container class="px-5">
         <v-list>
-            <v-list-tile @click="goToPatientProfile($store.state.patient.id)">
+            <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
                 <v-list-tile-content>
-                    <v-list-tile-title>{{ $store.state.patient.name }}</v-list-tile-title>
+                    <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
             <v-divider inset></v-divider>
-            <patientBoardDashboard v-for="item in patientBoards" :key="item" :selectedPatientBoard="selectedPatientBoard(item)"></patientBoardDashboard>
-            <v-divider inset></v-divider>
+            <v-list-tile v-for="item in patientBoards.Sensors" :key="item">
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.Sensormodel.measure }}</v-list-tile-title>
+                <v-list-tile-text>{{ item.last_commit }}</v-list-tile-text>
+              </v-list-tile-content>
+            </v-list-tile>
         </v-list>
     </v-container>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import PatientBoardDashboard from '@/components/dashboard/PatientBoardDashboard.vue';
 
 export default {
   name: "patientDashboard",
@@ -30,13 +33,10 @@ export default {
   created() {
     this.getPatientBoards();
   },
-  components: {
-    patientBoardDashboard: PatientBoardDashboard,
-  },
   methods: {
     getPatientBoards() {
       event_bus.$data.http
-        .get("/board/" + this.$store.state.patient.id + "/patient")
+        .get("/patient/" + this.$store.state.patient.id + "/board")
         .then(response => {
           this.patientBoards = response.data.boards;
         })
