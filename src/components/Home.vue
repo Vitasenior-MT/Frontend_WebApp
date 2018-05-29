@@ -1,7 +1,7 @@
 <template>
     <div>
       <section>
-        <v-parallax src="/static/img/hero.jpeg" height="600">
+        <v-parallax src="@/assets/underconstruction.jpg" height="600">
           <v-layout
             column
             align-center
@@ -10,7 +10,7 @@
           >
             <img src="/static/img/icons/android-chrome-192x192.png" alt="Vuetify.js" height="200">
             <h1 class="white--text mb-2 display-1 text-xs-center">Vitasenior</h1>
-            <div class="subheading mb-3 text-xs-center">Powered by Vuetify</div>
+            <div class="subheading mb-3 text-xs-center">Under construction</div>
           </v-layout>
         </v-parallax>
       </section>

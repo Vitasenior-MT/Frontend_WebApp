@@ -1,7 +1,7 @@
 <template>
   <div id="navbar">
 
-    <v-navigation-drawer v-if="logged" app width="250" id="side_bar" mobile-break-point=960>
+    <v-navigation-drawer v-if="logged" v-model="drawer" app width="250" id="side_bar" mobile-break-point=960>
 
       <v-toolbar class="primary--text raven" id="top_menu">
         <v-toolbar-title v-if="isadmin"><v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Backoffice</v-toolbar-title>
@@ -23,8 +23,21 @@
 
     </v-navigation-drawer>
 
-    
-    <toolbar :logged="logged"></toolbar>
+    <v-toolbar class="primary--text raven" id="top_bar">
+    <v-btn v-if="logged" @click.stop="drawer = !drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
+    <v-toolbar-title>
+      <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
+    </v-toolbar-title>
+    <v-spacer></v-spacer>
+
+    <v-toolbar-items v-if="logged">
+      <toolbar></toolbar>
+    </v-toolbar-items>
+
+    <v-toolbar-items v-else>
+      <v-btn flat dark to="/Signin" class="top_bar_item"><v-icon left dark>fas fa-sign-in-alt </v-icon> Signin</v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
     
   </div>
 </template>
@@ -43,7 +56,7 @@ export default {
   },
   data: () => {
     return {
-      option: "office"
+      drawer: null
     };
   },
   mounted() {
@@ -58,13 +71,12 @@ export default {
       this.$emit("logout");
     },
     resize() {
-      let drawer = document.getElementById("side_bar");
-      if (screen.width > 960 && drawer.className.indexOf("-temporary") !== -1) {
-        drawer.className =
+      if (screen.width > 960 && this.drawer.className.indexOf("-temporary") !== -1) {
+        this.drawer.className =
           "navigation-drawer navigation-drawer--open navigation-drawer--floating";
       }
-      if (screen.width < 960 && drawer.className.indexOf("-temporary") === -1) {
-        drawer.className =
+      if (screen.width < 960 && this.drawer.className.indexOf("-temporary") === -1) {
+        this.drawer.className =
           "navigation-drawer navigation-drawer--close navigation-drawer--floating navigation-drawer--temporary";
       }
     }
@@ -104,5 +116,11 @@ export default {
 }
 .office_menu {
   padding-top: 5%;
+}
+#top_bar {
+  height: 56px !important;
+}
+.top_bar_item{
+  height: 56px !important;
 }
 </style>

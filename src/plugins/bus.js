@@ -6,8 +6,8 @@ export const event_bus = new Vue({
   data: {
     http: null,
     token: store.state.user.token,
-    // url: process.env.NODE_ENV === "production" ? "https://" + location.hostname : "http://" + location.hostname + ":8080"
-     url: "https://vitasenior-test.eu-gb.mybluemix.net"
+    url: process.env.NODE_ENV === "production" ? "https://" + location.hostname : "http://" + location.hostname + ":8080"
+    //  url: "https://vitasenior-test.eu-gb.mybluemix.net"
     // url: "http://192.168.161.53:8080"
   },
   created() {
