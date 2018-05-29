@@ -1,5 +1,5 @@
 <template>
-    <v-container class="px-5">
+    <v-container class="gridPatient">
         <v-list>
             <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
                 <v-list-tile-content>
@@ -7,13 +7,24 @@
                 </v-list-tile-content>
             </v-list-tile>
             <v-divider inset></v-divider>
-            <v-list-tile v-for="item in patientBoards.Sensors" :key="item">
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.Sensormodel.measure }}</v-list-tile-title>
-                <v-list-tile-text>{{ item.last_commit }}</v-list-tile-text>
-              </v-list-tile-content>
-            </v-list-tile>
         </v-list>
+        <v-layout wrap>
+        <v-flex d-flex md6 lg7 >
+            <v-layout wrap>
+            <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
+              <v-card light>
+                <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+                <v-card-text primary>{{ item.Sensormodel.measure }}</v-card-text>
+              </v-card>
+            </v-flex>
+            </v-layout>
+        </v-flex>
+        <v-flex d-flex md6 lg5>
+              <v-card light>
+                <v-card-title primary class="title">GRAPH</v-card-title>
+              </v-card>
+            </v-flex>
+            </v-layout>
     </v-container>
 </template>
 
@@ -27,7 +38,8 @@ export default {
   },
   data() {
     return {
-      patientBoards: []
+      patientBoards: [],
+      boardSensors: []
     };
   },
   created() {
@@ -35,21 +47,11 @@ export default {
   },
   methods: {
     getPatientBoards() {
-      event_bus.$data.http
-        .get("/patient/" + this.$store.state.patient.id + "/board")
-        .then(response => {
-          this.patientBoards = response.data.boards;
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
+      this.selectedPatient.Boards.forEach(board => {
+        board.Sensors.forEach(sensor => {
+          this.boardSensors.push(sensor);
         });
+      });
     }
   }
 };

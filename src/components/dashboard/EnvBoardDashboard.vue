@@ -1,8 +1,15 @@
 <template>
-      <v-card dark tile flat >
-        <v-card-title>{{ this.$store.state.sensor.Sensormodel.measure }}</v-card-title>
-        <v-card-text>{{ this.$store.state.sensor.last_commit }}</v-card-text>
-    </v-card>
+  <v-card dark class="envGridSensors">
+    <v-card-title>{{ type }} : {{ averageValue }}</v-card-title>
+    <v-layout wrap >
+        <v-flex d-flex sm6 md4 lg3 v-for="item in sensors" :key="item.id">
+            <v-card light >
+                <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
+                <v-card-text primary>{{ item.location }}</v-card-text>
+            </v-card>
+        </v-flex> 
+    </v-layout>
+  </v-card>
 </template>
 
 
@@ -12,36 +19,22 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   name: "envBoardDashboard",
   props: {
-    selectedVitaboxBoard: Object
+    sensors: Array,
+    type: String
   },
   data() {
     return {
-      boardSensors: []
+      averageValue: null
     };
   },
   created() {
-    this.getBoardSensors();
-    console.log(this.$store.state.sensor.last_commit);
+    this.sensors.forEach(sensor => {
+      
+    });
+
   },
   methods: {
-    getBoardSensors() {
-      event_bus.$data.http
-        .get("/board/" + this.$store.state.vitaboxBoard.id + "/sensor")
-        .then(response => {
-          this.boardSensors = response.data.boards;
-          this.$store.commit("setSensorData", boardSensors);
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-        });
-    }
+    
   }
 };
 </script>

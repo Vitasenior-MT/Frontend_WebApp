@@ -10,8 +10,10 @@ const state = {
   vitabox: [],
   vitaboxBoard: [],
   patient: [],
+  patientBoards: [],
   patientBoard: [],
-  sensor: [],
+  patientSensors: [],
+  patientSensor: [],
   user: {
     token: null,
     name: null,
@@ -37,11 +39,17 @@ const mutations = {
   setPatientData(state, patientData) {
     state.patient = patientData;
   },
+  setPatientBoardsData(state, patientBoardsData) {
+    state.patientBoards = patientBoardsData;
+  },
   setPatientBoardData(state, patientBoardData) {
     state.patientBoard = patientBoardData;
   },
-  setSensorData(state, sensorData) {
-    state.sensor = sensorData;
+  setPatientSensorsData(state, patientSensorsData) {
+    state.patientSensors = patientSensorsData;
+  },
+  setPatientSensorData(state, patientSensorData) {
+    state.patientSensor = patientSensorData;
   },
   setUserData(state, userData) {
     state.user.token = userData.token;
@@ -64,12 +72,18 @@ const actions = {
   setPatientData: ({
     commit
   }) => commit('setPatientData'),
+  setPatientBoardsData: ({
+    commit
+  }) => commit('setPatientBoardsData'),
   setPatientBoardData: ({
     commit
   }) => commit('setPatientBoardData'),
-  setSensorData: ({
+  setPatientSensosrData: ({
     commit
-  }) => commit('setSensorData'),
+  }) => commit('setPatientSensorsData'),
+  setPatientSensorData: ({
+    commit
+  }) => commit('setPatientSensorData'),
   setUserData: ({
     commit
   }) => commit('setUserData'),
