@@ -5,31 +5,38 @@ import store from '@/store/store.js'
 import Home from '@/components/Home'
 import NotFoundView from '@/components/404.vue'
 
-import Dashboard from '@/components/Vitabox/Dashboard'
-import VitaboxHome from '@/components/Vitabox/VitaboxHome'
-import VitaboxDetail from '@/components/Vitabox/VitaboxDetail'
-import VitaboxCreate from '@/components/Vitabox/VitaboxCreate'
-import VitaboxEdit from '@/components/Vitabox/VitaboxEdit'
-import VitaboxDelete from '@/components/Vitabox/VitaboxDelete'
+import ChangePass from '@/components/auth/ChgPwd'
+import Signin from '@/components/auth/Index'
+import Signup from '@/components/auth/Signup'
 
-import BoardHome from '@/components/Board/BoardHome'
-import BoardDetail from '@/components/Board/BoardDetail'
-import BoardCreate from '@/components/Board/BoardCreate'
-import BoardEdit from '@/components/Board/BoardEdit'
-import BoardDelete from '@/components/Board/BoardDelete'
+// Frontend
+import Dashboard from '@/components/frontoffice/vitabox/Dashboard'
+import VitaboxHome from '@/components/frontoffice/vitabox/VitaboxHome'
+import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
+import VitaboxCreate from '@/components/frontoffice/vitabox/VitaboxCreate'
+import VitaboxEdit from '@/components/frontoffice/vitabox/VitaboxEdit'
+import VitaboxDelete from '@/components/frontoffice/vitabox/VitaboxDelete'
 
-import UserHome from '@/components/User/UserHome'
-import UserDetail from '@/components/User/UserDetail'
-import UserCreate from '@/components/User/UserCreate'
-import UserEdit from '@/components/User/UserEdit'
-import UserDelete from '@/components/User/UserDelete'
-import ChangePass from '@/components/User/ChangePass'
-import ForgotPass from '@/components/User/ForgotPass'
-import ResetPass from '@/components/User/ResetPass'
-import UpdatePhoto from '@/components/User/UpdatePhoto'
-import Logout from '@/components/User/Logout'
-import Signin from '@/components/User/Signin'
-import Signup from '@/components/User/Signup'
+import BoardHome from '@/components/frontoffice/board/BoardHome'
+import BoardDetail from '@/components/frontoffice/board/BoardDetail'
+import BoardCreate from '@/components/frontoffice/board/BoardCreate'
+import BoardEdit from '@/components/frontoffice/board/BoardEdit'
+import BoardDelete from '@/components/frontoffice/board/BoardDelete'
+
+import UserHome from '@/components/frontoffice/user/UserHome'
+import UserDetail from '@/components/frontoffice/user/UserDetail'
+import UserEdit from '@/components/frontoffice/user/UserEdit'
+import UpdatePhoto from '@/components/frontoffice/user/UpdatePhoto'
+
+// Backend
+import VitaboxList from '@/components/backoffice/vitabox/VitaboxList'
+import VitaboxRegister from '@/components/backoffice/vitabox/VitaboxRegister'
+import Boardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
+import Sensormodel from '@/components/backoffice/sensormodel/SensormodelList'
+import Utils from '@/components/backoffice/utils/utils'
+import ChgPwd from '@/components/auth/ChgPwd'
+import BoardDashboard from '@/components/backoffice/board/BoardDetails'
+import PatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
 Vue.use(Router)
 
@@ -52,7 +59,19 @@ function requireAuth(to, from, next) {
 
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
+      path: '/signin',
+      name: 'Signin',
+      component: Signin
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
+    },
+    
+    {
       path: '/',
       name: 'Home',
       component: Home
@@ -136,21 +155,9 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/user/create',
-      name: 'UserCreate',
-      component: UserCreate,
-      beforeEnter: requireAuth
-    },
-    {
       path: '/user/edit',
       name: 'UserEdit',
       component: UserEdit,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/user/delete',
-      name: 'UserDelete',
-      component: UserDelete,
       beforeEnter: requireAuth
     },
     {
@@ -160,39 +167,56 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/user/forgotpass',
-      name: 'ForgotPass',
-      component: ForgotPass
-    },
-    {
-      path: '/user/resetpass',
-      name: 'ResetPass',
-      component: ResetPass,
-      beforeEnter: requireAuth
-    },
-    {
       path: '/user/updatephoto',
       name: 'UpdatePhoto',
       component: UpdatePhoto,
       beforeEnter: requireAuth
     },
+    // backoffice
     {
-      path: '/signin',
-      name: 'Signin',
-      component: Signin
+      path: '/backoffice/vitabox/list',
+      name: 'VitaboxList',
+      component: VitaboxList
     },
     {
-      path: '/logout',
-      name: 'Logout',
-      component: Logout
+      path: '/backoffice/vitabox/register',
+      name: 'VitaboxRegister',
+      component: VitaboxRegister
     },
     {
-      path: '/signup',
-      name: 'Signup',
-      component: Signup
+      path: '/backoffice/boardmodel',
+      name: 'Boardmodel',
+      component: Boardmodel
     },
     {
-      // not found handler
+      path: '/backoffice/sensormodel',
+      name: 'Sensormodel',
+      component: Sensormodel
+    },
+    {
+      path: '/backoffice/utils',
+      name: 'Utils',
+      component: Utils
+    },
+    {
+      path: '/chgpwd',
+      name: 'ChgPwd',
+      component: ChgPwd
+    },
+    {
+      path: '/backoffice/dashboard/board',
+      name: 'BoardDashboard',
+      component: BoardDashboard,
+      props: true
+    },
+    {
+      path: '/backoffice/dashboard/patient',
+      name: 'PatientDashboard',
+      component: PatientDashboard,
+      props: true
+    },
+    // not found handler
+    {
       path: '*',
       component: NotFoundView
     }

@@ -1,5 +1,5 @@
 <template>
-    <v-content>
+    <div>
       <section>
         <v-parallax src="/static/img/hero.jpeg" height="600">
           <v-layout
@@ -32,7 +32,7 @@
           </v-flex>
           <v-flex xs12>
             <v-container grid-list-xl>
-              <v-layout row wrap align-center>
+              <v-layout row wrap justify-center>
                 <v-flex xs12 md4>
                   <v-card class="elevation-0 transparent">
                     <v-card-text class="text-xs-center">
@@ -140,5 +140,5 @@
           </v-layout>
         </v-container>
       </section>
-</v-content>
+</div>
 </template>
