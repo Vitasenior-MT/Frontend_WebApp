@@ -26,12 +26,14 @@
     <v-toolbar class="primary--text raven" id="top_bar">
     <v-btn v-if="logged" @click.stop="drawer = !drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
     <v-toolbar-title>
-      <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
+      <v-btn flat to="/" color="primary" class="top_bar_item subheading">
+        <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
+      </v-btn>
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
     <v-toolbar-items v-if="logged">
-      <toolbar></toolbar>
+      <warning></warning>
     </v-toolbar-items>
 
     <v-toolbar-items v-else>
@@ -45,7 +47,7 @@
 <script>
 import Frontoffice from "./Frontoffice.vue";
 import Backoffice from "./Backoffice.vue";
-import Toolbar from "./Toolbar.vue";
+import Warning from "./Warning.vue";
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
@@ -71,20 +73,26 @@ export default {
       this.$emit("logout");
     },
     resize() {
-      if (screen.width > 960 && this.drawer.className.indexOf("-temporary") !== -1) {
+      if (
+        screen.width > 960 &&
+        this.drawer.className.indexOf("-temporary") !== -1
+      ) {
         this.drawer.className =
           "navigation-drawer navigation-drawer--open navigation-drawer--floating";
       }
-      if (screen.width < 960 && this.drawer.className.indexOf("-temporary") === -1) {
+      if (
+        screen.width < 960 &&
+        this.drawer.className.indexOf("-temporary") === -1
+      ) {
         this.drawer.className =
           "navigation-drawer navigation-drawer--close navigation-drawer--floating navigation-drawer--temporary";
       }
     }
   },
   components: {
-    "frontoffice": Frontoffice,
-    "backoffice": Backoffice,
-    toolbar: Toolbar
+    frontoffice: Frontoffice,
+    backoffice: Backoffice,
+    warning: Warning
   }
 };
 </script>
@@ -120,7 +128,7 @@ export default {
 #top_bar {
   height: 56px !important;
 }
-.top_bar_item{
+.top_bar_item {
   height: 56px !important;
 }
 </style>

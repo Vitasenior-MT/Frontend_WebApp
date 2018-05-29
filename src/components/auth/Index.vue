@@ -1,14 +1,14 @@
 <template>
-  <div id="auth">
+  <v-content id="auth">
       <v-container fill-height>
-        <v-layout justify-center>
+        <v-layout justify-center wrap align-center class="pb-5 mb-5">
           <v-flex id="auth_card">
               <login v-if="sw" @forgot="()=>sw=false"></login>
               <forgot v-else @close="()=>sw=true"></forgot>
           </v-flex>
         </v-layout>
       </v-container>
-  </div>
+  </v-content>
 </template>
 
 <script>
