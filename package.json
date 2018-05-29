@@ -1,8 +1,7 @@
 {
-  "name": "vitaseniordev",
+  "name": "vitasenior",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "Pedro Henriques Dias <diaspedro1999@hotmail.com>",
+  "description": "Vitasenior-frontend",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -16,7 +15,6 @@
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "js-cookie": "^2.2.0",
-    "material-icons": "^0.2.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-google-maps": "^0.9.7",
