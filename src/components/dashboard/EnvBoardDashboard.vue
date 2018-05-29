@@ -1,10 +1,11 @@
 <template>
-  <v-card dark class="envGridSensors">
-    <v-card-title>{{ type }} : {{ averageValue }}</v-card-title>
+  <v-card  dark class="envGridSensors" @click="goToTypeDetails(sensors)">
+    <v-card-title>{{ type }}</v-card-title>
+    <v-card-text primary>{{ getAverageValue() }}</v-card-text>
     <v-layout wrap >
         <v-flex d-flex sm6 md4 lg3 v-for="item in sensors" :key="item.id">
-            <v-card light >
-                <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
+            <v-card flat light >
+                <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
                 <v-card-text primary>{{ item.location }}</v-card-text>
             </v-card>
         </v-flex> 
@@ -24,17 +25,28 @@ export default {
   },
   data() {
     return {
-      averageValue: null
     };
   },
-  created() {
-    this.sensors.forEach(sensor => {
-      
-    });
-
-  },
   methods: {
-    
+    getAverageValue() {
+      var averageValue = 0;
+      var count = 0;
+      this.sensors.forEach(sensor => {
+        if(sensor.last_values == null){
+          averageValue = 'none';
+        }else{
+          average += sensor.last_values[0];
+          count++;
+        }
+        if(averageValue != 'none'){
+          average = average / count;
+        }
+      });
+      return averageValue;
+    },
+    goToTypeDetails(){
+
+    }
   }
 };
 </script>
