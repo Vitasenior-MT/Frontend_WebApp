@@ -1,5 +1,6 @@
 <template>
-  <v-stepper v-model="step" id="forgot">
+<v-card id="forgot">
+  <v-stepper v-model="step">
     <v-stepper-header>
       <v-stepper-step step="1" >Forgot password</v-stepper-step>
       <v-divider></v-divider>
@@ -16,9 +17,14 @@
         </v-card-text>
         <br>
         <v-card-actions>
-          <v-btn class="raven primary--text" @click.native="forgot">Send</v-btn>
+          <v-btn @click.native="close" flat color="grey">
+            <v-icon dark>fas fa-undo</v-icon>
+          </v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat class="primary--text" @click.native="close">Cancel</v-btn>
+          <v-btn class="raven primary--text" @click.native="forgot">
+            Send
+            <v-icon dark right>fas fa-share-square</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-stepper-content>
       <v-stepper-content step="2">
@@ -31,13 +37,19 @@
         </v-card-text>
         <br><br><br>
         <v-card-actions>
-          <v-btn class="raven primary--text" @click.native="reset">Submit</v-btn>
+          <v-btn @click.native="close" flat color="grey">
+            <v-icon dark>fas fa-undo</v-icon>
+          </v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat class="primary--text" @click.native="close">Cancel</v-btn>
+          <v-btn class="raven primary--text" @click.native="reset">
+            Submit
+            <v-icon dark right>fas fa-external-link-alt</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
+</v-card>
 </template>
 
 <script>

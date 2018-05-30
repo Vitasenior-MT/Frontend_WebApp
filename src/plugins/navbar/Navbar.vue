@@ -37,7 +37,8 @@
     </v-toolbar-items>
 
     <v-toolbar-items v-else>
-      <v-btn flat dark to="/Signin" class="top_bar_item"><v-icon left dark>fas fa-sign-in-alt </v-icon> Signin</v-btn>
+      <v-btn flat dark to="/Signin" class="top_bar_item"><v-icon left dark>fas fa-sign-in-alt </v-icon>Signin</v-btn>
+      <v-btn flat dark to="/Signup" color="grey lighten-1" class="top_bar_item">Signup</v-btn>
     </v-toolbar-items>
   </v-toolbar>
     

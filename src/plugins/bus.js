@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios from "axios";
-import store from '@/store/store.js'
+import store from '@/plugins/store.js'
 
 export const event_bus = new Vue({
   data: {

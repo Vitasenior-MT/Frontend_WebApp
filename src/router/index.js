@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store/store.js'
+import store from '@/plugins/store.js'
 
 import Home from '@/components/Home'
 import NotFoundView from '@/components/404.vue'
 
 import ChangePass from '@/components/auth/ChgPwd'
 import Signin from '@/components/auth/Index'
-import Signup from '@/components/auth/Signup'
+import Signup from '@/components/auth/Register'
 
 // Frontend
 import Dashboard from '@/components/frontoffice/vitabox/Dashboard'

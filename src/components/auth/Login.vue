@@ -1,16 +1,20 @@
 <template>
   <v-card id="login" >
-    <v-card-title id="login_box"><p class="title mb-0">Login</p></v-card-title>
-    <v-card-text>
+    <v-card-title id="login_title"><p class="title mb-0">Login</p></v-card-title>
+    <v-card-text id="login_box">
       <v-form>
           <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Email" id="email" type="text"></v-text-field>
           <v-text-field prepend-icon="fas fa-lock" v-model="password" name="password" label="Password" id="password" type="password"></v-text-field>
       </v-form>
+      <v-btn small block flat class="primary--text" @click.native="forgotSw">forgot password</v-btn>
     </v-card-text>
     <v-card-actions class="bottom_action">
-      <v-btn class="raven primary--text" @click.native="login">Login</v-btn>
+      <v-btn flat class="primary--text" to="/signup">register</v-btn>
       <v-spacer></v-spacer>
-      <v-btn flat class="primary--text" @click.native="forgotSw">forgot password</v-btn>
+      <v-btn class="raven primary--text" @click.native="login">
+        Login
+        <v-icon dark right>fas fa-sign-in-alt</v-icon>
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -62,15 +66,24 @@ export default {
     },
     forgotSw() {
       this.$emit("forgot");
+    },
+    registerSw() {
+      this.$emit("register");
     }
   }
 };
 </script>
 
 <style>
-#login_box {
+#login{
+  padding-bottom: 5px;
+}
+#login_title {
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
   height: 72px;
+}
+#login_box{
+  height: 251px;
 }
 </style>
