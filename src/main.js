@@ -8,6 +8,7 @@ import store from './store/store'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
+
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 

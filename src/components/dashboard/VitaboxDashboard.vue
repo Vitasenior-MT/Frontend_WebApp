@@ -2,17 +2,19 @@
     <v-container fluid grid-list-sm id="vitaboxDashboard">
         <v-layout wrap >
             <v-flex d-flex xs12 sm12 md12 lg12>
-                <v-card dark>
-                    <v-carousel>
-                        <patientDashboard v-for="item in patients" :key="item.id" :selectedPatient="selectedPatient(item)"></patientDashboard>
+                <v-card dark v-if="patients.length > 0">
+                    <v-carousel :cycle="false">
+                      <v-carousel-item v-for="item in patients" :key="item.id" >
+                        <patientDashboard :selectedPatient="item"></patientDashboard>
+                      </v-carousel-item>
                     </v-carousel>
                 </v-card>
             </v-flex>  
             <v-flex d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
-                <envBoardDashboard v-if="tempSensors.length != 0" :sensors="tempSensors" :type="'Temperature'"></envBoardDashboard>
-                <envBoardDashboard v-if="humiSensors.length != 0" :sensors="humiSensors" :type="'Humidity'"></envBoardDashboard>
-                <envBoardDashboard v-if="monoSensors.length != 0" :sensors="monoSensors" :type="'Carbon Monoxide'"></envBoardDashboard>
-                <envBoardDashboard v-if="dioxiSensors.length != 0" :sensors="dioxiSensors" :type="'Carbon Dioxide'"></envBoardDashboard>    
+                <envBoardDashboard v-if="tempSensors.length != 0" :sensors="tempSensors" :type="tempSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
+                <envBoardDashboard v-if="humiSensors.length != 0" :sensors="humiSensors" :type="humiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
+                <envBoardDashboard v-if="monoSensors.length != 0" :sensors="monoSensors" :type="monoSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
+                <envBoardDashboard v-if="dioxiSensors.length != 0" :sensors="dioxiSensors" :type="dioxiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>    
             </v-flex>  
         </v-layout>
     </v-container> 
@@ -84,25 +86,25 @@ export default {
               switch (sensor.Sensormodel.tag) {
                 case "temp":
                   this.tempSensors.push({
-                    location: board.description,
+                    board: board,
                     sensor: sensor
                   });
                   break;
                 case "humi":
                   this.humiSensors.push({
-                    location: board.description,
+                    board: board,
                     sensor: sensor
                   });
                   break;
                 case "mono":
                   this.monoSensors.push({
-                    location: board.description,
+                    board: board,
                     sensor: sensor
                   });
                   break;
                 case "dioxi":
                   this.dioxiSensors.push({
-                    location: board.description,
+                    board: board,
                     sensor: sensor
                   });
                   break;
@@ -148,4 +150,6 @@ export default {
 .envGridSensors {
   padding: 0 5px 5px 5px;
 }
+
+
 </style>

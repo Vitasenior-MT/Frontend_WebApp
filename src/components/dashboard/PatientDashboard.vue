@@ -9,19 +9,22 @@
             <v-divider inset></v-divider>
         </v-list>
         <v-layout wrap>
-        <v-flex d-flex md6 lg7 >
-            <v-layout wrap>
+        <v-flex d-flex md6 lg4>
+          <v-layout wrap>
             <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
-              <v-card light>
-                <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
-                <v-card-text primary>{{ item.Sensormodel.measure }}</v-card-text>
-              </v-card>
+                <v-card light>
+                  <a @click="showGraph(item)">
+                    <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
+                    <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
+                  </a>
+                </v-card>
             </v-flex>
-            </v-layout>
+          </v-layout>
         </v-flex>
-        <v-flex d-flex md6 lg5>
+        <v-flex d-flex md6 lg8>
               <v-card light>
-                <v-card-title primary class="title">GRAPH</v-card-title>
+                <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
+
               </v-card>
             </v-flex>
             </v-layout>
@@ -31,6 +34,7 @@
 <script>
 import { event_bus } from "@/plugins/bus.js";
 
+
 export default {
   name: "patientDashboard",
   props: {
@@ -38,6 +42,7 @@ export default {
   },
   data() {
     return {
+      selectedSensorGraph: [],
       patientBoards: [],
       boardSensors: []
     };
@@ -49,9 +54,16 @@ export default {
     getPatientBoards() {
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
-          this.boardSensors.push(sensor);
+          this.boardSensors.push({
+            board: board,
+            sensor: sensor
+          });
         });
       });
+      this.selectedSensorGraph = this.boardSensors[0];
+    },
+    showGraph(sensor){
+      this.selectedSensorGraph = sensor;
     }
   }
 };
