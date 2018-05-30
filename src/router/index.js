@@ -10,7 +10,7 @@ import Signin from '@/components/auth/Index'
 import Signup from '@/components/auth/Register'
 
 // Frontend
-import Dashboard from '@/components/frontoffice/vitabox/Dashboard'
+import Dashboard from '@/components/frontoffice/dashboard/Dashboard'
 import VitaboxHome from '@/components/frontoffice/vitabox/VitaboxHome'
 import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
 import VitaboxCreate from '@/components/frontoffice/vitabox/VitaboxCreate'
@@ -77,7 +77,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/vitabox/dashboard',
+      path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
       // beforeEnter: requireAuth
