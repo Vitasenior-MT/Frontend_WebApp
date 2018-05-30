@@ -1,5 +1,6 @@
 <template>
   <v-content id="vitabox_list">
+
     <v-container class="pl-0 mb-2">
       <v-layout row wrap>
         <v-flex lg2 md3>
@@ -14,8 +15,8 @@
       <br>
       <v-divider></v-divider>
     </v-container>
-    <v-card id="select-card" v-if="select">
-      <v-layout row wrap>
+    <v-card id="select-card">
+      <v-layout row wrap v-if="select">
         <v-flex xs12 sm9 md8>
           <table>
             <tr>
@@ -62,7 +63,7 @@
             </v-flex>
             <v-flex xs4 sm12>
               <v-bottom-sheet v-model="boards_sheet" inset lazy>
-                <v-btn slot="activator" color="indigo" dark><v-icon>fas fa-broadcast-tower </v-icon></v-btn>
+                <v-btn slot="activator" color="indigo" dark><v-icon>fas fa-broadcast-tower</v-icon></v-btn>
                 <vitabox-boards :item="select" @close="boards_sheet=false"></vitabox-boards>
               </v-bottom-sheet>
             </v-flex>
@@ -70,11 +71,7 @@
         </v-flex>
       </v-layout>
       <br>
-      
-      <gmap-map :center="select.center" :zoom="15" style="width:100%;  height: 370px;" >
-        <gmap-marker :position="select.center"  @click="center=select.center" ></gmap-marker>
-      </gmap-map>
-
+      <div id="google-map-list"></div>
     </v-card>
 
   </v-content>
@@ -108,36 +105,51 @@ export default {
     };
   },
   created() {
-    event_bus.$emit("waiting", true);
-    event_bus.$data.http
-      .get("/vitabox")
-      .then(response => {
-        this.vitaboxes = response.data.vitaboxes;
-        this.select = response.data.vitaboxes[0];
-        event_bus.$emit("waiting", false);
-      })
-      .catch(error => {
-        if (error.response) {
-          event_bus.$emit("toast", {
-            message: error.response.data,
-            type: "error"
-          });
-        } else {
-          event_bus.$emit("toast", {
-            message: error.message,
-            type: "error"
-          });
-        }
-        event_bus.$emit("waiting", false);
-      });
+    if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
+    } else {
+      event_bus.$emit("waiting", true);
+      event_bus.$data.http
+        .get("/vitabox")
+        .then(response => {
+          this.vitaboxes = response.data.vitaboxes;
+          this.select = response.data.vitaboxes[0];
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", {
+              message: error.message,
+              type: "error"
+            });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    }
   },
   watch: {
     select(val) {
       if (val.latitude && val.longitude) {
-        this.select.center = {
-          lat: Number(val.latitude),
-          lng: Number(val.longitude)
-        };
+        // this.select.center = {
+        //   lat: Number(val.latitude),
+        //   lng: Number(val.longitude)
+        // };
+        let myLatLng = new google.maps.LatLng(val.latitude, val.longitude);
+        this.map = new google.maps.Map(
+          document.getElementById("google-map-list"),
+          { zoom: 15, center: myLatLng }
+        );
+        this.marker = new google.maps.Marker({
+          position: myLatLng,
+          map: this.map,
+          title: val.address
+        });
       }
       let monthNames = [
         "Jan",

@@ -105,33 +105,41 @@ export default {
     };
   },
   mounted() {
-    if (this.board) {
-      event_bus.$emit("waiting", true);
-      event_bus.$data.http
-        .get("/board/" + this.board.id + "/sensor")
-        .then(response => {
-          this.sensors = response.data.sensors;
-          this.selected_sensor = "tab-" + response.data.sensors[0].id;
-          this.last_commit = this.sensors.reduce(
-            (last, current) =>
-              current.datetime > last ? current.datetime : last
-          );
-          event_bus.$emit("waiting", false);
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-          event_bus.$emit("waiting", false);
-        });
-      this.warning();
+    if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
     } else {
-      event_bus.$emit("toast", { message: "Board undefined", type: "error" });
+      if (this.board) {
+        event_bus.$emit("waiting", true);
+        event_bus.$data.http
+          .get("/board/" + this.board.id + "/sensor")
+          .then(response => {
+            this.sensors = response.data.sensors;
+            this.selected_sensor = "tab-" + response.data.sensors[0].id;
+            this.last_commit = this.sensors.reduce(
+              (last, current) =>
+                current.datetime > last ? current.datetime : last
+            );
+            event_bus.$emit("waiting", false);
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
+            } else {
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
+            }
+            event_bus.$emit("waiting", false);
+          });
+        this.warning();
+      } else {
+        event_bus.$emit("toast", { message: "Board undefined", type: "error" });
+      }
     }
   },
   beforeDestroy() {

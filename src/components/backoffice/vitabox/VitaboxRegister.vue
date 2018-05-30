@@ -38,15 +38,20 @@ export default {
     };
   },
   mounted() {
-    const element = document.getElementById("google-map-register");
-    const options = {
-      zoom: 15,
-      center: new google.maps.LatLng(39.6027245, -8.4039402)
-    };
-    this.map = new google.maps.Map(element, options);
-    google.maps.event.addListener(this.map, "click", event =>
-      this.setMarker(event.latLng)
-    );
+   if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
+    } else {
+      const element = document.getElementById("google-map-register");
+      const options = {
+        zoom: 15,
+        center: new google.maps.LatLng(39.6027245, -8.4039402)
+      };
+      this.map = new google.maps.Map(element, options);
+      google.maps.event.addListener(this.map, "click", event =>
+        this.setMarker(event.latLng)
+      );
+    }
   },
   methods: {
     register() {

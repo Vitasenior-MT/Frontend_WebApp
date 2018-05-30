@@ -76,28 +76,33 @@ export default {
     }
   },
   created() {
-    event_bus.$emit("waiting", true);
-    event_bus.$data.http
-      .get("/sensormodel")
-      .then(response => {
-        this.sensors = response.data.sensors;
-        event_bus.$emit("setSensors", response.data.sensors);
-        event_bus.$emit("waiting", false);
-      })
-      .catch(error => {
-        if (error.response) {
-          event_bus.$emit("toast", {
-            message: error.response.data,
-            type: "error"
-          });
-        } else {
-          event_bus.$emit("toast", {
-            message: error.message,
-            type: "error"
-          });
-        }
-        event_bus.$emit("waiting", false);
-      });
+    if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
+    } else {
+      event_bus.$emit("waiting", true);
+      event_bus.$data.http
+        .get("/sensormodel")
+        .then(response => {
+          this.sensors = response.data.sensors;
+          event_bus.$emit("setSensors", response.data.sensors);
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", {
+              message: error.message,
+              type: "error"
+            });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    }
   },
   methods: {
     editItem(item) {

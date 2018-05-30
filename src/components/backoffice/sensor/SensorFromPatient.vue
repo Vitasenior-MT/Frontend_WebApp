@@ -59,7 +59,14 @@ export default {
     getValues(page) {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/record/sensor/" + this.sensor.id + "/patient/" + this.patient + "/page/" + (this.page + page))
+        .get(
+          "/record/sensor/" +
+            this.sensor.id +
+            "/patient/" +
+            this.patient +
+            "/page/" +
+            (this.page + page)
+        )
         .then(response => {
           this.records = response.data.records.sort(this.compare);
           this.page += page;

@@ -91,28 +91,39 @@ export default {
     };
   },
   mounted() {
-    if (this.patient) {
-      event_bus.$emit("waiting", true);
-      event_bus.$data.http
-        .get("/patient/" + this.patient.id + "/board")
-        .then(response => {
-          this.boards = response.data.boards;
-          this.sensors = this.boards.length > 0 ? this.boards[0].Sensors : [];
-          event_bus.$emit("waiting", false);
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-          event_bus.$emit("waiting", false);
-        });
+    if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
     } else {
-      event_bus.$emit("toast", { message: "Patient undefined", type: "error" });
+      if (this.patient) {
+        event_bus.$emit("waiting", true);
+        event_bus.$data.http
+          .get("/patient/" + this.patient.id + "/board")
+          .then(response => {
+            this.boards = response.data.boards;
+            this.sensors = this.boards.length > 0 ? this.boards[0].Sensors : [];
+            event_bus.$emit("waiting", false);
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
+            } else {
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
+            }
+            event_bus.$emit("waiting", false);
+          });
+      } else {
+        event_bus.$emit("toast", {
+          message: "Patient undefined",
+          type: "error"
+        });
+      }
     }
   },
   methods: {

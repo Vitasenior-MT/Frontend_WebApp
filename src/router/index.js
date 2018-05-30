@@ -40,22 +40,22 @@ import PatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
 Vue.use(Router)
 
-function requireAuth(to, from, next) {
-  var logged = store.state.user.token ? true : false;
-  if (logged == true) {
-    next();
-  } else {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    window.console.log('Not authenticated')
-    next({
-      path: '/signin',
-      query: {
-        redirect: to.fullPath
-      }
-    })
-  }
-}
+// function requireAuth(to, from, next) {
+//   var logged = store.state.user.token ? true : false;
+//   if (logged == true) {
+//     next();
+//   } else {
+//     // this route requires auth, check if logged in
+//     // if not, redirect to login page.
+//     window.console.log('Not authenticated')
+//     next({
+//       path: '/signin',
+//       query: {
+//         redirect: to.fullPath
+//       }
+//     })
+//   }
+// }
 
 
 export default new Router({
@@ -80,97 +80,97 @@ export default new Router({
       path: '/vitabox/dashboard',
       name: 'Dashboard',
       component: Dashboard,
-      beforeEnter: requireAuth,
+      // beforeEnter: requireAuth
     },
     {
       path: '/vitabox',
       name: 'VitaboxHome',
       component: VitaboxHome,
-      beforeEnter: requireAuth,
+      // beforeEnter: requireAuth
     },
     {
       path: '/vitabox/detail',
       name: 'VitaboxDetail',
       component: VitaboxDetail,
-      beforeEnter: requireAuth,
+      // beforeEnter: requireAuth
     },
     {
       path: '/vitabox/create',
       name: 'VitaboxCreate',
       component: VitaboxCreate,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/vitabox/edit',
       name: 'VitaboxEdit',
       component: VitaboxEdit,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/vitabox/delete',
       name: 'VitaboxDelete',
       component: VitaboxDelete,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/board',
       name: 'BoardHome',
       component: BoardHome,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/board/detail',
       name: 'BoardDetail',
       component: BoardDetail,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/board/create',
       name: 'BoardCreate',
       component: BoardCreate,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/board/edit',
       name: 'BoardEdit',
       component: BoardEdit,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/board/delete',
       name: 'BoardDelete',
       component: BoardDelete,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/user',
       name: 'UserHome',
       component: UserHome,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/user/detail',
       name: 'UserDetail',
       component: UserDetail,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/user/edit',
       name: 'UserEdit',
       component: UserEdit,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/user/changepass',
       name: 'ChangePass',
       component: ChangePass,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     {
       path: '/user/updatephoto',
       name: 'UpdatePhoto',
       component: UpdatePhoto,
-      beforeEnter: requireAuth
+      // beforeEnter: requireAuth
     },
     // backoffice
     {
@@ -220,6 +220,5 @@ export default new Router({
       path: '*',
       component: NotFoundView
     }
-  ],
-  mode: 'history'
+  ]
 })

@@ -74,6 +74,10 @@ export default {
     };
   },
   created() {
+    if (this.$store.state.user.token === null) {
+      this.$router.push("/");
+      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
+    }
     event_bus.$data.http
       .get("/boardmodel")
       .then(response => (this.models = response.data.models))

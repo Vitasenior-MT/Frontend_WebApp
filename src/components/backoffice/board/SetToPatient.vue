@@ -52,12 +52,18 @@ export default {
               type: "error"
             });
           } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
+            event_bus.$emit("toast", {
+              message: error.message,
+              type: "error"
+            });
           }
           event_bus.$emit("waiting", false);
         });
     } else {
-      event_bus.$emit("toast", { message: "Patient undefined", type: "error" });
+      event_bus.$emit("toast", {
+        message: "Patient undefined",
+        type: "error"
+      });
     }
   },
   methods: {

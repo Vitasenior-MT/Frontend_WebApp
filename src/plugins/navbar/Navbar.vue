@@ -1,7 +1,7 @@
 <template>
   <div id="navbar">
 
-    <v-navigation-drawer v-if="logged" v-model="drawer" app width="250" id="side_bar" mobile-break-point=960>
+    <v-navigation-drawer v-if="logged" v-bind:class="drawer" app width="250" id="side_bar" mobile-break-point=960>
 
       <v-toolbar class="primary--text raven" id="top_menu">
         <v-toolbar-title v-if="isadmin"><v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Backoffice</v-toolbar-title>
@@ -65,7 +65,7 @@ export default {
     window.addEventListener("resize", this.resize);
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
     logout() {
@@ -73,18 +73,12 @@ export default {
       this.$emit("logout");
     },
     resize() {
-      if (
-        screen.width > 960 &&
-        this.drawer.className.indexOf("-temporary") !== -1
-      ) {
-        this.drawer.className =
+      if (screen.width > 960) {
+        this.drawer =
           "navigation-drawer navigation-drawer--open navigation-drawer--floating";
       }
-      if (
-        screen.width < 960 &&
-        this.drawer.className.indexOf("-temporary") === -1
-      ) {
-        this.drawer.className =
+      if (screen.width < 960) {
+        this.drawer =
           "navigation-drawer navigation-drawer--close navigation-drawer--floating navigation-drawer--temporary";
       }
     }
