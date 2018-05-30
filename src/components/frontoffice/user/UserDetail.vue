@@ -7,9 +7,6 @@
                     <v-btn class="mb-3" success @click.native='changepass'>Change Password</v-btn>
                 </v-card>
                 <v-card>
-                    <v-btn class="mb-3" success @click='resetpassword'>Reset Password</v-btn>
-                </v-card>
-                <v-card>
                     <v-btn class="mb-3" success @click='updatephoto'>Update Photo</v-btn>
                 </v-card>
             </v-flex>
@@ -24,9 +21,6 @@ export default {
   methods: {
       changepass(){
           this.$router.push("changepass");
-      },
-      resetpassword(){
-          this.$router.push("resetpass");
       },
       updatephoto(){
           this.$router.push("updatephoto");

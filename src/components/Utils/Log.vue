@@ -3,7 +3,7 @@
     <v-snackbar v-for="option in success_options" :key="option.key" :color="option.type" :timeout="success_log.timeout" v-model="option.model" :style="'margin-top: '+option.top+'px; z-index:'+option.zindex" :top="true" :right="true">
       {{ option.message }}
       <v-btn flat @click.native="close(option)">
-        <v-icon class="white--text">mdi-close</v-icon>
+        <v-icon class="white--text">fas fa-times</v-icon>
       </v-btn>
     </v-snackbar>
   </div>
@@ -11,6 +11,7 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+
 export default {
   name: "success_log",
   data: () => {

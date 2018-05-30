@@ -1,5 +1,5 @@
 <template>
-  <v-container id="chg_pwd" fluid fill-height>
+  <v-content id="chg_pwd" fluid fill-height>
     <v-layout align-center justify-center>
       <v-card  width="500">
         <v-card-text>
@@ -15,11 +15,12 @@
         </v-card-text>
       </v-card>
     </v-layout>
-  </v-container>
+  </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+
 export default {
   name: "chg_pwd",
   data: () => {
@@ -34,7 +35,7 @@ export default {
     save() {
       if (this.new_password !== this.old_password) {
         if (this.new_password === this.confirmed_password) {
-          event_bus.$emit("waiting", 50);
+          event_bus.$emit("waiting", true);
           event_bus.$data.http
             .post("/chpass", {
               old_password: this.old_password,
@@ -45,7 +46,7 @@ export default {
                 message: "password successfully updated",
                 type: "success"
               });
-              event_bus.$emit("waiting", 50);
+              event_bus.$emit("waiting", false);
             })
             .catch(error => {
               if (error.response) {
@@ -59,7 +60,7 @@ export default {
                   type: "error"
                 });
               }
-              event_bus.$emit("waiting", 50);
+              event_bus.$emit("waiting", false);
             });
         } else {
           event_bus.$emit("toast", {
@@ -79,4 +80,5 @@ export default {
 </script>
 
 <style>
+
 </style>

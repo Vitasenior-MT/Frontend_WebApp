@@ -18,7 +18,8 @@ const state = {
     token: null,
     name: null,
     email: null,
-    photo: null
+    photo: null,
+    is_admin: null
   }
 }
 
@@ -56,6 +57,7 @@ const mutations = {
     state.user.name = userData.name;
     state.user.email = userData.email;
     state.user.photo = userData.photo;
+    state.user.is_admin = userData.is_admin;
   }
 }
 
