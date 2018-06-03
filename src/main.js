@@ -7,6 +7,7 @@ import Vuetify from 'vuetify'
 import store from '@/plugins/store'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import Navbar from "@/plugins/navbar"
+import Chart from "chart.js";
 
 Vue.use(Vuetify, {
   theme: {

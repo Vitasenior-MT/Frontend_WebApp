@@ -1,5 +1,5 @@
 <template>
-  <v-content style="margin-top:35px">
+  <v-content style="margin-top:20px">
     <v-tabs dark color="grey" grow v-model="vitabox" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left">
       <v-tab v-for="item in vitaboxes" :key="item.id" :href="`#tab-${item.id}`">
         Vitabox - {{ item.address }}

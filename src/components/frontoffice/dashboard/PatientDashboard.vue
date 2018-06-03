@@ -24,7 +24,7 @@
         <v-flex d-flex md6 lg8>
               <v-card light>
                 <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
-
+                <biometricGraph> </biometricGraph>
               </v-card>
             </v-flex>
             </v-layout>
@@ -33,7 +33,7 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-
+import BiometricGraph from "./BiometricGraph.vue";
 
 export default {
   name: "patientDashboard",
@@ -47,9 +47,13 @@ export default {
       boardSensors: []
     };
   },
+  components: {
+    biometricGraph: BiometricGraph
+  },
   created() {
     this.getPatientBoards();
   },
+
   methods: {
     getPatientBoards() {
       this.selectedPatient.Boards.forEach(board => {
@@ -62,7 +66,7 @@ export default {
       });
       this.selectedSensorGraph = this.boardSensors[0];
     },
-    showGraph(sensor){
+    showGraph(sensor) {
       this.selectedSensorGraph = sensor;
     }
   }
