@@ -25,7 +25,7 @@
               <v-card light>
                 <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
                 <div v-if="records" style="height:350px; position:relative;">
-                   <canvas :id=" selectedSensorGraph.sensor.Sensormodel.id"></canvas>
+                   <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
                 </div>
                 <v-layout row wrap>
                   <v-flex class="py-0">
@@ -96,7 +96,7 @@ export default {
       event_bus.$data.http
         .get(
           "/record/sensor/" +
-            this.selectedSensorGraph.sensor.Sensormodel.id +
+            this.selectedSensorGraph.sensor.id +
             "/patient/" +
             this.selectedPatient.id +
             "/page/" +
@@ -119,7 +119,7 @@ export default {
         });
     },
     initGraph() {
-      this.chart = new Chart(document.getElementById(this.selectedSensorGraph.sensor.Sensormodel.id), {
+      this.chart = new Chart(document.getElementById(this.selectedSensorGraph.sensor.id), {
         type: "line",
         options: {
           legend: { display: false },
