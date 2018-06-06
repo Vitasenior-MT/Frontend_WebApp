@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid grid-list-sm id="vitaboxDashboard">
+    <v-content fluid grid-list-sm id="vitaboxDashboard">
         <v-layout wrap >
             <v-flex d-flex xs12 sm12 md12 lg12>
                 <v-card dark v-if="patients.length > 0">
@@ -17,7 +17,7 @@
                 <envBoardDashboard v-if="dioxiSensors.length != 0" :sensors="dioxiSensors" :type="dioxiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>    
             </v-flex>  
         </v-layout>
-    </v-container> 
+    </v-content> 
 </template>
 
 <script>
@@ -53,10 +53,9 @@ export default {
   methods: {
     getPatients() {
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/patient")
+        .get("/vitabox/" + this.selectedVitabox.id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
-          this.$store.state.patient = this.patients[0];
           this.patientBoards = this.patients[0].Boards;
         })
         .catch(error => {
@@ -72,10 +71,9 @@ export default {
     },
     getVitaboxBoards() {
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
+        .get("/vitabox/" + this.selectedVitabox.id + "/board")
         .then(response => {
           this.vitaboxBoards = response.data.boards;
-          this.$store.state.vitabox = this.vitaboxBoards[0];
           this.vitaboxBoards.forEach(board => {
             if (board.Boardmodel.type === "environmental") {
               this.vitaboxBoardSensors.push(board);
@@ -129,10 +127,6 @@ export default {
       this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
-    },
-    selectedVitaboxBoard(vitaboxBoardData) {
-      //this.$store.commit("setVitaboxBoardData", vitaboxBoardData);
-      return vitaboxBoardData;
     }
   }
 };
