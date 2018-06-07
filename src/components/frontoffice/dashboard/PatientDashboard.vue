@@ -1,47 +1,55 @@
 <template>
-    <v-container class="gridPatient">
-        <v-list>
-            <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            <v-divider inset></v-divider>
-        </v-list>
+  <v-container class="gridPatient">
+    <v-list>
+        <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
+            <v-list-tile-content>
+                <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-divider inset></v-divider>
+    </v-list>
+    <v-layout v-if="boardSensors.length > 0" wrap>
+      <v-flex d-flex md6 lg4>
         <v-layout wrap>
-        <v-flex d-flex md6 lg4>
-          <v-layout wrap>
-            <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
-                <v-card light>
-                  <a @click="showGraph(item)">
-                    <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
-                    <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
-                  </a>
-                </v-card>
+          <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
+              <v-card light>
+                <a @click="showGraph(item)">
+                  <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
+                  <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
+                </a>
+              </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex v-if="selectedSensorGraph != null" d-flex md6 lg8>
+        <v-card light>
+          <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
+          <div v-if="records" style="height:350px; position:relative;">
+            <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
+          </div>
+          <v-layout row wrap>
+            <v-flex class="py-0">
+              <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            </v-flex>
+            <v-flex class="py-0">
+              <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
             </v-flex>
           </v-layout>
-        </v-flex>
-        <v-flex d-flex md6 lg8>
-              <v-card light>
-                <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
-                <div v-if="records" style="height:350px; position:relative;">
-                   <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
-                </div>
-                <v-layout row wrap>
-                  <v-flex class="py-0">
-                    <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-                    <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-                  </v-flex>
-                  <v-flex class="py-0">
-                    <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-                    <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-                  </v-flex>
-                </v-layout>
-                <!-- <biometricGraph> </biometricGraph> -->
-              </v-card>
-            </v-flex>
-            </v-layout>
-    </v-container>
+          <!-- <biometricGraph> </biometricGraph> -->
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout v-else wrap>
+      <v-flex d-flex sm12 md12 lg12>
+        <v-card light>
+          <v-card-title primary class="title">This patient does not have biometric data associated</v-card-title>
+          <v-card-text primary>Sorry</v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>  
+  </v-container>
 </template>
 
 <script>
@@ -71,8 +79,11 @@ export default {
     this.getPatientBoards();
   },
   mounted() {
-    this.initGraph();
-    this.getValues(0);
+    if(this.selectedSensorGraph != null){
+      this.initGraph();
+      this.getValues(0);
+    }
+    
   },
   methods: {
     getPatientBoards() {

@@ -10,7 +10,7 @@
         </v-list-tile-content>
       </v-list-tile>
     </router-link>
-    <v-list v-for="item in vitaboxes" :key="item.id" :selectedVitabox="selectedVitabox(item)">
+    <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
       <v-list-tile class="office_options office_notchoosen ash--text">
         <v-list-tile-action>
           <v-icon>fa fa-tv</v-icon>
@@ -19,7 +19,7 @@
           <v-list-tile-title > Vitabox - {{ item.address }}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-    </v-list>
+    </router-link>
   </v-list>  
   
 </template>
@@ -82,7 +82,7 @@ export default {
     },
     selectedVitabox(vitaboxData) {
       this.$store.commit("setVitaboxData", vitaboxData);
-      return vitaboxData;
+      //this.$router.push("/dashboard");
     }
   }
 };

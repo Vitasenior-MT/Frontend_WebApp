@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-top:35px; margin-left:10px; margin-right:10px">
+    <v-content>
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
       <v-list>
         <v-list-tile>
@@ -9,17 +9,17 @@
           </v-list-tile-content>
           <v-list-tile-content >
             <v-list-tile-title>Registered</v-list-tile-title>
-            <v-icon v-if="this.$store.state.vitabox.registered === true">mdi-check</v-icon> 
-            <v-icon v-else>mdi-close</v-icon>
+            <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
+            <v-icon v-else>fas fa-times-circle</v-icon>
           </v-list-tile-content>
           <v-list-tile-content>
             <v-list-tile-title>Active</v-list-tile-title>
-            <v-icon v-if="this.$store.state.vitabox.active === true">mdi-check</v-icon> 
-            <v-icon v-else>mdi-close</v-icon> 
+            <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
+            <v-icon v-else>fas fa-times-circle</v-icon> 
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-    <div>
+    <!-- <v-content> -->
     <br>
     <gmap-map
       :center="center"
@@ -33,8 +33,8 @@
         @click="center=m.position"
       ></gmap-marker>
     </gmap-map>
-    </div>
-    <div style="margin-top:20px">
+    <!-- </v-content> -->
+    <!-- <v-content style="margin-top:20px"> -->
     <v-data-table
       :headers="headers"
       :items="boards"
@@ -45,12 +45,12 @@
         <td class="text-xs-left">{{ props.item.id }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
         <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-        <td class="text-xs-left" v-if="props.item.active === true"><v-icon>mdi-check</v-icon></td>
-        <td class="text-xs-left" v-else><v-icon>mdi-close</v-icon></td>
+        <td class="text-xs-left" v-if="props.item.active === true"><v-icon>fas fa-check-circle</v-icon></td>
+        <td class="text-xs-left" v-else><v-icon>fas fa-times-circle</v-icon></td>
         <td class="text-xs-left">{{ props.item.updated_at }}</td>
         <td class="justify-left layout px-0">
           <v-btn @click='goToBoardDetails(props.item)'>
-            <v-icon >mdi-information-outline</v-icon>
+            <v-icon >fas fa-info-circle</v-icon>
           </v-btn>
         </td>
       </template>
@@ -62,11 +62,11 @@
     </v-data-table>
     <v-flex style="margin-bottom: 40px">
       <v-btn @click="$router.go(-1)">
-            <v-icon >mdi-keyboard-return</v-icon>
+            <v-icon>fas fa-long-arrow-alt-left </v-icon>
       </v-btn>
     </v-flex>
-  </div>
-  </div>
+  <!-- </v-content> -->
+  </v-content>
 </template>
 
 <script>

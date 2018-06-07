@@ -1,17 +1,17 @@
 <template>
-  <v-card  dark class="envGridSensors" >
+  <v-card dark class="envGridSensors" >
     <v-flex d-flex sm12 md12 lg12>
       <v-card flat light hover @click="goToTypeDetails(sensors)">
         <v-card-title>{{ type }}</v-card-title>
         <v-card-text primary>{{ getAverageValue() }}</v-card-text>
       </v-card>
     </v-flex>
-    <v-layout wrap >
-        <v-flex d-flex sm6 md4 lg3 v-for="item in sensors" :key="item.id">
-            <v-card flat hover light @click="goToSensorDetails(item)">
-                <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
-                <v-card-text primary>{{ item.board.description }}</v-card-text>
-            </v-card>
+    <v-layout row wrap>
+        <v-flex d-flex sm7 md5 lg4 v-for="item in sensors" :key="item.id">
+          <v-card flat hover light @click="goToSensorDetails(item)">
+            <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+            <v-card-text primary>{{ item.board.description }}</v-card-text>
+          </v-card>
         </v-flex> 
     </v-layout>
   </v-card>

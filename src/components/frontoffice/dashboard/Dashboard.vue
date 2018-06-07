@@ -1,62 +1,58 @@
 <template>
-  <v-content style="margin-top:20px">
-    <v-tabs dark color="grey" grow v-model="vitabox" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left">
-      <v-tab v-for="item in vitaboxes" :key="item.id" :href="`#tab-` + item">
-        Vitabox - {{ item.address }}
-      </v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="vitabox">
-      <v-tab-item lazy v-for="item in vitaboxes" :key="item.id" :id="`tab-` + item" >
-        <vitaboxDashboard :selectedVitabox="selectedVitabox(item)"></vitaboxDashboard>
-      </v-tab-item>
-    </v-tabs-items>
+  <v-content fluid grid-list-sm style="margin-top:20px">
+     <v-flex d-flex xs12 sm12 md12 lg12 >
+        <v-card dark>
+          <v-list>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title>Location</v-list-tile-title>
+                {{ this.$store.state.vitabox.address }}
+              </v-list-tile-content>
+              <v-list-tile-content >
+                <v-list-tile-title>Registered</v-list-tile-title>
+                <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
+                <v-icon v-else>fas fa-times-circle</v-icon>
+              </v-list-tile-content>
+              <v-list-tile-content>
+                <v-list-tile-title>Active</v-list-tile-title>
+                <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
+                <v-icon v-else>fas fa-times-circle</v-icon> 
+              </v-list-tile-content>
+               <v-list-tile-content>
+                <v-list-tile-title>Details</v-list-tile-title>
+                <v-btn @click='goToVitaboxDetails($store.state.vitabox)'>
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>  
+    <vitaboxDashboard :selectedVitabox="$store.state.vitabox"></vitaboxDashboard>
   </v-content>  
 </template>
 
 
 <script>
-import VitaboxDashboard from './VitaboxDashboard.vue';
-import { event_bus } from "@/plugins/bus.js";
+import VitaboxDashboard from "./VitaboxDashboard.vue";
 
 export default {
-  data() {
-    return {
-      vitaboxes: [],
-      vitabox: null
-    };
-  },
   components: {
     vitaboxDashboard: VitaboxDashboard
   },
-  created() {
-    this.getVitaboxes();
-  },
   methods: {
-    getVitaboxes() {
-      event_bus.$data.http
-        .get("/vitabox")
-        .then(response => {
-          this.vitaboxes = response.data.vitaboxes;
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-        });
-    },
-    selectedVitabox(vitaboxData){
-      this.$store.commit("setVitaboxData", vitaboxData); 
-      return vitaboxData;
+    goToVitaboxDetails(vitaboxData) {
+      this.$store.commit("setVitaboxData", vitaboxData);
+      this.$router.push("/vitabox/detail");
+    }
+  },
+   watch: {
+    selectedVitabox: function (val) {
+      goToVitaboxDetails(val);
     }
   }
 };
 </script>
 
 <style>
-
 </style>
