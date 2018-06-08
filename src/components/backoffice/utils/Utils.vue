@@ -27,7 +27,7 @@
           <v-btn @click="createBoard" block>Create Board</v-btn>
         </v-flex>
         <v-flex xs5  class="px-2">
-          <v-text-field label="MAC Address" required :rules="[() => !!board.mac_addr || 'This field is required']" v-model="board.mac_addr"></v-text-field>
+          <v-text-field label="MAC Address" required :mask="'nn:nn:nn:nn:nn:nn:nn:nn'" :rules="[() => !!board.mac_addr || 'This field is required']" v-model="board.mac_addr"></v-text-field>
         </v-flex>
         <v-flex xs5  class="px-2">
           <v-select autocomplete label="Model" :items="models" item-text="name" item-value="id" v-model="board.model" append-icon="fas fa-angle-down"></v-select>
@@ -103,6 +103,23 @@ export default {
         });
     },
     createBoard() {
+       if (this.board.mac_addr !== ""){
+         this.board.mac_addr =
+          this.board.mac_addr.substring(0, 2) +
+          ":" +
+          this.board.mac_addr.substring(2, 4) +
+          ":" +
+          this.board.mac_addr.substring(4, 6) +
+          ":" +
+          this.board.mac_addr.substring(6, 8) +
+          ":" +
+          this.board.mac_addr.substring(8, 10) +
+          ":" +
+          this.board.mac_addr.substring(10, 12) +
+          ":" +
+          this.board.mac_addr.substring(12, 14) +
+          ":" +
+          this.board.mac_addr.substring(14);
       event_bus.$data.http
         .post("/board", this.board)
         .then(response => {
@@ -115,6 +132,12 @@ export default {
             event_bus.$emit("error", error.message);
           }
         });
+       } else {
+        event_bus.$emit("toast", {
+          message: "insert all fields",
+          type: "error"
+        });
+      }
     }
   }
 };

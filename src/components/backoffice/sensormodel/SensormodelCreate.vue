@@ -76,7 +76,8 @@ export default {
         { measure: "calories", tag: "callories" },
         { measure: "steps", tag: "steps" },
         { measure: "meters", tag: "meters" },
-        { measure: "heart rate", tag: "heartrate" }
+        { measure: "heart rate", tag: "heartrate" },
+        { measure: "body temperature", tag: "bodytemp" }
       ],
       selected_measure: null,
       dialog_create_sensor: false
