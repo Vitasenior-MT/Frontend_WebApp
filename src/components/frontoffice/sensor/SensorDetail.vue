@@ -1,48 +1,39 @@
 <template>
-  <v-card flat class="ash_l">
-    <v-card-title class="pb-1">
-      <p class="title">{{sensor.Sensormodel.transducer}} - {{sensor.Sensormodel.measure}}</p>
-    </v-card-title>
-    <v-card-text class="py-0">
-      <table style="width:100%">
-        <tr>
-          <td class="text-xs-right"><label class="primary_d--text mr-2">last commit</label></td>
-          <th class="text-xs-left">
-            <label v-if="sensor.last_commit">{{getTime(sensor.last_commit)}}</label>
-            <label v-else>NaN</label>
-          </th>
-        </tr>
-        <tr>
-          <td class="text-xs-right"><label class="primary_d--text mr-2">id</label></td>
-          <th class="text-xs-left" colspan="2">{{sensor.id}}</th>
-        </tr>
-      </table>
-      <div v-if="records" style="height: 250px;position:relative;">
-        <canvas class="sensor_graph" :id="sensor.id"></canvas>
-      </div>
-      <v-layout row wrap>
+    <v-container class="gridSensor">
+    <v-list>
+        <v-list-tile>
+            <v-list-tile-content>
+            <v-list-tile-title>{{ this.selectedSensor.Sensormodel.measure }}</v-list-tile-title>
+            </v-list-tile-content>      
+        </v-list-tile>
+        <v-divider inset></v-divider>
+    </v-list>
+    <v-card light>
+        <div v-if="records" style="height:350px; position:relative;">
+        <canvas :id=" this.selectedSensor.id"></canvas>
+        </div>
+        <v-layout row wrap>
         <v-flex class="py-0">
-          <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-          <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
         </v-flex>
         <v-flex class="py-0">
-          <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-          <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
         </v-flex>
-      </v-layout>
-    </v-card-text>
-  </v-card>
+        </v-layout>
+    </v-card>
+    </v-container>
 </template>
 
 <script>
-import Chart from "chart.js";
 import { event_bus } from "@/plugins/bus.js";
+import Chart from "chart.js";
 
 export default {
-  name: "sensor_graph",
+  name: "sensorDetail",
   props: {
-    sensor: Object,
-    patient: String
+    selectedSensor: Object
   },
   data: () => {
     return {
@@ -55,23 +46,28 @@ export default {
     this.initGraph();
     this.getValues(0);
   },
+  watch: {
+    selectedSensor(val) {
+      this.initGraph();
+      this.getValues(0);
+    }
+  },
   methods: {
     getValues(page) {
-      //event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get(
           "/record/sensor/" +
-            this.sensor.id +
+            this.selectedSensor.id +
             "/patient/" +
-            this.patient +
+            this.$store.state.patient.id +
             "/page/" +
             (this.page + page)
         )
         .then(response => {
           this.records = response.data.records.sort(this.compare);
+          console.log(this.records);
           this.page += page;
           this.designGraph();
-          //event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -79,19 +75,21 @@ export default {
           } else {
             event_bus.$emit("error", error.message);
           }
-          //event_bus.$emit("waiting", false);
         });
     },
     initGraph() {
-      this.chart = new Chart(document.getElementById(this.sensor.id), {
-        type: "line",
-        options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: false }] },
-          responsive: true,
-          maintainAspectRatio: false
+      this.chart = new Chart(
+        document.getElementById(this.selectedSensor.id),
+        {
+          type: "line",
+          options: {
+            legend: { display: false },
+            scales: { xAxes: [{ display: false }] },
+            responsive: true,
+            maintainAspectRatio: false
+          }
         }
-      });
+      );
     },
     designGraph() {
       let length = this.records.length;
@@ -100,7 +98,7 @@ export default {
       });
       this.chart.data.datasets = [
         {
-          label: this.sensor.Sensormodel.measure,
+          label: this.selectedSensor.Sensormodel.measure,
           data: this.records.map(x => {
             return x.value;
           }),
@@ -120,7 +118,7 @@ export default {
           label: "minimum acceptable",
           data: Array.from(
             { length },
-            i => this.sensor.Sensormodel.min_acceptable
+            i => this.selectedSensor.Sensormodel.min_acceptable
           ),
           borderWidth: 2,
           fill: false,
@@ -131,7 +129,7 @@ export default {
           label: "maximum acceptable",
           data: Array.from(
             { length },
-            i => this.sensor.Sensormodel.max_acceptable
+            i => this.selectedSensor.Sensormodel.max_acceptable
           ),
           borderWidth: 2,
           fill: false,
@@ -190,3 +188,11 @@ export default {
   }
 };
 </script>
+
+<style>
+
+.gridSensor {
+  padding: 0 45px 60px 45px !important; 
+}
+
+</style>

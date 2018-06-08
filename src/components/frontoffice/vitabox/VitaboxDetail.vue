@@ -1,7 +1,7 @@
 <template>
     <v-content>
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-      <v-list>
+      <v-list dark>
         <v-list-tile>
           <v-list-tile-content>
             <v-list-tile-title>Location</v-list-tile-title>
@@ -19,8 +19,6 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-    <!-- <v-content> -->
-    <br>
     <gmap-map
       :center="center"
       :zoom="15"
@@ -33,16 +31,15 @@
         @click="center=m.position"
       ></gmap-marker>
     </gmap-map>
-    <!-- </v-content> -->
-    <!-- <v-content style="margin-top:20px"> -->
     <v-data-table
       :headers="headers"
       :items="boards"
       hide-actions
       class="elevation-1"
+      dark
     >
       <template slot="items" slot-scope="props">
-        <td class="text-xs-left">{{ props.item.id }}</td>
+        <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
         <td class="text-xs-left">{{ props.item.mac_addr }}</td>
         <td class="text-xs-left" v-if="props.item.active === true"><v-icon>fas fa-check-circle</v-icon></td>
@@ -61,11 +58,10 @@
       </template>
     </v-data-table>
     <v-flex style="margin-bottom: 40px">
-      <v-btn @click="$router.go(-1)">
+      <v-btn dark @click="$router.go(-1)">
             <v-icon>fas fa-long-arrow-alt-left </v-icon>
       </v-btn>
     </v-flex>
-  <!-- </v-content> -->
   </v-content>
 </template>
 
@@ -106,10 +102,12 @@ export default {
   },
   methods: {
     getBoards() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
         .then(response => {
           this.boards = response.data.boards;
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -120,10 +118,11 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     goToBoardDetails(boardData) {
-      this.$store.commit("setVitaboxBoardData", boardData);
+      this.$store.commit("setBoardData", boardData);
       this.$router.push("/board/detail");
     }
   }

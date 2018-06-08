@@ -9,6 +9,7 @@
           <v-list-tile-title v-text="link.name"></v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
+      <v-divider inset light></v-divider>
     </router-link>
     <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
       <v-list-tile class="office_options office_notchoosen ash--text">
@@ -64,10 +65,12 @@ export default {
       this.selected = i;
     },
     getVitaboxes() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox")
         .then(response => {
           this.vitaboxes = response.data.vitaboxes;
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -78,11 +81,11 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     selectedVitabox(vitaboxData) {
       this.$store.commit("setVitaboxData", vitaboxData);
-      //this.$router.push("/dashboard");
     }
   }
 };

@@ -8,6 +8,8 @@ Vue.use(Vuex)
 const state = {
   vitaboxes: [],
   vitabox: [],
+  board: [],
+  sensor: [],
   vitaboxBoard: [],
   patient: [],
   patientBoards: [],
@@ -33,6 +35,12 @@ const mutations = {
   },
   setVitaboxData(state, vitaboxData) {
     state.vitabox = vitaboxData;
+  },
+  setBoardData(state, boardData) {
+    state.board = boardData;
+  },
+  setSensorData(state, sensorData) {
+    state.sensor = sensorData;
   },
   setVitaboxBoardData(state, vitaboxBoardData) {
     state.vitaboxBoard = vitaboxBoardData;
@@ -68,6 +76,12 @@ const actions = {
   setVitaboxData: ({
     commit
   }) => commit('setVitaboxData'),
+  setBoardData: ({
+    commit
+  }) => commit('setBoardData'),
+  setSensorData: ({
+    commit
+  }) => commit('setSensorData'),
   setVitaboxBoardData: ({
     commit
   }) => commit('setVitaboxBoardData'),

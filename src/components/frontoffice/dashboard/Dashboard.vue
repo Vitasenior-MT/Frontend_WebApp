@@ -20,9 +20,12 @@
               </v-list-tile-content>
                <v-list-tile-content>
                 <v-list-tile-title>Details</v-list-tile-title>
-                <v-btn @click='goToVitaboxDetails($store.state.vitabox)'>
-                  <v-icon>fas fa-info-circle</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <v-btn slot="activator" @click.native='goToVitaboxDetails($store.state.vitabox)'>
+                    <v-icon>fas fa-info-circle</v-icon>
+                  </v-btn>
+                  <span>Vitabox Details</span>
+                </v-tooltip>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -45,14 +48,10 @@ export default {
       this.$store.commit("setVitaboxData", vitaboxData);
       this.$router.push("/vitabox/detail");
     }
-  },
-   watch: {
-    selectedVitabox: function (val) {
-      goToVitaboxDetails(val);
-    }
   }
 };
 </script>
 
 <style>
+
 </style>

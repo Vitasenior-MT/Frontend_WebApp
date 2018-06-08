@@ -10,10 +10,10 @@
           </v-card>
       </v-flex>  
       <v-flex v-if="vitaboxBoardSensors.length > 0" d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
-          <envBoardDashboard v-if="tempSensors.length != 0" :sensors="tempSensors" :type="tempSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-          <envBoardDashboard v-if="humiSensors.length != 0" :sensors="humiSensors" :type="humiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-          <envBoardDashboard v-if="monoSensors.length != 0" :sensors="monoSensors" :type="monoSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-          <envBoardDashboard v-if="dioxiSensors.length != 0" :sensors="dioxiSensors" :type="dioxiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>    
+          <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
+          <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
+          <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
+          <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>    
       </v-flex>
       <v-flex v-else d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
         <v-card light>
@@ -51,24 +51,25 @@ export default {
     envBoardDashboard: EnvBoardDashboard
   },
   created() {
-    // this.$watch(
-    //   "selectedVitabox",
-    //   selectedVitabox => {
-        this.getPatients();
-        this.getVitaboxBoards();
-    //   },
-    //   { immediate: true }
-    // );
+    this.getPatients();
+    this.getVitaboxBoards();
   },
-
+  watch: {
+    selectedVitabox(val) {
+      this.getPatients();
+      this.getVitaboxBoards();
+    }
+  },
   methods: {
     getPatients() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox/" + this.selectedVitabox.id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
           this.patientBoards = this.patients[0].Boards;
           console.log(this.patients[0].name);
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -79,50 +80,51 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     getVitaboxBoards() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox/" + this.selectedVitabox.id + "/board")
         .then(response => {
           this.vitaboxBoards = response.data.boards;
-          this.vitaboxBoards.forEach(board => {
-            if (board.Boardmodel.type === "environmental") {
-              this.vitaboxBoardSensors.push(board);
-            }
+          this.vitaboxBoardSensors = this.vitaboxBoards.filter(
+            board => board.Boardmodel.type === "environmental"
+          );
+          this.tempSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "temp"
+              )[0]
+            };
           });
-          this.vitaboxBoardSensors.forEach(board => {
-            board.Sensors.forEach(sensor => {
-              switch (sensor.Sensormodel.tag) {
-                case "temp":
-                  this.tempSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "humi":
-                  this.humiSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "mono":
-                  this.monoSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "dioxi":
-                  this.dioxiSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                default:
-                  break;
-              }
-            });
+          this.humiSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "humi"
+              )[0]
+            };
           });
+          this.monoSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "mono"
+              )[0]
+            };
+          });
+          this.dioxiSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "dioxi"
+              )[0]
+            };
+          });
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -133,6 +135,7 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     selectedPatient(patientData) {
@@ -154,8 +157,6 @@ export default {
 }
 
 .envGridSensors {
-  padding: 0 5px 5px 5px;
+  padding: 5px 5px 5px 5px;
 }
-
-
 </style>

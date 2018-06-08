@@ -1,10 +1,18 @@
 <template>
   <v-container class="gridPatient">
     <v-list>
-        <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
-            <v-list-tile-content>
-                <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
-            </v-list-tile-content>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
+          </v-list-tile-content>
+          <v-list-tile-action>
+            <v-tooltip bottom>
+              <v-btn slot="activator" @click='goToPatientProfile(this.selectedPatient.id)'>
+                <v-icon>fas fa-info-circle</v-icon>
+              </v-btn>
+              <span>Patient Details</span>
+            </v-tooltip>
+          </v-list-tile-action>       
         </v-list-tile>
         <v-divider inset></v-divider>
     </v-list>
@@ -14,7 +22,9 @@
           <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
               <v-card light>
                 <a @click="showGraph(item)">
-                  <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
+                  <v-card-title primary class="title">
+                    {{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}
+                  </v-card-title>
                   <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
                 </a>
               </v-card>
@@ -23,7 +33,16 @@
       </v-flex>
       <v-flex v-if="selectedSensorGraph != null" d-flex md6 lg8>
         <v-card light>
-          <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
+          <v-card-title primary class="title">
+            {{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}
+            <v-spacer></v-spacer>
+            <v-tooltip bottom>
+              <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board,selectedSensorGraph.sensor)'>
+                <v-icon>fas fa-info-circle</v-icon>
+              </v-btn>
+              <span>Sensor Details</span>
+            </v-tooltip>
+          </v-card-title>
           <div v-if="records" style="height:350px; position:relative;">
             <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
           </div>
@@ -55,7 +74,6 @@
 <script>
 import Chart from "chart.js";
 import { event_bus } from "@/plugins/bus.js";
-// import BiometricGraph from "./BiometricGraph.vue";
 
 export default {
   name: "patientDashboard",
@@ -72,21 +90,27 @@ export default {
       page: 1
     };
   },
-  // components: {
-  //   biometricGraph: BiometricGraph
-  // },
   created() {
     this.getPatientBoards();
   },
   mounted() {
-    if(this.selectedSensorGraph != null){
+    if (this.selectedSensorGraph != null) {
       this.initGraph();
       this.getValues(0);
     }
-    
+  },
+  watch: {
+    selectedPatient(val) {
+      this.getPatientBoards();
+      if (this.selectedSensorGraph != null) {
+        this.initGraph();
+        this.getValues(0);
+      }
+    }
   },
   methods: {
     getPatientBoards() {
+      this.boardSensors = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
           this.boardSensors.push({
@@ -103,7 +127,6 @@ export default {
       this.getValues(0);
     },
     getValues(page) {
-      // event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get(
           "/record/sensor/" +
@@ -118,7 +141,6 @@ export default {
           console.log(this.records);
           this.page += page;
           this.designGraph();
-          // event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -126,19 +148,21 @@ export default {
           } else {
             event_bus.$emit("error", error.message);
           }
-          // event_bus.$emit("waiting", false);
         });
     },
     initGraph() {
-      this.chart = new Chart(document.getElementById(this.selectedSensorGraph.sensor.id), {
-        type: "line",
-        options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: false }] },
-          responsive: true,
-          maintainAspectRatio: false
+      this.chart = new Chart(
+        document.getElementById(this.selectedSensorGraph.sensor.id),
+        {
+          type: "line",
+          options: {
+            legend: { display: false },
+            scales: { xAxes: [{ display: false }] },
+            responsive: true,
+            maintainAspectRatio: false
+          }
         }
-      });
+      );
     },
     designGraph() {
       let length = this.records.length;
@@ -233,6 +257,11 @@ export default {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
+    },
+    goToBoardDetails(boardData, sensorData) {
+      this.$store.commit("setBoardData", boardData);
+      this.$store.commit("setSensorData", sensorData);
+      this.$router.push("/board/detail");
     }
   }
 };
