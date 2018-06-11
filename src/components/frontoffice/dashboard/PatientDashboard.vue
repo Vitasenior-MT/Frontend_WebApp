@@ -127,6 +127,7 @@ export default {
       this.getValues(0);
     },
     getValues(page) {
+      console.log("/record/sensor/" + this.selectedSensorGraph.sensor.id + "/patient/" + this.selectedPatient.id + "/page/" + (this.page + page));
       event_bus.$data.http
         .get(
           "/record/sensor/" +

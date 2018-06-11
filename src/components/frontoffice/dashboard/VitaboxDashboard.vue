@@ -4,7 +4,7 @@
           <v-card dark v-if="patients.length > 0">
               <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle">
                 <v-carousel-item v-for="item in patients" :key="item.id" >
-                  <patientDashboard :selectedPatient="item"></patientDashboard>
+                  <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
                 </v-carousel-item>
               </v-carousel>
           </v-card>
@@ -61,8 +61,9 @@ export default {
     }
   },
   methods: {
-    getPatients() {
+    getPatients() { 
       event_bus.$emit("waiting", true);
+      this.patients = [];
       event_bus.$data.http
         .get("/vitabox/" + this.selectedVitabox.id + "/patient")
         .then(response => {

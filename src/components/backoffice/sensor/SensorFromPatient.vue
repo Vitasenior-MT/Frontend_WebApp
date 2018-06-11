@@ -54,10 +54,12 @@ export default {
   mounted() {
     this.initGraph();
     this.getValues(0);
+    console.log("/record/sensor/" + this.sensor.id + "/patient/" + this.patient + "/page/" + (this.page + page));
   },
   methods: {
     getValues(page) {
       //event_bus.$emit("waiting", true);
+      console.log("/record/sensor/" + this.sensor.id + "/patient/" + this.patient + "/page/" + (this.page + page));
       event_bus.$data.http
         .get(
           "/record/sensor/" +

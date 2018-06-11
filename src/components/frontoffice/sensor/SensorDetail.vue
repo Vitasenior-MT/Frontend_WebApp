@@ -54,42 +54,65 @@ export default {
   },
   methods: {
     getValues(page) {
-      event_bus.$data.http
-        .get(
-          "/record/sensor/" +
-            this.selectedSensor.id +
-            "/patient/" +
-            this.$store.state.patient.id +
-            "/page/" +
-            (this.page + page)
-        )
-        .then(response => {
-          this.records = response.data.records.sort(this.compare);
-          console.log(this.records);
-          this.page += page;
-          this.designGraph();
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("error", error.response.data);
-          } else {
-            event_bus.$emit("error", error.message);
-          }
-        });
+      if (this.$store.state.board.Boardmodel.type === "environmental") {
+        event_bus.$data.http
+          .get(
+            "/record/sensor/" +
+              this.selectedSensor.id +
+              "/page/" +
+              (this.page + page)
+          )
+          .then(response => {
+            this.records = response.data.records.sort(this.compare);
+            console.log(this.records);
+            this.page += page;
+            this.designGraph();
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("error", error.response.data);
+            } else {
+              event_bus.$emit("error", error.message);
+            }
+          });
+      } else {
+        // /record/sensor/900ab14e-1d02-4e1d-b387-d394d11e2e8b/patient/183a27be-4daf-4515-84f6-1faa202433b8/page/1 -frontend
+        //
+        console.log("/record/sensor/" + this.selectedSensor.id + "/patient/" + this.$store.state.patient.id + "/page/" + (this.page + page));
+        event_bus.$data.http
+          .get(
+            "/record/sensor/" +
+              this.selectedSensor.id +
+              "/patient/" +
+              this.$store.state.patient.id +
+              "/page/" +
+              (this.page + page)
+          )
+          .then(response => {
+            this.records = response.data.records.sort(this.compare);
+            console.log(this.records);
+            this.page += page;
+            this.designGraph();
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("error", error.response.data);
+            } else {
+              event_bus.$emit("error", error.message);
+            }
+          });
+      }
     },
     initGraph() {
-      this.chart = new Chart(
-        document.getElementById(this.selectedSensor.id),
-        {
-          type: "line",
-          options: {
-            legend: { display: false },
-            scales: { xAxes: [{ display: false }] },
-            responsive: true,
-            maintainAspectRatio: false
-          }
+      this.chart = new Chart(document.getElementById(this.selectedSensor.id), {
+        type: "line",
+        options: {
+          legend: { display: false },
+          scales: { xAxes: [{ display: false }] },
+          responsive: true,
+          maintainAspectRatio: false
         }
-      );
+      });
     },
     designGraph() {
       let length = this.records.length;
@@ -190,9 +213,7 @@ export default {
 </script>
 
 <style>
-
 .gridSensor {
-  padding: 0 45px 60px 45px !important; 
+  padding: 0 45px 60px 45px !important;
 }
-
 </style>

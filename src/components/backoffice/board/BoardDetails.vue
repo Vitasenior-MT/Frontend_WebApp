@@ -136,7 +136,7 @@ export default {
             }
             event_bus.$emit("waiting", false);
           });
-        this.warning();
+        //this.warning();
       } else {
         event_bus.$emit("toast", { message: "Board undefined", type: "error" });
       }
