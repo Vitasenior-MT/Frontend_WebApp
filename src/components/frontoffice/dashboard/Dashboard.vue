@@ -1,7 +1,7 @@
 <template>
-  <v-content fluid grid-list-sm style="margin-top:20px">
-     <v-flex d-flex xs12 sm12 md12 lg12 >
-        <v-card dark>
+  <v-content fluid grid-list-sm >
+     <v-flex d-flex xs12 sm12 md12 lg12 style="padding-bottom:5px">
+        <v-card dark flat>
           <v-list>
             <v-list-tile>
               <v-list-tile-content>

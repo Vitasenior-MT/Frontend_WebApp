@@ -1,7 +1,7 @@
 <template>
   <v-layout wrap >
       <v-flex d-flex xs12 sm12 md12 lg12>
-          <v-card dark v-if="patients.length > 0">
+          <v-card dark flat v-if="patients.length > 0">
               <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle">
                 <v-carousel-item v-for="item in patients" :key="item.id" >
                   <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
@@ -16,7 +16,7 @@
           <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>    
       </v-flex>
       <v-flex v-else d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
-        <v-card light>
+        <v-card flat>
           <v-card-title primary class="title">This vitabox does not have environmental data associated</v-card-title>
           <v-card-text primary>Sorry</v-card-text>
         </v-card> 
@@ -69,7 +69,6 @@ export default {
         .then(response => {
           this.patients = response.data.patients;
           this.patientBoards = this.patients[0].Boards;
-          console.log(this.patients[0].name);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -140,7 +139,6 @@ export default {
         });
     },
     selectedPatient(patientData) {
-      this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
     }

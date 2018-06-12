@@ -14,6 +14,9 @@
             <v-flex xs4 sm3>
               <v-text-field :rules="[() => patient.height > 0.5 && patient.height < 3 || 'Invalid patient height value']" label="Height" v-model="patient.height" type="number" step="0.01" suffix="m"></v-text-field>
             </v-flex>
+            <v-flex xs4 sm3>
+              <v-text-field :rules="[() => patient.weight > 20 && patient.weight < 120 || 'Invalid patient weight value']" label="Weight" v-model="patient.weight" type="number" step="0.01" suffix="kg"></v-text-field>
+            </v-flex>
             <v-flex xs6 sm5>
               <v-select :rules="[() => patient.gender.length > 1 || 'Patient gender is required']" :items="items" label="Gender" v-model="patient.gender" single-line append-icon="fas fa-angle-down"></v-select>
             </v-flex>
@@ -51,6 +54,7 @@ export default {
         birthdate: null,
         gender: "",
         height: null,
+        weight: null,
         id: null
       },
       items: ["male", "female", "undefined"],

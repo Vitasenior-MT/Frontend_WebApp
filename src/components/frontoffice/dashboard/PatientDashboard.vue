@@ -1,63 +1,71 @@
 <template>
-  <v-container class="gridPatient">
-    <v-list>
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
-          </v-list-tile-content>
-          <v-list-tile-action>
-            <v-tooltip bottom>
-              <v-btn slot="activator" @click='goToPatientProfile(this.selectedPatient.id)'>
-                <v-icon>fas fa-info-circle</v-icon>
-              </v-btn>
-              <span>Patient Details</span>
-            </v-tooltip>
-          </v-list-tile-action>       
-        </v-list-tile>
-        <v-divider inset></v-divider>
-    </v-list>
+  <v-container class="gridPatient" >
     <v-layout v-if="boardSensors.length > 0" wrap>
       <v-flex d-flex md6 lg4>
         <v-layout wrap>
-          <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
-              <v-card light>
-                <a @click="showGraph(item)">
-                  <v-card-title primary class="title">
-                    {{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}
-                  </v-card-title>
-                  <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
-                </a>
+          <v-container grid-list text-xs-center>
+            <v-flex d-flex sm12 md12 lg12 >
+              <v-card flat>
+                <v-avatar size="250px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
+                <v-card flat>
+                  <h3 class="headline mb-0">{{ this.selectedPatient.name }}</h3>
+                </v-card>
+                <v-card flat>
+                  <v-tooltip bottom>
+                    <v-btn slot="activator" @click.native='goToPatientProfile(this.selectedPatient.id)'>
+                      <v-icon>fas fa-info-circle</v-icon>
+                    </v-btn>
+                    <span>Patient Details</span>
+                  </v-tooltip>
+                </v-card>
               </v-card>
-          </v-flex>
+            </v-flex>
+          </v-container>
+          <v-container >
+            <v-layout wrap>
+              <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
+                  <v-card light flat hover>
+                    <a @click="showGraph(item)">
+                      <v-card-title primary class="title">
+                        {{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}
+                      </v-card-title>
+                      <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
+                    </a>
+                  </v-card>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-layout>
       </v-flex>
       <v-flex v-if="selectedSensorGraph != null" d-flex md6 lg8>
-        <v-card light>
-          <v-card-title primary class="title">
-            {{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}
-            <v-spacer></v-spacer>
-            <v-tooltip bottom>
-              <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board,selectedSensorGraph.sensor)'>
-                <v-icon>fas fa-info-circle</v-icon>
-              </v-btn>
-              <span>Sensor Details</span>
-            </v-tooltip>
-          </v-card-title>
-          <div v-if="records" style="height:350px; position:relative;">
-            <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
-          </div>
-          <v-layout row wrap>
-            <v-flex class="py-0">
-              <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-            </v-flex>
-            <v-flex class="py-0">
-              <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-            </v-flex>
-          </v-layout>
-          <!-- <biometricGraph> </biometricGraph> -->
-        </v-card>
+        <v-container>
+          <v-card light flat>
+            <v-card-title primary class="title">
+              {{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}
+              <v-spacer></v-spacer>
+              <v-tooltip bottom>
+                <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board,selectedSensorGraph.sensor)'>
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+                <span>Sensor Details</span>
+              </v-tooltip>
+            </v-card-title>
+            <div v-if="records" style="height:350px; position:relative;">
+              <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
+            </div>
+            <v-layout row wrap>
+              <v-flex class="py-0">
+                <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+              </v-flex>
+              <v-flex class="py-0">
+                <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+              </v-flex>
+            </v-layout>
+            <!-- <biometricGraph> </biometricGraph> -->
+          </v-card>
+        </v-container>
       </v-flex>
     </v-layout>
     <v-layout v-else wrap>
@@ -103,7 +111,7 @@ export default {
     selectedPatient(val) {
       this.getPatientBoards();
       if (this.selectedSensorGraph != null) {
-        this.initGraph();
+        this.designGraph();
         this.getValues(0);
       }
     }
@@ -123,11 +131,11 @@ export default {
     },
     showGraph(sensor) {
       this.selectedSensorGraph = sensor;
-      this.initGraph();
+      this.records = [];
       this.getValues(0);
+      this.designGraph();
     },
     getValues(page) {
-      console.log("/record/sensor/" + this.selectedSensorGraph.sensor.id + "/patient/" + this.selectedPatient.id + "/page/" + (this.page + page));
       event_bus.$data.http
         .get(
           "/record/sensor/" +
@@ -139,9 +147,11 @@ export default {
         )
         .then(response => {
           this.records = response.data.records.sort(this.compare);
-          console.log(this.records);
           this.page += page;
-          this.designGraph();
+          if(this.records.length > 0){
+            this.designGraph();
+          }
+          
         })
         .catch(error => {
           if (error.response) {

@@ -1,14 +1,9 @@
 <template>
     <v-container class="gridSensor">
-    <v-list>
-        <v-list-tile>
-            <v-list-tile-content>
-            <v-list-tile-title>{{ this.selectedSensor.Sensormodel.measure }}</v-list-tile-title>
-            </v-list-tile-content>      
-        </v-list-tile>
-        <v-divider inset></v-divider>
-    </v-list>
     <v-card light>
+      <v-card-title primary class="title">
+         {{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}
+        </v-card-title>
         <div v-if="records" style="height:350px; position:relative;">
         <canvas :id=" this.selectedSensor.id"></canvas>
         </div>
@@ -48,7 +43,7 @@ export default {
   },
   watch: {
     selectedSensor(val) {
-      this.initGraph();
+      this.designGraph();
       this.getValues(0);
     }
   },
@@ -64,7 +59,6 @@ export default {
           )
           .then(response => {
             this.records = response.data.records.sort(this.compare);
-            console.log(this.records);
             this.page += page;
             this.designGraph();
           })
