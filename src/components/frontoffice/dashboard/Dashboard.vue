@@ -8,15 +8,9 @@
                 <v-list-tile-title>Location</v-list-tile-title>
                 {{ this.$store.state.vitabox.address }}
               </v-list-tile-content>
-              <v-list-tile-content >
-                <v-list-tile-title>Registered</v-list-tile-title>
-                <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
-                <v-icon v-else>fas fa-times-circle</v-icon>
-              </v-list-tile-content>
               <v-list-tile-content>
-                <v-list-tile-title>Active</v-list-tile-title>
-                <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
-                <v-icon v-else>fas fa-times-circle</v-icon> 
+                <v-list-tile-title>ID</v-list-tile-title>
+                {{ this.$store.state.vitabox.id }}
               </v-list-tile-content>
                <v-list-tile-content>
                 <v-list-tile-title>Details</v-list-tile-title>

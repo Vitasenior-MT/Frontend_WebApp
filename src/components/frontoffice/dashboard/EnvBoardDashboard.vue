@@ -1,23 +1,50 @@
 <template>
-    <v-card v-if="sensors.length > 0" dark class="envGridSensors" >
-      <v-flex d-flex sm12 md12 lg12 style="padding:5px">
-        <v-card flat light hover @click="goToTypeDetails(sensors)">
-          <v-card-title>{{ type }}</v-card-title>
-          <v-card-text primary>{{ getAverageValue() }}</v-card-text>
-        </v-card>
+    <v-container grid-list text-xs-center v-if="sensors.length > 0" class="envGridSensors px-0">
+      <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
+        <v-layout row >
+          <v-flex xs3 sm2 >  
+            <v-card class="red darken-4" style="height:100%">
+              <v-container fill-height>
+                <v-avatar justify-center align-center ><img src="@/assets/logo.png"></v-avatar>
+              </v-container>
+            </v-card>
+          </v-flex>
+          <v-flex xs9 sm10>  
+            <v-card class="red darken-1">
+              <v-card-text headline class="text-md-center">{{ getAverageValue() }}</v-card-text>
+              <v-card-text primary>{{ type }}</v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex style="padding:5px" v-else>
+        <v-layout row>
+          <v-flex xs3 sm2>  
+            <v-card class="green darken-4" style="height:100%">
+               <v-avatar ><img src="@/assets/logo.png"></v-avatar>
+            </v-card>
+          </v-flex>
+          <v-flex xs9 sm10>  
+            <v-card hover @click="goToTypeDetails(sensors)" class="green darken-1">
+              <v-card-title>{{ type }}</v-card-title>
+              <v-card-text primary>{{ getAverageValue() }}</v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
       </v-flex>
       <v-layout row wrap>
-          <v-flex sm12 md12 lg6 v-for="item in sensors" :key="item.id" style="padding:5px">
-            <v-card v-if="item.sensor != null " flat hover light @click.native="goToBoardDetails(item.board, item.sensor)">
+          <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
+            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-if="getAverageValue() <= item.sensor.Sensormodel.min_acceptable || getAverageValue() >= item.sensor.Sensormodel.max_acceptable" class="red darken-1">
               <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
-            <v-card v-else flat light>
-              <v-card-text primary>NaN</v-card-text>
+            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-else class="green darken-1">
+              <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+              <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
           </v-flex> 
       </v-layout>
-    </v-card>
+    </v-container>
 </template>
 
 
@@ -28,27 +55,29 @@ export default {
   name: "envBoardDashboard",
   props: {
     sensors: Array,
-    type: String
+    type: String,
   },
   data() {
-    return {};
+    return {
+      averageValue: 0
+    };
   },
   methods: {
     getAverageValue() {
-      var averageValue = 0;
+      this.averageValue = 0;
       var count = 0;
       this.sensors.forEach(sensor => {
         if (sensor.last_values == null) {
-          averageValue = "none";
+          this.averageValue = "none";
         } else {
           average += sensor.last_values[0];
           count++;
         }
-        if (averageValue != "none") {
+        if (this.averageValue != "none") {
           average = average / count;
         }
       });
-      return averageValue;
+      return this.averageValue;
     },
     goToBoardDetails(boardData, sensorData) {
       this.$store.commit("setBoardData", boardData);
@@ -60,5 +89,4 @@ export default {
 </script>
 
 <style>
-
 </style>

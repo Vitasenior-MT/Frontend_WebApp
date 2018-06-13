@@ -22,9 +22,9 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-      <v-flex d-flex xs12 sm12 md12 lg12>
+      <v-flex wrap>
           <v-card dark v-if="sensors.length > 0">
-              <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle">
+              <v-carousel lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle" style="height:75vh">
                 <v-carousel-item v-for="item in sensors" :key="item.id" >
                   <sensorDetail :selectedSensor="item"></sensorDetail>
                 </v-carousel-item>

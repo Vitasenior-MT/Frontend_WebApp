@@ -1,27 +1,33 @@
 <template>
-  <v-layout wrap >
-      <v-flex d-flex xs12 sm12 md12 lg12>
-          <v-card dark flat v-if="patients.length > 0">
-              <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle">
-                <v-carousel-item v-for="item in patients" :key="item.id" >
-                  <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
-                </v-carousel-item>
-              </v-carousel>
-          </v-card>
-      </v-flex>  
-      <v-flex v-if="vitaboxBoardSensors.length > 0" d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
+  <v-container>
+    <v-card dark flat v-if="patients.length > 0">
+        <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
+          <v-carousel-item v-for="item in patients" :key="item.id" >
+            <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
+          </v-carousel-item>
+        </v-carousel>
+    </v-card>
+    <v-container v-if="vitaboxBoardSensors.length > 0" style="padding-top:10px" class="px-0">
+      <v-layout wrap>
+        <v-flex d-flex xs12 sm6 md4 lg3>
           <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
           <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
           <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
-          <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>    
-      </v-flex>
-      <v-flex v-else d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
-        <v-card flat>
-          <v-card-title primary class="title">This vitabox does not have environmental data associated</v-card-title>
-          <v-card-text primary>Sorry</v-card-text>
-        </v-card> 
-      </v-flex>  
-  </v-layout>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
+          <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-card v-else flat style="padding-top:10px">
+      <v-card-title primary class="title">This vitabox does not have environmental data associated</v-card-title>
+      <v-card-text primary>Sorry</v-card-text>
+    </v-card> 
+  </v-container>
 </template>
 
 <script>
@@ -152,10 +158,10 @@ export default {
 }
 
 .gridPatient {
-  padding: 0 45px 60px 45px;
+  padding: 0 45px;
 }
 
 .envGridSensors {
-  padding: 5px 5px 5px 5px;
+  padding: 5px;
 }
 </style>

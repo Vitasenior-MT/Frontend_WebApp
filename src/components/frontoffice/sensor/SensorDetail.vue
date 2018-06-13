@@ -1,23 +1,23 @@
 <template>
-    <v-container class="gridSensor">
-    <v-card light>
-      <v-card-title primary class="title">
-         {{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}
-        </v-card-title>
-        <div v-if="records" style="height:350px; position:relative;">
-        <canvas :id=" this.selectedSensor.id"></canvas>
-        </div>
-        <v-layout row wrap>
-        <v-flex class="py-0">
-            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-        </v-flex>
-        <v-flex class="py-0">
-            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-        </v-flex>
-        </v-layout>
-    </v-card>
+    <v-container class="gridSensor" >
+      <v-card light>
+        <v-card-title primary class="title">
+          {{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}
+          </v-card-title>
+          <div v-if="records" style="height:60vh; position:relative;">
+            <canvas :id=" this.selectedSensor.id"></canvas>
+          </div>
+          <v-layout row wrap>
+          <v-flex class="py-0">
+              <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+          </v-flex>
+          <v-flex class="py-0">
+              <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+          </v-flex>
+          </v-layout>
+      </v-card>
     </v-container>
 </template>
 
@@ -70,9 +70,6 @@ export default {
             }
           });
       } else {
-        // /record/sensor/900ab14e-1d02-4e1d-b387-d394d11e2e8b/patient/183a27be-4daf-4515-84f6-1faa202433b8/page/1 -frontend
-        //
-        console.log("/record/sensor/" + this.selectedSensor.id + "/patient/" + this.$store.state.patient.id + "/page/" + (this.page + page));
         event_bus.$data.http
           .get(
             "/record/sensor/" +
@@ -84,7 +81,6 @@ export default {
           )
           .then(response => {
             this.records = response.data.records.sort(this.compare);
-            console.log(this.records);
             this.page += page;
             this.designGraph();
           })
@@ -101,8 +97,8 @@ export default {
       this.chart = new Chart(document.getElementById(this.selectedSensor.id), {
         type: "line",
         options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: false }] },
+          legend: { display: true },
+          scales: { xAxes: [{ display: true }] },
           responsive: true,
           maintainAspectRatio: false
         }
@@ -119,17 +115,9 @@ export default {
           data: this.records.map(x => {
             return x.value;
           }),
-          pointBackgroundColor: this.records.map(x => {
-            return x.analyzed
-              ? "rgba(152, 244, 70, 1)"
-              : "rgba(255, 143, 40, 1)";
-          }),
-          backgroundColor: this.records.map(x => {
-            return x.analyzed
-              ? "rgba(152, 244, 70, 0.6)"
-              : "rgba(255, 143, 40, 0.6)";
-          }),
-          borderWidth: 2
+          backgroundColor: "rgba(71, 183,132,.5)",
+          borderColor: '#47b784',
+          borderWidth: 3
         },
         {
           label: "minimum acceptable",
@@ -176,14 +164,12 @@ export default {
         d.getHours() +
         ":" +
         d.getMinutes() +
-        ":" +
-        d.getSeconds() +
-        " - " +
+        "-" +
         d.getDate() +
         " " +
         monthNames[d.getMonth()] +
-        " " +
-        d.getFullYear()
+        "'" +
+        d.getFullYear().toString().substring(2)
       );
     },
     getTime(date) {
@@ -208,6 +194,6 @@ export default {
 
 <style>
 .gridSensor {
-  padding: 0 45px 60px 45px !important;
+  padding: 0 45px 60px 45px ;
 }
 </style>

@@ -9,8 +9,12 @@ import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import Navbar from "@/plugins/navbar"
 import Chart from "chart.js";
 
-import * as VueGoogleMaps from 'vue2-google-maps'
+// import BootstrapVue from 'bootstrap-vue'
+// Vue.use(BootstrapVue);
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyA0u4i3aBE3vhcVjO_s-aLFL8dVIGJwrOo',
