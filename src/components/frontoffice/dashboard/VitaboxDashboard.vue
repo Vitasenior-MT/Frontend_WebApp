@@ -2,7 +2,7 @@
   <v-container>
     <v-card dark flat v-if="patients.length > 0">
         <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
-          <v-carousel-item v-for="item in patients" :key="item.id" >
+          <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
             <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
           </v-carousel-item>
         </v-carousel>
@@ -152,7 +152,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="stylus">
 .carousel {
   height: inherit !important;
 }
@@ -164,4 +164,14 @@ export default {
 .envGridSensors {
   padding: 5px;
 }
+
+ #carousel-view .fade
+      &-enter-active, &-leave-active, &-leave-to
+        transition: .3s ease-out
+        position: absolute
+        top: 0
+        left: 0
+      &-enter, &-leave, &-leave-to
+        opacity: 0
+        
 </style>
