@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="padding:0px;">
     <v-card dark flat v-if="patients.length > 0">
         <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
           <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
@@ -7,6 +7,10 @@
           </v-carousel-item>
         </v-carousel>
     </v-card>
+    <v-card dark v-else flat style="padding:0px">
+      <v-card-title primary class="title">This vitabox does not have patient data associated</v-card-title>
+      <v-card-text primary>Sorry</v-card-text>
+    </v-card> 
     <v-container v-if="vitaboxBoardSensors.length > 0" style="padding-top:10px" class="px-0">
       <v-layout wrap>
         <v-flex d-flex xs12 sm6 md4 lg3>
@@ -74,7 +78,9 @@ export default {
         .get("/vitabox/" + this.selectedVitabox.id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
-          this.patientBoards = this.patients[0].Boards;
+          if (this.patients.length > 0){
+            this.patientBoards = this.patients[0].Boards;
+          }
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

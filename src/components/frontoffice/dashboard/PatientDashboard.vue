@@ -12,7 +12,7 @@
                 </v-card>
                 <v-card flat>
                   <v-tooltip bottom>
-                    <v-btn slot="activator" @click.native='goToPatientProfile(this.selectedPatient.id)'>
+                    <v-btn slot="activator" @click.native='goToPatientProfile(selectedPatient)'>
                       <v-icon>fas fa-info-circle</v-icon>
                     </v-btn>
                     <span>Patient Details</span>
@@ -265,6 +265,10 @@ export default {
       this.$store.commit("setSensorData", sensorData);
       this.$store.commit("setPatientData", patientData);
       this.$router.push("/board/detail");
+    },
+    goToPatientProfile(patientData){
+      this.$store.commit("setPatientData", patientData);
+      this.$router.push("/patient/detail");
     }
   }
 };

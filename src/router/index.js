@@ -23,6 +23,8 @@ import BoardCreate from '@/components/frontoffice/board/BoardCreate'
 import BoardEdit from '@/components/frontoffice/board/BoardEdit'
 import BoardDelete from '@/components/frontoffice/board/BoardDelete'
 
+import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
+
 import UserHome from '@/components/frontoffice/user/UserHome'
 import UserDetail from '@/components/frontoffice/user/UserDetail'
 import UserEdit from '@/components/frontoffice/user/UserEdit'
@@ -122,6 +124,12 @@ export default new Router({
       path: '/board/delete',
       name: 'BoardDelete',
       component: BoardDelete,
+      // beforeEnter: requireAuth
+    },
+    {
+      path: '/patient/detail',
+      name: 'PatientDetail',
+      component: PatientDetail,
       // beforeEnter: requireAuth
     },
     {

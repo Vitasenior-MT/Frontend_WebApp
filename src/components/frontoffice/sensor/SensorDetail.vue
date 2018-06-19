@@ -109,15 +109,32 @@ export default {
       this.chart.data.labels = this.records.map(x => {
         return this.formatDate(x.datetime);
       });
+     const colours = this.records.map(x => x.value < this.selectedSensor.Sensormodel.min_acceptable || x.value > this.selectedSensor.Sensormodel.max_acceptable ? 'rgba(206,33,33,.8)' : 'rgba(71, 183,132,.8)');
       this.chart.data.datasets = [
+        // {
+        //   label: this.selectedSensor.Sensormodel.measure,
+        //   data: this.records.map(x => {
+        //     if(x.value < this.selectedSensor.Sensormodel.min_acceptable || x.value > this.selectedSensor.Sensormodel.max_acceptable){
+        //       return x.value;
+        //     }
+
+        //   }),
+        //   backgroundColor: 'rgba(206,33,33,.5)',
+        //   borderColor: 'rgba(206,33,33,.8)',
+        //   borderWidth: 3,
+        //   fill: true
+        // },
         {
           label: this.selectedSensor.Sensormodel.measure,
           data: this.records.map(x => {
-            return x.value;
+            // if(x.value >= this.selectedSensor.Sensormodel.min_acceptable || x.value <= this.selectedSensor.Sensormodel.max_acceptable){
+              return x.value;
+            // }
           }),
-          backgroundColor: "rgba(71, 183,132,.5)",
-          borderColor: '#47b784',
-          borderWidth: 3
+          pointBackgroundColor: colours,
+          pointBorderColor: colours,
+          borderWidth: 3,
+          fill: true
         },
         {
           label: "minimum acceptable",
@@ -142,6 +159,7 @@ export default {
           pointRadius: 0
         }
       ];
+
       this.chart.update();
     },
     formatDate(date) {
@@ -169,7 +187,10 @@ export default {
         " " +
         monthNames[d.getMonth()] +
         "'" +
-        d.getFullYear().toString().substring(2)
+        d
+          .getFullYear()
+          .toString()
+          .substring(2)
       );
     },
     getTime(date) {
@@ -194,6 +215,6 @@ export default {
 
 <style>
 .gridSensor {
-  padding: 0 45px 60px 45px ;
+  padding: 0 45px 60px 45px;
 }
 </style>
