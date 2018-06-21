@@ -1,24 +1,72 @@
 <template>
-    <v-container class="gridSensor" >
-      <v-card light>
-        <v-card-title primary class="title">
+  <v-container class="gridSensor">
+    <v-card light >
+      <v-card dark>
+         <v-card-title primary class="title">
           {{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}
-          </v-card-title>
-          <div v-if="records" style="height:60vh; position:relative;">
-            <canvas :id=" this.selectedSensor.id"></canvas>
-          </div>
-          <v-layout row wrap>
-          <v-flex class="py-0">
-              <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-          </v-flex>
-          <v-flex class="py-0">
-              <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-              <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-          </v-flex>
-          </v-layout>
+          <v-spacer></v-spacer>
+          <v-menu
+            ref="menu1"
+            :close-on-content-click="false"
+            v-model="menu1"
+            :nudge-right="40"
+            :return-value.sync="date1"
+            lazy
+            transition="scale-transition"
+            offset-y
+            full-width
+            min-width="290px"
+          >
+            <v-text-field
+              slot="activator"
+              v-model="date1"
+              label="Pick Start Date"
+              prepend-icon="far fa-calendar"
+              readonly
+            ></v-text-field>
+            <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+            <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1,time1)"></v-time-picker>
+          </v-menu>
+          <v-menu
+            ref="menu2"
+            :close-on-content-click="false"
+            v-model="menu2"
+            :nudge-right="40"
+            :return-value.sync="date2"
+            lazy
+            transition="scale-transition"
+            offset-y
+            full-width
+            min-width="290px"
+          >
+            <v-text-field
+              slot="activator"
+              v-model="date2"
+              label="Pick End Date"
+              prepend-icon="far fa-calendar"
+              readonly
+            ></v-text-field>
+            <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+            <v-time-picker v-if="flag2 == true" v-model="time2" :min="this.timeMin" format="24hr" @change="saveTime2(date2,time2)"></v-time-picker>
+          </v-menu>
+          <v-btn color="primary" @click="updateGraph()">Go</v-btn>
+        </v-card-title>
       </v-card>
-    </v-container>
+      <div v-if="records" style="height:50vh; position:relative;">
+        <canvas :id=" this.selectedSensor.id"></canvas>
+      </div>
+      <v-layout row wrap>
+        <v-flex class="py-0">
+            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+        </v-flex>
+        <v-flex class="py-0">
+            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+        </v-flex>
+      </v-layout>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -32,6 +80,16 @@ export default {
   },
   data: () => {
     return {
+      flag1: false,
+      date1: null,
+      menu1: false,
+      time1: null,
+      datetMin: null,
+      timeMin: null,
+      flag2: false,
+      date2: null,
+      menu2: false,
+      time2: null,
       chart: null,
       records: [],
       page: 1
@@ -40,14 +98,38 @@ export default {
   mounted() {
     this.initGraph();
     this.getValues(0);
+    // this.getMinStartDate();
   },
   watch: {
+    datetime2(val) {},
     selectedSensor(val) {
       this.designGraph();
       this.getValues(0);
     }
   },
   methods: {
+    saveTime1(date, time) {
+      this.flag1 = false;
+      var datetime = date + " " + time;
+      this.$refs.menu1.save(datetime);
+      this.dateMin = date;
+      this.timeMin = time;
+    },
+    saveTime2(date, time) {
+      this.flag2 = false;
+      var datetime = date + " " + time;
+      this.$refs.menu2.save(datetime);
+    },
+    getCurrentTime() {
+      var currentdate = new Date();
+      var datetime =
+        currentdate.getFullYear() +
+        "/" +
+        (currentdate.getMonth() + 1) +
+        "/" +
+        currentdate.getDate();
+      return datetime;
+    },
     getValues(page) {
       if (this.$store.state.board.Boardmodel.type === "environmental") {
         event_bus.$data.http
@@ -109,7 +191,13 @@ export default {
       this.chart.data.labels = this.records.map(x => {
         return this.formatDate(x.datetime);
       });
-     const colours = this.records.map(x => x.value < this.selectedSensor.Sensormodel.min_acceptable || x.value > this.selectedSensor.Sensormodel.max_acceptable ? 'rgba(206,33,33,.8)' : 'rgba(71, 183,132,.8)');
+      const colours = this.records.map(
+        x =>
+          x.value < this.selectedSensor.Sensormodel.min_acceptable ||
+          x.value > this.selectedSensor.Sensormodel.max_acceptable
+            ? "rgba(206,33,33,.8)"
+            : "rgba(71, 183,132,.8)"
+      );
       this.chart.data.datasets = [
         // {
         //   label: this.selectedSensor.Sensormodel.measure,
@@ -128,7 +216,7 @@ export default {
           label: this.selectedSensor.Sensormodel.measure,
           data: this.records.map(x => {
             // if(x.value >= this.selectedSensor.Sensormodel.min_acceptable || x.value <= this.selectedSensor.Sensormodel.max_acceptable){
-              return x.value;
+            return x.value;
             // }
           }),
           pointBackgroundColor: colours,
@@ -159,7 +247,6 @@ export default {
           pointRadius: 0
         }
       ];
-
       this.chart.update();
     },
     formatDate(date) {
@@ -193,21 +280,27 @@ export default {
           .substring(2)
       );
     },
-    getTime(date) {
-      let miliseconds = new Date() - new Date(date);
-      if (miliseconds < 1000) return "<1 sec";
-      else if (miliseconds < 60000) {
-        return "~" + Math.floor(miliseconds / 1000) + " sec";
-      } else if (miliseconds < 3600000) {
-        return "~" + Math.floor(miliseconds / 60000) + " min";
-      } else if (miliseconds < 86400000) {
-        return Math.floor(miliseconds / 3600000) + " hours";
-      } else return ">24 hours";
-    },
     compare(a, b) {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
+    },
+    getMinStartDate() {
+      var minDate = new Date(this.records[0].datetime);
+      var datetime =
+        minDate.getFullYear() +
+        "/" +
+        (minDate.getMonth() + 1) +
+        "/" +
+        minDate.getDate();
+      this.datetime1 = datetime;
+    },
+    updateGraph() {
+      this.chart.data.labels.pop();
+      chart.data.datasets.forEach(dataset => {
+        dataset.data.pop();
+      });
+      this.chart.update();
     }
   }
 };

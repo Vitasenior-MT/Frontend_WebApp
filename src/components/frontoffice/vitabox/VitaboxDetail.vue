@@ -52,7 +52,7 @@
         </td>
       </template>
       <template slot="no-data">
-        <v-alert :value="true" color="error" icon="mdi-alert">
+        <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
           Sorry, nothing to display here :(
         </v-alert>
       </template>
