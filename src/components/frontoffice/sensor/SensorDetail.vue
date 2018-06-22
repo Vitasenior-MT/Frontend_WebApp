@@ -49,7 +49,7 @@
             <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
             <v-time-picker v-if="flag2 == true" v-model="time2" :min="this.timeMin" format="24hr" @change="saveTime2(date2,time2)"></v-time-picker>
           </v-menu>
-          <v-btn color="primary" @click="updateGraph()">Go</v-btn>
+          <v-btn color="primary" @click.native="updateGraph()">Go</v-btn>
         </v-card-title>
       </v-card>
       <div v-if="records" style="height:50vh; position:relative;">
@@ -86,6 +86,8 @@ export default {
       time1: null,
       datetMin: null,
       timeMin: null,
+      dateMax: null,
+      timeMax: null,
       flag2: false,
       date2: null,
       menu2: false,
@@ -119,6 +121,8 @@ export default {
       this.flag2 = false;
       var datetime = date + " " + time;
       this.$refs.menu2.save(datetime);
+      this.dateMax = date;
+      this.timeMax = time;
     },
     getCurrentTime() {
       var currentdate = new Date();
@@ -296,11 +300,51 @@ export default {
       this.datetime1 = datetime;
     },
     updateGraph() {
-      this.chart.data.labels.pop();
-      chart.data.datasets.forEach(dataset => {
-        dataset.data.pop();
-      });
-      this.chart.update();
+      if (this.$store.state.board.Boardmodel.type === "environmental") {
+        event_bus.$data.http
+          .get(
+            "/record/sensor/" +
+              this.selectedSensor.id +
+              "/start/" +
+              (this.dateMin + "T" + this.timeMin) +
+              "/end/" +
+              (this.dateMax + "T" + this.timeMax)
+          )
+          .then(response => {
+            this.records = response.data.records.sort(this.compare);
+            this.designGraph();
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("error", error.response.data);
+            } else {
+              event_bus.$emit("error", error.message);
+            }
+          });
+      } else {
+        event_bus.$data.http
+          .get(
+            "/record/sensor/" +
+              this.selectedSensor.id +
+              "/patient/" +
+              this.$store.state.patient.id +
+              "/start/" +
+              (this.dateMin + "T" + this.timeMin) +
+              "/end/" +
+              (this.dateMax + "T" + this.timeMax)
+          )
+          .then(response => {
+            this.records = response.data.records.sort(this.compare);
+            this.designGraph();
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("error", error.response.data);
+            } else {
+              event_bus.$emit("error", error.message);
+            }
+          });
+      }
     }
   }
 };

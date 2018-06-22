@@ -21,7 +21,7 @@
             </v-flex>
             <v-flex xs12 md8>
                 <v-card dark flat style="height:70vh;">
-                    <v-dialog v-model="dialog" max-width="500px">
+                    <!-- <v-dialog v-model="dialog" max-width="500px">
                         <v-btn slot="activator" color="primary" dark class="mb-2">New Profile</v-btn>
                         <v-card>
                             <v-card-title>
@@ -54,7 +54,7 @@
                             <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
                             </v-card-actions>
                         </v-card>
-                    </v-dialog>
+                    </v-dialog> -->
                     <v-data-table
                         :headers="headers"
                         :items="this.$store.state.patient.Profiles"
@@ -70,9 +70,6 @@
                             <td class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(props.item)">
                                 <v-icon color="teal">fas fa-edit</v-icon>
-                            </v-btn>
-                            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-                                <v-icon color="pink">das fa-trash</v-icon>
                             </v-btn>
                             </td>
                         </template>
@@ -174,34 +171,34 @@ export default {
       } else {
         this.$store.state.patient.Profiles.push(this.editedItem);
       }
-      event_bus.$emit("waiting", true);
-      event_bus.$data.http
-        .post(
-          "/patient/" + this.$store.state.patient.id + "/profile",
-          this.editedItem
-        )
-        .then(response => {
-          this.editedItem.id = response.data.id;
-          this.$emit("update", this.editedItem);
-          event_bus.$emit("toast", {
-            message: "The Profile was successfully added to patient",
-            type: "success"
-          });
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", {
-              message: error.message,
-              type: "error"
-            });
-          }
-          event_bus.$emit("waiting", false);
-        });
+    //   event_bus.$emit("waiting", true);
+    //   event_bus.$data.http
+    //     .post(
+    //       "/patient/" + this.$store.state.patient.id + "/profile",
+    //       this.editedItem
+    //     )
+    //     .then(response => {
+    //       this.editedItem.id = response.data.id;
+    //       this.$emit("update", this.editedItem);
+    //       event_bus.$emit("toast", {
+    //         message: "The Profile was successfully added to patient",
+    //         type: "success"
+    //       });
+    //     })
+    //     .catch(error => {
+    //       if (error.response) {
+    //         event_bus.$emit("toast", {
+    //           message: error.response.data,
+    //           type: "error"
+    //         });
+    //       } else {
+    //         event_bus.$emit("toast", {
+    //           message: error.message,
+    //           type: "error"
+    //         });
+    //       }
+    //       event_bus.$emit("waiting", false);
+    //     });
       this.close();
     }
   }

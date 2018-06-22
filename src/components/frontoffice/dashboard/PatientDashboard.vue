@@ -62,8 +62,8 @@
       </v-flex>
     </v-layout>
     <v-container fluid align-center justify-center>
-      <v-layout wrap style="height:50%">
-        <v-flex xs6 sm3 md3 lg3  v-for="item in boardSensors" :key="item.id" >
+      <v-layout wrap>
+        <v-flex xs6 sm3 md3 lg3  v-for="item in boardSensors" :key="item.id">
             <v-card light flat hover style="height:100%">
               <a @click="showGraph(item)">
                 <v-card-title primary class="title">
@@ -147,10 +147,7 @@ export default {
         .then(response => {
           this.records = response.data.records.sort(this.compare);
           this.page += page;
-          if(this.records.length > 0){
-            this.designGraph();
-          }
-          
+          this.designGraph();
         })
         .catch(error => {
           if (error.response) {
