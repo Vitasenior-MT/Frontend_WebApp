@@ -14,16 +14,19 @@
             <v-flex xs4 sm3>
               <v-text-field :rules="[() => patient.height > 0.5 && patient.height < 3 || 'Invalid patient height value']" label="Height" v-model="patient.height" type="number" step="0.01" suffix="m"></v-text-field>
             </v-flex>
-            <v-flex xs6 sm5>
+            <v-flex xs8 sm9>
               <v-select :rules="[() => patient.gender.length > 1 || 'Patient gender is required']" :items="items" label="Gender" v-model="patient.gender" single-line append-icon="fas fa-angle-down"></v-select>
             </v-flex>
-            <v-flex xs6 sm5>
+            <v-flex xs4 sm3>
+              <v-text-field :rules="[() => patient.weight > 35 && patient.weight < 300 || 'Invalid patient weight value']" label="Weight" v-model="patient.weight" type="number" step="0.1" suffix="m"></v-text-field>
+            </v-flex>
+            <v-flex xs6>
               <v-menu ref="menu" lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-right="40" min-width="290px" :return-value.sync="patient.birthdate">
                 <v-text-field slot="activator" :rules="[() => patient.birthdate !== null || 'Patient birthdate is required']" label="Birthdate" v-model="patient.birthdate" append-icon="fas fa-calendar-alt" readonly></v-text-field>
                 <v-date-picker ref="picker" v-model="patient.birthdate" @change="$refs.menu.save(patient.birthdate)" min="1910-01-01" :max="new Date().toISOString().substr(0, 10)" no-title next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left"></v-date-picker>
               </v-menu>
             </v-flex>
-            <v-flex sm2>
+            <v-flex sx4 offset-xs8 sm2 offset-sm4>
               <div class="text-xs-right mt-3">
                 <v-btn dark color="ash" block @click.native="save">Save</v-btn>
               </div>
@@ -51,6 +54,7 @@ export default {
         birthdate: null,
         gender: "",
         height: null,
+        weight: null,
         id: null
       },
       items: ["male", "female", "undefined"],

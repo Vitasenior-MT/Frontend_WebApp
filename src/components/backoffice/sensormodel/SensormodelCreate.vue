@@ -61,8 +61,8 @@ export default {
       items: [
         { measure: "temperature", tag: "temp" },
         { measure: "humidity", tag: "humi" },
-        { measure: "dioxide carbon", tag: "dioxi" },
-        { measure: "monoxide carbon", tag: "mono" },
+        { measure: "carbon dioxide", tag: "dioxi" },
+        { measure: "carbon monoxide", tag: "mono" },
         { measure: "systolic", tag: "systolic" },
         { measure: "diastolic", tag: "diastolic" },
         { measure: "pulse", tag: "pulse" },
