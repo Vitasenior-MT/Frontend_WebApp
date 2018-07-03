@@ -24,6 +24,7 @@ import BoardEdit from '@/components/frontoffice/board/BoardEdit'
 import BoardDelete from '@/components/frontoffice/board/BoardDelete'
 
 import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
+import AlertList from '@/components/frontoffice/alerts/AlertList'
 
 import UserHome from '@/components/frontoffice/user/UserHome'
 import UserDetail from '@/components/frontoffice/user/UserDetail'
@@ -130,6 +131,12 @@ export default new Router({
       path: '/patient/detail',
       name: 'PatientDetail',
       component: PatientDetail,
+      // beforeEnter: requireAuth
+    },
+    {
+      path: '/alerts/list',
+      name: 'AlertList',
+      component: AlertList,
       // beforeEnter: requireAuth
     },
     {

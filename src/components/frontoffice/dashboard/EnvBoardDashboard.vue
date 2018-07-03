@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list text-xs-center v-if="sensors.length > 0" class="envGridSensors px-0">
+    <v-container grid-list text-xs-center v-if="sensors.length > 0 || sensors.sensor != null" class="envGridSensors px-0">
       <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
           <v-flex xs3 sm2 >  
@@ -19,7 +19,7 @@
       </v-flex>
       <v-flex style="padding:5px" v-else>
         <v-layout row>
-          <v-flex xs3 sm2>  
+          <v-flex xs3 sm2>
             <v-card class="green darken-4" style="height:100%">
                <v-avatar ><img src="@/assets/logo.png"></v-avatar>
             </v-card>

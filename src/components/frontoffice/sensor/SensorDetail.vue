@@ -2,55 +2,60 @@
   <v-container class="gridSensor">
     <v-card light >
       <v-card dark>
-         <v-card-title primary class="title">
-          {{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}
-          <v-spacer></v-spacer>
-          <v-menu
-            ref="menu1"
-            :close-on-content-click="false"
-            v-model="menu1"
-            :nudge-right="40"
-            :return-value.sync="date1"
-            lazy
-            transition="scale-transition"
-            offset-y
-            full-width
-            min-width="290px"
-          >
-            <v-text-field
-              slot="activator"
-              v-model="date1"
-              label="Pick Start Date"
-              prepend-icon="far fa-calendar"
-              readonly
-            ></v-text-field>
-            <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
-            <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1,time1)"></v-time-picker>
-          </v-menu>
-          <v-menu
-            ref="menu2"
-            :close-on-content-click="false"
-            v-model="menu2"
-            :nudge-right="40"
-            :return-value.sync="date2"
-            lazy
-            transition="scale-transition"
-            offset-y
-            full-width
-            min-width="290px"
-          >
-            <v-text-field
-              slot="activator"
-              v-model="date2"
-              label="Pick End Date"
-              prepend-icon="far fa-calendar"
-              readonly
-            ></v-text-field>
-            <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
-            <v-time-picker v-if="flag2 == true" v-model="time2" :min="this.timeMin" format="24hr" @change="saveTime2(date2,time2)"></v-time-picker>
-          </v-menu>
-          <v-btn color="primary" @click.native="updateGraph()">Go</v-btn>
-        </v-card-title>
+        <v-flex wrap>
+          <v-layout>
+            <v-card-title primary class="title" style="width:60vh">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</v-card-title>
+            <v-card-text style="width:80vh">
+              <v-icon small>fas fa-calendar-alt</v-icon>
+              Última actualização: {{ this.lastrecord }}
+            </v-card-text>
+            <v-menu
+              ref="menu1"
+              :close-on-content-click="false"
+              v-model="menu1"
+              :nudge-right="40"
+              :return-value.sync="date1"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <v-text-field
+                slot="activator"
+                v-model="date1"
+                label="Pick Start Date"
+                prepend-icon="far fa-calendar"
+                readonly
+              ></v-text-field>
+              <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+              <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1, time1)"></v-time-picker>
+            </v-menu>
+            <v-menu
+              ref="menu2"
+              :close-on-content-click="false"
+              v-model="menu2"
+              :nudge-right="40"
+              :return-value.sync="date2"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <v-text-field
+                slot="activator"
+                v-model="date2"
+                label="Pick End Date"
+                prepend-icon="far fa-calendar"
+                readonly
+              ></v-text-field>
+              <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+              <v-time-picker v-if="flag2 == true" v-model="time2" :min="checkTimeMin()" format="24hr" @change="saveTime2(date2, time2)"></v-time-picker>
+            </v-menu>
+            <v-btn color="primary" @click.native="updateGraph()">Go</v-btn>
+          </v-layout>
+        </v-flex>
       </v-card>
       <div v-if="records" style="height:50vh; position:relative;">
         <canvas :id=" this.selectedSensor.id"></canvas>
@@ -80,27 +85,27 @@ export default {
   },
   data: () => {
     return {
+      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
       flag1: false,
       date1: null,
       menu1: false,
       time1: null,
       datetMin: null,
       timeMin: null,
-      dateMax: null,
-      timeMax: null,
       flag2: false,
       date2: null,
       menu2: false,
       time2: null,
+      datetime2: null,
       chart: null,
       records: [],
+      lastrecord: null,
       page: 1
     };
   },
   mounted() {
     this.initGraph();
     this.getValues(0);
-    // this.getMinStartDate();
   },
   watch: {
     datetime2(val) {},
@@ -117,12 +122,17 @@ export default {
       this.dateMin = date;
       this.timeMin = time;
     },
+    checkTimeMin() {
+      if (this.dateMin != this.date2) {
+        return "0:00";
+      } else {
+        return this.timeMin;
+      }
+    },
     saveTime2(date, time) {
       this.flag2 = false;
       var datetime = date + " " + time;
       this.$refs.menu2.save(datetime);
-      this.dateMax = date;
-      this.timeMax = time;
     },
     getCurrentTime() {
       var currentdate = new Date();
@@ -169,6 +179,9 @@ export default {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
+            this.lastrecord = this.records[this.records.length-1].datetime;
+            this.lastrecord = new Date(this.lastrecord).toLocaleDateString("pt-pt", this.options);
+            console.log(this.lastrecord);
           })
           .catch(error => {
             if (error.response) {
@@ -203,25 +216,10 @@ export default {
             : "rgba(71, 183,132,.8)"
       );
       this.chart.data.datasets = [
-        // {
-        //   label: this.selectedSensor.Sensormodel.measure,
-        //   data: this.records.map(x => {
-        //     if(x.value < this.selectedSensor.Sensormodel.min_acceptable || x.value > this.selectedSensor.Sensormodel.max_acceptable){
-        //       return x.value;
-        //     }
-
-        //   }),
-        //   backgroundColor: 'rgba(206,33,33,.5)',
-        //   borderColor: 'rgba(206,33,33,.8)',
-        //   borderWidth: 3,
-        //   fill: true
-        // },
         {
           label: this.selectedSensor.Sensormodel.measure,
           data: this.records.map(x => {
-            // if(x.value >= this.selectedSensor.Sensormodel.min_acceptable || x.value <= this.selectedSensor.Sensormodel.max_acceptable){
             return x.value;
-            // }
           }),
           pointBackgroundColor: colours,
           pointBorderColor: colours,
@@ -288,16 +286,6 @@ export default {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
-    },
-    getMinStartDate() {
-      var minDate = new Date(this.records[0].datetime);
-      var datetime =
-        minDate.getFullYear() +
-        "/" +
-        (minDate.getMonth() + 1) +
-        "/" +
-        minDate.getDate();
-      this.datetime1 = datetime;
     },
     updateGraph() {
       if (this.$store.state.board.Boardmodel.type === "environmental") {

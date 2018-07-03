@@ -12,7 +12,7 @@
                 </v-card>
                 <v-card flat>
                   <v-tooltip bottom>
-                    <v-btn slot="activator" @click.native='goToPatientProfile(selectedPatient)'>
+                    <v-btn slot="activator" @click.native='goToPatientProfile(this.selectedPatient)'>
                       <v-icon>fas fa-info-circle</v-icon>
                     </v-btn>
                     <span>Patient Details</span>
@@ -27,17 +27,17 @@
         <v-container>
           <v-card light flat>
             <v-card-title primary class="title">
-              {{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}
+              {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}
               <v-spacer></v-spacer>
               <v-tooltip bottom>
-                <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board,selectedSensorGraph.sensor, selectedPatient)'>
+                <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
                   <v-icon>fas fa-info-circle</v-icon>
                 </v-btn>
                 <span>Sensor Details</span>
               </v-tooltip>
             </v-card-title>
             <div v-if="records" style="height:40vh; position:relative;">
-              <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
+              <canvas :id=" this.selectedSensorGraph.sensor.id"></canvas>
             </div>
             <v-layout row wrap>
               <v-flex class="py-0">
@@ -67,7 +67,7 @@
             <v-card light flat hover style="height:100%">
               <a @click="showGraph(item)">
                 <v-card-title primary class="title">
-                  {{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}
+                  {{ item.sensor.last_values ? item.sensor.last_values[0] : 'none' }}
                 </v-card-title>
                 <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
               </a>
