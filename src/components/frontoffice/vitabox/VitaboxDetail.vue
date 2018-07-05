@@ -1,43 +1,26 @@
 <template>
-    <v-content>
+  <v-content>
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-      <v-list dark>
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-title>Location</v-list-tile-title>
-            {{ $store.state.vitabox.address }}
-          </v-list-tile-content>
-          <v-list-tile-content >
-            <v-list-tile-title>Registered</v-list-tile-title>
-            <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
-            <v-icon v-else>fas fa-times-circle</v-icon>
-          </v-list-tile-content>
-          <v-list-tile-content>
-            <v-list-tile-title>Active</v-list-tile-title>
-            <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
-            <v-icon v-else>fas fa-times-circle</v-icon> 
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    <gmap-map
-      :center="center"
-      :zoom="15"
-      style="width:100%;  height: 400px;"
-    >
-      <gmap-marker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        @click="center=m.position"
-      ></gmap-marker>
-    </gmap-map>
-    <v-data-table
-      :headers="headers"
-      :items="boards"
-      hide-actions
-      class="elevation-1"
-      dark
-    >
+    <v-list dark>
+      <v-list-tile>
+        <v-list-tile-content>
+          <v-list-tile-title>Location</v-list-tile-title>
+          {{ $store.state.vitabox.address }}
+        </v-list-tile-content>
+        <v-list-tile-content >
+          <v-list-tile-title>Registered</v-list-tile-title>
+          <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
+          <v-icon v-else>fas fa-times-circle</v-icon>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title>Active</v-list-tile-title>
+          <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
+          <v-icon v-else>fas fa-times-circle</v-icon> 
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+    <div id="google-map-box"></div>
+    <v-data-table :headers="headers" :items="boards" hide-actions class="elevation-1" dark >
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
@@ -79,26 +62,27 @@ export default {
         { text: "Details", value: "name", sortable: false }
       ],
       boards: [],
-      center: { lat: null, lng: null },
-      markers: [],
-      places: []
+      map: null,
+      marker: null
     };
   },
   created() {
     this.getBoards();
   },
   mounted() {
-    this.center = {
-      lat: Number(this.$store.state.vitabox.latitude),
-      lng: Number(this.$store.state.vitabox.longitude)
-    };
-    const marker = {
-      lat: Number(this.$store.state.vitabox.latitude),
-      lng: Number(this.$store.state.vitabox.longitude)
-    };
-    this.markers.push({ position: marker });
-    this.places.push(this.currentPlace);
-    this.center = marker;
+    let myLatLng = new google.maps.LatLng(
+      this.$store.state.vitabox.latitude,
+      this.$store.state.vitabox.longitude
+    );
+    this.map = new google.maps.Map(document.getElementById("google-map-box"), {
+      zoom: 15,
+      center: myLatLng
+    });
+    this.marker = new google.maps.Marker({
+      position: myLatLng,
+      map: this.map,
+      title: this.$store.state.vitabox.address
+    });
   },
   methods: {
     getBoards() {
@@ -128,3 +112,10 @@ export default {
   }
 };
 </script>
+
+<style>
+#google-map-box {
+  width: 100%;
+  height: 400px;
+}
+</style>

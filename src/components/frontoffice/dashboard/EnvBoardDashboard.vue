@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list text-xs-center v-if="sensors.length > 0" class="envGridSensors px-0">
+    <v-container grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" class="envGridSensors px-0">
       <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
           <v-flex xs3 sm2 >  
@@ -33,16 +33,18 @@
         </v-layout>
       </v-flex>
       <v-layout row wrap>
-          <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
-            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-if="getAverageValue() <= item.sensor.Sensormodel.min_acceptable || getAverageValue() >= item.sensor.Sensormodel.max_acceptable" class="red darken-1">
+        <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
+          <div v-if="item.sensor">
+            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[0] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable" class="red darken-1">
               <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
             <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-else class="green darken-1">
-              <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+              <v-card-title primary class="title">{{ item.last_values }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
-          </v-flex> 
+          </div>
+        </v-flex> 
       </v-layout>
     </v-container>
 </template>
@@ -55,29 +57,20 @@ export default {
   name: "envBoardDashboard",
   props: {
     sensors: Array,
-    type: String,
-  },
-  data() {
-    return {
-      averageValue: 0
-    };
+    type: String
   },
   methods: {
     getAverageValue() {
-      this.averageValue = 0;
-      var count = 0;
+      let sum = 0,
+        count = 0;
       this.sensors.forEach(sensor => {
-        if (sensor.last_values == null) {
-          this.averageValue = "none";
-        } else {
-          average += sensor.last_values[0];
+        if (sensor.last_values && sensor.last_values.length > 0) {
+          sum += sensor.last_values[0];
           count++;
         }
-        if (this.averageValue != "none") {
-          average = average / count;
-        }
       });
-      return this.averageValue;
+      if (count === 0) return "none";
+      else return sum / count;
     },
     goToBoardDetails(boardData, sensorData) {
       this.$store.commit("setBoardData", boardData);

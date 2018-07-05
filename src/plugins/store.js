@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   vitaboxes: [],
-  vitabox: [],
+  vitabox: null,
   board: [],
   sensor: [],
   vitaboxBoard: [],

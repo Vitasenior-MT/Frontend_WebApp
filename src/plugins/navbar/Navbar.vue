@@ -104,6 +104,7 @@ export default {
 #body_menu {
   height: calc(100% - 56px - 36px);
   position: relative;
+  overflow-y: auto;
 }
 #btn_logout {
   height: 36px;

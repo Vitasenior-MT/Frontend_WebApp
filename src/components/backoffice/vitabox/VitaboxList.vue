@@ -136,10 +136,6 @@ export default {
   watch: {
     select(val) {
       if (val.latitude && val.longitude) {
-        // this.select.center = {
-        //   lat: Number(val.latitude),
-        //   lng: Number(val.longitude)
-        // };
         let myLatLng = new google.maps.LatLng(val.latitude, val.longitude);
         this.map = new google.maps.Map(
           document.getElementById("google-map-list"),
