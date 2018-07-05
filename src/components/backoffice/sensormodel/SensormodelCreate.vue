@@ -57,36 +57,124 @@ export default {
         min_possible: 0,
         max_possible: 1,
         tag: "",
-        unit: ""
+        unit: "",
+        to_read: ""
       },
       items: [
-        { measure: "temperatura", tag: "temp", unit: "ºC" },
-        { measure: "humidade", tag: "humi", unit: "%" },
-        { measure: "dióxido de carbon", tag: "dioxi", unit: "ppm" },
-        { measure: "monóxido de carbono", tag: "mono", unit: "ppm" },
         {
-          measure: "pressão arterial sistólica",
+          measure: "temperatura",
+          to_read: "temperatura",
+          tag: "temp",
+          unit: "ºC"
+        },
+        {
+          measure: "humidade",
+          to_read: "humidade",
+          tag: "humi",
+          unit: "%"
+        },
+        {
+          measure: "CO2",
+          to_read: "dióxido de carbono",
+          tag: "dioxi",
+          unit: "ppm"
+        },
+        {
+          measure: "Mono. Carbono",
+          to_read: "monóxido de carbono",
+          tag: "mono",
+          unit: "ppm"
+        },
+        {
+          measure: "p.a. sistólica",
+          to_read: "pressão arterial sistólica",
           tag: "systolic",
           unit: "mmHg"
         },
         {
-          measure: "pressão arterial diastólica",
+          measure: "p.a. diastólica",
+          to_read: "pressão arterial diastólica",
           tag: "diastolic",
           unit: "mmHg"
         },
-        { measure: "pulsação arterial", tag: "pulse", unit: "bpm" },
-        { measure: "oximetria do pulso", tag: "spo2", unit: "%" },
-        { measure: "peso", tag: "weight", unit: "Kg" },
-        { measure: "gordura corporal", tag: "bodyfat", unit: "%" },
-        { measure: "massa óssea", tag: "bonemass", unit: "%" },
-        { measure: "massa muscular", tag: "musclemass", unit: "%" },
-        { measure: "gordura visceral", tag: "visceralfat", unit: "%" },
-        { measure: "água", tag: "water", unit: "%" },
-        { measure: "calorias", tag: "callories", unit: "%" },
-        { measure: "passos", tag: "steps", unit: "" },
-        { measure: "metros", tag: "meters", unit: "m" },
-        { measure: "frequência cardíaca", tag: "heartrate", unit: "bpm" },
-        { measure: "temperatura corporal", tag: "bodytemp", unit: "ºC" }
+        {
+          measure: "pulsação",
+          to_read: "pulsação arterial",
+          tag: "pulse",
+          unit: "bpm"
+        },
+        {
+          measure: "oximetria",
+          to_read: "oximetria do pulso",
+          tag: "spo2",
+          unit: "%"
+        },
+        {
+          measure: "peso",
+          to_read: "peso",
+          tag: "weight",
+          unit: "Kg"
+        },
+        {
+          measure: "gordura corp.",
+          to_read: "gordura corporal",
+          tag: "bodyfat",
+          unit: "%"
+        },
+        {
+          measure: "massa óssea",
+          to_read: "massa óssea",
+          tag: "bonemass",
+          unit: "%"
+        },
+        {
+          measure: "massa muscular",
+          to_read: "massa muscular",
+          tag: "musclemass",
+          unit: "%"
+        },
+        {
+          measure: "gordura visceral",
+          to_read: "gordura visceral",
+          tag: "visceralfat",
+          unit: "%"
+        },
+        {
+          measure: "água",
+          to_read: "água",
+          tag: "water",
+          unit: "%"
+        },
+        {
+          measure: "calorias",
+          to_read: "calorias",
+          tag: "callories",
+          unit: "%"
+        },
+        {
+          measure: "passos",
+          to_read: "passos",
+          tag: "steps",
+          unit: ""
+        },
+        {
+          measure: "metros",
+          to_read: "metros",
+          tag: "meters",
+          unit: "m"
+        },
+        {
+          measure: "freq. cardíaca",
+          to_read: "frequência cardíaca",
+          tag: "heartrate",
+          unit: "bpm"
+        },
+        {
+          measure: "temperatura corp.",
+          to_read: "temperatura corporal",
+          tag: "bodytemp",
+          unit: "ºC"
+        }
       ],
       selected_measure: null,
       dialog_create_sensor: false
@@ -104,6 +192,7 @@ export default {
         this.sensor.tag = this.selected_measure.tag;
         this.sensor.measure = this.selected_measure.measure;
         this.sensor.unit = this.selected_measure.unit;
+        this.sensor.to_read = this.selected_measure.to_read;
         event_bus.$data.http
           .post("/sensormodel", this.sensor)
           .then(response => {
@@ -112,7 +201,7 @@ export default {
             this.$emit("new", this.sensor);
             event_bus.$emit("toast", {
               message: "transducer was successfully created",
-              type: "errsuccessor"
+              type: "success"
             });
           })
           .catch(error => {
