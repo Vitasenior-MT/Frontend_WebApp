@@ -41,7 +41,26 @@ export default {
     };
   },
   mounted() {
-    event_bus.$on("setSensors", s => (this.sensors = s));
+    event_bus.$data.http
+        .get("/sensormodel")
+        .then(response => {
+          this.sensors = response.data.sensors;
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", {
+              message: error.message,
+              type: "error"
+            });
+          }
+          event_bus.$emit("waiting", false);
+        });
   },
   methods: {
     save() {
@@ -52,10 +71,10 @@ export default {
         })
         .then(response => {
           this.$emit("update", this.selected);
-          event_bus.$emit(
-            "success",
-            "transducer was successfully added to board model"
-          );
+          event_bus.$emit("toast", {
+            type: "success",
+            message: "transducer was successfully added to board model"
+          });
         })
         .catch(error => {
           if (error.response) {

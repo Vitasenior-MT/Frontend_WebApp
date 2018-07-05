@@ -1,23 +1,37 @@
 <template>
-    <v-container fluid grid-list-sm id="vitaboxDashboard">
-        <v-layout wrap >
-            <v-flex d-flex xs12 sm12 md12 lg12>
-                <v-card dark v-if="patients.length > 0">
-                    <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle">
-                      <v-carousel-item v-for="item in patients" :key="item.id" >
-                        <patientDashboard :selectedPatient="item"></patientDashboard>
-                      </v-carousel-item>
-                    </v-carousel>
-                </v-card>
-            </v-flex>  
-            <v-flex d-flex xs12 sm12 md12 lg12 style="padding-top:10px">
-                <envBoardDashboard v-if="tempSensors.length != 0" :sensors="tempSensors" :type="tempSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-                <envBoardDashboard v-if="humiSensors.length != 0" :sensors="humiSensors" :type="humiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-                <envBoardDashboard v-if="monoSensors.length != 0" :sensors="monoSensors" :type="monoSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>
-                <envBoardDashboard v-if="dioxiSensors.length != 0" :sensors="dioxiSensors" :type="dioxiSensors[0].sensor.Sensormodel.measure"></envBoardDashboard>    
-            </v-flex>  
-        </v-layout>
-    </v-container> 
+  <v-container style="padding:0px;">
+    <v-card dark flat v-if="patients.length > 0">
+        <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
+          <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
+            <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
+          </v-carousel-item>
+        </v-carousel>
+    </v-card>
+    <v-card dark v-else flat style="padding:0px">
+      <v-card-title primary class="title">This vitabox does not have patient data associated</v-card-title>
+      <v-card-text primary>Sorry</v-card-text>
+    </v-card> 
+    <v-container v-if="vitaboxBoardSensors.length > 0" style="padding-top:10px" class="px-0">
+      <v-layout wrap>
+        <v-flex d-flex xs12 sm6 md4 lg3>
+          <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
+          <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
+          <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
+        </v-flex>
+        <v-flex d-flex xs12 sm6 md4 lg3>
+          <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-card v-else flat style="padding-top:10px">
+      <v-card-title primary class="title">This vitabox does not have environmental data associated</v-card-title>
+      <v-card-text primary>Sorry</v-card-text>
+    </v-card> 
+  </v-container>
 </template>
 
 <script>
@@ -50,14 +64,24 @@ export default {
     this.getPatients();
     this.getVitaboxBoards();
   },
+  watch: {
+    selectedVitabox(val) {
+      this.getPatients();
+      this.getVitaboxBoards();
+    }
+  },
   methods: {
-    getPatients() {
+    getPatients() { 
+      event_bus.$emit("waiting", true);
+      this.patients = [];
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/patient")
+        .get("/vitabox/" + this.selectedVitabox.id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
-          this.$store.state.patient = this.patients[0];
-          this.patientBoards = this.patients[0].Boards;
+          if (this.patients.length > 0){
+            this.patientBoards = this.patients[0].Boards;
+          }
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -68,51 +92,51 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     getVitaboxBoards() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
+        .get("/vitabox/" + this.selectedVitabox.id + "/board")
         .then(response => {
           this.vitaboxBoards = response.data.boards;
-          this.$store.state.vitabox = this.vitaboxBoards[0];
-          this.vitaboxBoards.forEach(board => {
-            if (board.Boardmodel.type === "environmental") {
-              this.vitaboxBoardSensors.push(board);
-            }
+          this.vitaboxBoardSensors = this.vitaboxBoards.filter(
+            board => board.Boardmodel.type === "environmental"
+          );
+          this.tempSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "temp"
+              )[0]
+            };
           });
-          this.vitaboxBoardSensors.forEach(board => {
-            board.Sensors.forEach(sensor => {
-              switch (sensor.Sensormodel.tag) {
-                case "temp":
-                  this.tempSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "humi":
-                  this.humiSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "mono":
-                  this.monoSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                case "dioxi":
-                  this.dioxiSensors.push({
-                    board: board,
-                    sensor: sensor
-                  });
-                  break;
-                default:
-                  break;
-              }
-            });
+          this.humiSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "humi"
+              )[0]
+            };
           });
+          this.monoSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "mono"
+              )[0]
+            };
+          });
+          this.dioxiSensors = this.vitaboxBoardSensors.map(board => {
+            return {
+              board: board,
+              sensor: board.Sensors.filter(
+                sensor => sensor.Sensormodel.tag === "dioxi"
+              )[0]
+            };
+          });
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -123,33 +147,37 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     selectedPatient(patientData) {
-      this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
-    },
-    selectedVitaboxBoard(vitaboxBoardData) {
-      //this.$store.commit("setVitaboxBoardData", vitaboxBoardData);
-      return vitaboxBoardData;
     }
   }
 };
 </script>
 
-<style>
+<style lang="stylus">
 .carousel {
   height: inherit !important;
 }
 
 .gridPatient {
-  padding: 0 45px 60px 45px;
+  padding: 0 45px;
 }
 
 .envGridSensors {
-  padding: 0 5px 5px 5px;
+  padding: 5px;
 }
 
-
+ #carousel-view .fade
+      &-enter-active, &-leave-active, &-leave-to
+        transition: .3s ease-out
+        position: absolute
+        top: 0
+        left: 0
+      &-enter, &-leave, &-leave-to
+        opacity: 0
+        
 </style>

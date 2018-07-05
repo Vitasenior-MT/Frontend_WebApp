@@ -1,5 +1,4 @@
 <template>
-
   <v-list id="frontoffice" class="office_menu">
     <router-link v-for='(link,index) in links.frontoffice' :key='link.name + index' :to='link.path'>
       <v-list-tile class="office_options office_notchoosen ash--text">
@@ -10,18 +9,36 @@
           <v-list-tile-title v-text="link.name"></v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
+      <v-divider inset light></v-divider>
     </router-link>
-  </v-list>
-
+    <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
+      <v-list-tile class="office_options office_notchoosen ash--text">
+        <v-list-tile-action>
+          <v-icon>fa fa-tv</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title > Vitabox - {{ item.address }}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+  </v-list>  
+  
 </template>
 
 <script>
+import { event_bus } from "@/plugins/bus.js";
+
 export default {
   name: "frontoffice",
   data: () => {
     return {
-      selected: -1
+      selected: -1,
+      vitaboxes: [],
+      vitabox: null
     };
+  },
+  created() {
+    this.getVitaboxes();
   },
   mounted() {
     this.links.frontoffice.map((item, index) => {
@@ -35,15 +52,40 @@ export default {
       });
     }
   },
-   methods: {
+  methods: {
     select(i) {
       if (this.selected !== -1) {
-        document.getElementsByClassName("office_options")[this.selected].className =
+        document.getElementsByClassName("office_options")[
+          this.selected
+        ].className =
           "office_options office_notchoosen ash--text";
       }
       document.getElementsByClassName("office_options")[i].className =
         "office_options";
       this.selected = i;
+    },
+    getVitaboxes() {
+      event_bus.$emit("waiting", true);
+      event_bus.$data.http
+        .get("/vitabox")
+        .then(response => {
+          this.vitaboxes = response.data.vitaboxes;
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", { message: error.message, type: "error" });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    },
+    selectedVitabox(vitaboxData) {
+      this.$store.commit("setVitaboxData", vitaboxData);
     }
   }
 };

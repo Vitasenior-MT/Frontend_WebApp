@@ -1,54 +1,46 @@
 <template>
-  <v-content style="margin-top:20px">
-    <v-tabs dark color="grey" grow v-model="vitabox" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left">
-      <v-tab v-for="item in vitaboxes" :key="item.id" :href="`#tab-${item.id}`">
-        Vitabox - {{ item.address }}
-      </v-tab>
-    </v-tabs>
-      <v-tabs-items v-model="vitabox">
-        <vitaboxDashboard v-for="item in vitaboxes" :key="item.id" :id="`tab-${item.id}`" lazy :selectedVitabox="selectedVitabox(item)"></vitaboxDashboard>
-      </v-tabs-items>
+  <v-content fluid grid-list-sm >
+     <v-flex d-flex xs12 sm12 md12 lg12 style="padding-bottom:5px">
+        <v-card dark flat>
+          <v-list>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title>Location</v-list-tile-title>
+                {{ this.$store.state.vitabox.address }}
+              </v-list-tile-content>
+              <v-list-tile-content>
+                <v-list-tile-title>ID</v-list-tile-title>
+                {{ this.$store.state.vitabox.id }}
+              </v-list-tile-content>
+               <v-list-tile-content>
+                <v-list-tile-title>Details</v-list-tile-title>
+                <v-tooltip bottom>
+                  <v-btn slot="activator" @click.native='goToVitaboxDetails($store.state.vitabox)'>
+                    <v-icon>fas fa-info-circle</v-icon>
+                  </v-btn>
+                  <span>Vitabox Details</span>
+                </v-tooltip>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>  
+    <vitaboxDashboard :selectedVitabox="$store.state.vitabox"></vitaboxDashboard>
   </v-content>  
 </template>
 
 
 <script>
-import VitaboxDashboard from './VitaboxDashboard.vue';
-import { event_bus } from "@/plugins/bus.js";
+import VitaboxDashboard from "./VitaboxDashboard.vue";
+
 export default {
-  data() {
-    return {
-      vitaboxes: [],
-      vitabox: null
-    };
-  },
   components: {
     vitaboxDashboard: VitaboxDashboard
   },
-  created() {
-    this.getVitaboxes();
-  },
   methods: {
-    getVitaboxes() {
-      event_bus.$data.http
-        .get("/vitabox")
-        .then(response => {
-          this.vitaboxes = response.data.vitaboxes;
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-        });
-    },
-    selectedVitabox(vitaboxData){
-      this.$store.commit("setVitaboxData", vitaboxData); 
-      return vitaboxData;
+    goToVitaboxDetails(vitaboxData) {
+      this.$store.commit("setVitaboxData", vitaboxData);
+      this.$router.push("/vitabox/detail");
     }
   }
 };

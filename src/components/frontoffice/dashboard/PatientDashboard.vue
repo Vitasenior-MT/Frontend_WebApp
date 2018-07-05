@@ -1,53 +1,86 @@
 <template>
-    <v-container class="gridPatient">
-        <v-list>
-            <v-list-tile @click="goToPatientProfile(this.selectedPatient.id)">
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ this.selectedPatient.name }}</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            <v-divider inset></v-divider>
-        </v-list>
+  <v-container class="gridPatient" >
+    <v-layout v-if="boardSensors.length > 0" wrap>
+      <v-flex d-flex md4 lg2>
         <v-layout wrap>
-        <v-flex d-flex md6 lg4>
-          <v-layout wrap>
-            <v-flex d-flex sm6 md4 lg3 v-for="item in boardSensors" :key="item.id">
-                <v-card light>
-                  <a @click="showGraph(item)">
-                    <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
-                    <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
-                  </a>
+          <v-container grid-list text-xs-center>
+            <v-flex d-flex sm12 md12 lg12 >
+              <v-card flat>
+                <v-avatar size="150px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
+                <v-card flat>
+                  <h3 class="headline mb-0">{{ this.selectedPatient.name }}</h3>
                 </v-card>
-            </v-flex>
-          </v-layout>
-        </v-flex>
-        <v-flex d-flex md6 lg8>
-              <v-card light>
-                <v-card-title primary class="title">{{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}</v-card-title>
-                <div v-if="records" style="height:350px; position:relative;">
-                   <canvas :id=" selectedSensorGraph.sensor.Sensormodel.id"></canvas>
-                </div>
-                <v-layout row wrap>
-                  <v-flex class="py-0">
-                    <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-                    <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-                  </v-flex>
-                  <v-flex class="py-0">
-                    <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-                    <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-                  </v-flex>
-                </v-layout>
-                <!-- <biometricGraph> </biometricGraph> -->
+                <v-card flat>
+                  <v-tooltip bottom>
+                    <v-btn slot="activator" @click.native='goToPatientProfile(selectedPatient)'>
+                      <v-icon>fas fa-info-circle</v-icon>
+                    </v-btn>
+                    <span>Patient Details</span>
+                  </v-tooltip>
+                </v-card>
               </v-card>
             </v-flex>
+          </v-container>
+        </v-layout>
+      </v-flex>
+      <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
+        <v-container>
+          <v-card light flat>
+            <v-card-title primary class="title">
+              {{ selectedSensorGraph.board.Boardmodel.name }} : {{ selectedSensorGraph.sensor.Sensormodel.measure }}
+              <v-spacer></v-spacer>
+              <v-tooltip bottom>
+                <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board,selectedSensorGraph.sensor, selectedPatient)'>
+                  <v-icon>fas fa-info-circle</v-icon>
+                </v-btn>
+                <span>Sensor Details</span>
+              </v-tooltip>
+            </v-card-title>
+            <div v-if="records" style="height:40vh; position:relative;">
+              <canvas :id=" selectedSensorGraph.sensor.id"></canvas>
+            </div>
+            <v-layout row wrap>
+              <v-flex class="py-0">
+                <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+              </v-flex>
+              <v-flex class="py-0">
+                <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+              </v-flex>
             </v-layout>
-    </v-container>
+          </v-card>
+        </v-container>
+      </v-flex>
+    </v-layout>
+    <v-layout v-else wrap>
+      <v-flex d-flex sm12 md12 lg12>
+        <v-card light>
+          <v-card-title primary class="title">This patient does not have biometric data associated</v-card-title>
+          <v-card-text primary>Sorry</v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-container fluid align-center justify-center>
+      <v-layout wrap>
+        <v-flex xs6 sm3 md3 lg3  v-for="item in boardSensors" :key="item.id">
+            <v-card light flat hover style="height:100%">
+              <a @click="showGraph(item)">
+                <v-card-title primary class="title">
+                  {{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}
+                </v-card-title>
+                <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
+              </a>
+            </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>  
+  </v-container>
 </template>
 
 <script>
 import Chart from "chart.js";
 import { event_bus } from "@/plugins/bus.js";
-// import BiometricGraph from "./BiometricGraph.vue";
 
 export default {
   name: "patientDashboard",
@@ -64,18 +97,27 @@ export default {
       page: 1
     };
   },
-  // components: {
-  //   biometricGraph: BiometricGraph
-  // },
   created() {
     this.getPatientBoards();
   },
   mounted() {
-    this.initGraph();
-    this.getValues(0);
+    if (this.selectedSensorGraph != null) {
+      this.initGraph();
+      this.getValues(0);
+    }
+  },
+  watch: {
+    selectedPatient(val) {
+      this.getPatientBoards();
+      if (this.selectedSensorGraph != null) {
+        this.designGraph();
+        this.getValues(0);
+      }
+    }
   },
   methods: {
     getPatientBoards() {
+      this.boardSensors = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
           this.boardSensors.push({
@@ -88,15 +130,15 @@ export default {
     },
     showGraph(sensor) {
       this.selectedSensorGraph = sensor;
-      this.initGraph();
+      this.records = [];
       this.getValues(0);
+      this.designGraph();
     },
     getValues(page) {
-      // event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get(
           "/record/sensor/" +
-            this.selectedSensorGraph.sensor.Sensormodel.id +
+            this.selectedSensorGraph.sensor.id +
             "/patient/" +
             this.selectedPatient.id +
             "/page/" +
@@ -104,10 +146,8 @@ export default {
         )
         .then(response => {
           this.records = response.data.records.sort(this.compare);
-          console.log(this.records);
           this.page += page;
           this.designGraph();
-          // event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -115,19 +155,21 @@ export default {
           } else {
             event_bus.$emit("error", error.message);
           }
-          // event_bus.$emit("waiting", false);
         });
     },
     initGraph() {
-      this.chart = new Chart(document.getElementById(this.selectedSensorGraph.sensor.Sensormodel.id), {
-        type: "line",
-        options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: false }] },
-          responsive: true,
-          maintainAspectRatio: false
+      this.chart = new Chart(
+        document.getElementById(this.selectedSensorGraph.sensor.id),
+        {
+          type: "line",
+          options: {
+            legend: { display: true },
+            scales: { xAxes: [{ display: false }] },
+            responsive: true,
+            maintainAspectRatio: false
+          }
         }
-      });
+      );
     },
     designGraph() {
       let length = this.records.length;
@@ -140,17 +182,9 @@ export default {
           data: this.records.map(x => {
             return x.value;
           }),
-          pointBackgroundColor: this.records.map(x => {
-            return x.analyzed
-              ? "rgba(152, 244, 70, 1)"
-              : "rgba(255, 143, 40, 1)";
-          }),
-          backgroundColor: this.records.map(x => {
-            return x.analyzed
-              ? "rgba(152, 244, 70, 0.6)"
-              : "rgba(255, 143, 40, 0.6)";
-          }),
-          borderWidth: 2
+          backgroundColor: "rgba(71, 183,132,.5)",
+          borderColor: '#47b784',
+          borderWidth: 3
         },
         {
           label: "minimum acceptable",
@@ -158,7 +192,7 @@ export default {
             { length },
             i => this.selectedSensorGraph.sensor.Sensormodel.min_acceptable
           ),
-          borderWidth: 2,
+          borderWidth: 3,
           fill: false,
           borderColor: "rgba(58, 100, 252, 1)",
           pointRadius: 0
@@ -169,7 +203,7 @@ export default {
             { length },
             i => this.selectedSensorGraph.sensor.Sensormodel.max_acceptable
           ),
-          borderWidth: 2,
+          borderWidth: 3,
           fill: false,
           borderColor: "rgba(255, 83, 35, 1)",
           pointRadius: 0
@@ -222,6 +256,16 @@ export default {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
+    },
+    goToBoardDetails(boardData, sensorData, patientData) {
+      this.$store.commit("setBoardData", boardData);
+      this.$store.commit("setSensorData", sensorData);
+      this.$store.commit("setPatientData", patientData);
+      this.$router.push("/board/detail");
+    },
+    goToPatientProfile(patientData){
+      this.$store.commit("setPatientData", patientData);
+      this.$router.push("/patient/detail");
     }
   }
 };

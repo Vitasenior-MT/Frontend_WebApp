@@ -35,16 +35,19 @@ export default {
         })
         .then(response => {
           this.$emit("remove");
-          event_bus.$emit(
-            "success",
-            "transducer was successfully removed from board model"
-          );
+          event_bus.$emit("toast", {
+            type: "success",
+            message: "transducer was successfully removed from board model"
+          });
         })
         .catch(error => {
           if (error.response) {
-            event_bus.$emit("error", error.response.data);
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
           } else {
-            event_bus.$emit("error", error.message);
+            event_bus.$emit("toast", { message: error.message, type: "error" });
           }
           event_bus.$emit("waiting", false);
         });

@@ -23,6 +23,8 @@ import BoardCreate from '@/components/frontoffice/board/BoardCreate'
 import BoardEdit from '@/components/frontoffice/board/BoardEdit'
 import BoardDelete from '@/components/frontoffice/board/BoardDelete'
 
+import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
+
 import UserHome from '@/components/frontoffice/user/UserHome'
 import UserDetail from '@/components/frontoffice/user/UserDetail'
 import UserEdit from '@/components/frontoffice/user/UserEdit'
@@ -31,10 +33,11 @@ import UpdatePhoto from '@/components/frontoffice/user/UpdatePhoto'
 // Backend
 import VitaboxList from '@/components/backoffice/vitabox/VitaboxList'
 import VitaboxRegister from '@/components/backoffice/vitabox/VitaboxRegister'
+import UserList from '@/components/backoffice/users/UserList'
 import Boardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
 import Sensormodel from '@/components/backoffice/sensormodel/SensormodelList'
+import Profilemodel from '@/components/backoffice/profile/ProfileList'
 import Utils from '@/components/backoffice/utils/utils'
-import ChgPwd from '@/components/auth/ChgPwd'
 import BoardDashboard from '@/components/backoffice/board/BoardDetails'
 import PatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
@@ -52,7 +55,6 @@ export default new Router({
       name: 'Signup',
       component: Signup
     },
-    
     {
       path: '/',
       name: 'Home',
@@ -125,6 +127,12 @@ export default new Router({
       // beforeEnter: requireAuth
     },
     {
+      path: '/patient/detail',
+      name: 'PatientDetail',
+      component: PatientDetail,
+      // beforeEnter: requireAuth
+    },
+    {
       path: '/user',
       name: 'UserHome',
       component: UserHome,
@@ -166,6 +174,11 @@ export default new Router({
       component: VitaboxRegister
     },
     {
+      path: '/backoffice/user',
+      name: 'UserList',
+      component: UserList
+    },
+    {
       path: '/backoffice/boardmodel',
       name: 'Boardmodel',
       component: Boardmodel
@@ -176,14 +189,14 @@ export default new Router({
       component: Sensormodel
     },
     {
+      path: '/backoffice/profilemodel',
+      name: 'Profilemodel',
+      component: Profilemodel
+    },
+    {
       path: '/backoffice/utils',
       name: 'Utils',
       component: Utils
-    },
-    {
-      path: '/chgpwd',
-      name: 'ChgPwd',
-      component: ChgPwd
     },
     {
       path: '/backoffice/dashboard/board',

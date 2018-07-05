@@ -15,7 +15,7 @@ const links = {
     {
       name: 'Users',
       icon: 'fas fa-users',
-      path: '/'
+      path: '/backoffice/user'
     },
     {
       name: 'Boards Models',
@@ -26,6 +26,11 @@ const links = {
       name: 'Sensors Models',
       icon: 'fas fa-microchip',
       path: '/backoffice/sensormodel'
+    },
+    {
+      name: 'Profiles Models',
+      icon: 'fas fa-heartbeat',
+      path: '/backoffice/profilemodel'
     },
     {
       name: 'Utils',

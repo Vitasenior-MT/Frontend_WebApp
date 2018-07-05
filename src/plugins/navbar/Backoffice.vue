@@ -1,5 +1,4 @@
 <template>
-
   <v-list id="backoffice"  class="office_menu">
     <router-link v-for='(link,index) in links.backoffice' :key='link.name + index' :to='link.path'>
       <v-list-tile class="office_options office_notchoosen ash--text">
@@ -12,7 +11,6 @@
       </v-list-tile>
     </router-link>
   </v-list>
-
 </template>
 
 <script>

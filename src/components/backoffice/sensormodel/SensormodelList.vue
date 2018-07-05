@@ -52,7 +52,7 @@ export default {
         { text: "Measure unit", align: "left", value: "measure" },
         { text: "Acceptable", align: "left", sortable: false },
         { text: "Possible", align: "left", sortable: false },
-        { text: "Actions", align: "right", value: "id", sortable: false }
+        { text: "Actions", align: "right", sortable: false }
       ],
       sensors: [],
       temp_sensor: null,
@@ -85,7 +85,6 @@ export default {
         .get("/sensormodel")
         .then(response => {
           this.sensors = response.data.sensors;
-          event_bus.$emit("setSensors", response.data.sensors);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -110,7 +109,7 @@ export default {
       this.temp_sensor = item;
     },
     setItem(item) {
-      sensors.push(val);
+      this.sensors.push(item);
       event_bus.$emit("waiting", false);
     },
     update(item) {

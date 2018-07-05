@@ -46,25 +46,33 @@ export default {
   data: () => {
     return {
       items: [
-        { measure: "temperature", tag: "temp" },
-        { measure: "humidity", tag: "humi" },
-        { measure: "dioxide carbon", tag: "dioxi" },
-        { measure: "monoxide carbon", tag: "mono" },
-        { measure: "systolic", tag: "systolic" },
-        { measure: "diastolic", tag: "diastolic" },
-        { measure: "pulse", tag: "pulse" },
-        { measure: "pulse oximetry", tag: "spo2" },
-        { measure: "weight", tag: "weight" },
-        { measure: "body fat", tag: "bodyfat" },
-        { measure: "bone mass", tag: "bonemass" },
-        { measure: "muscle mass", tag: "musclemass" },
-        { measure: "visceral fat", tag: "visceralfat" },
-        { measure: "water", tag: "water" },
-        { measure: "calories", tag: "callories" },
-        { measure: "steps", tag: "steps" },
-        { measure: "meters", tag: "meters" },
-        { measure: "heart rate", tag: "heartrate" },
-        { measure: "body temperature", tag: "bodytemp" }
+        { measure: "temperatura", tag: "temp", unit: "ºC" },
+        { measure: "humidade", tag: "humi", unit: "%" },
+        { measure: "dióxido de carbon", tag: "dioxi", unit: "ppm" },
+        { measure: "monóxido de carbono", tag: "mono", unit: "ppm" },
+        {
+          measure: "pressão arterial sistólica",
+          tag: "systolic",
+          unit: "mmHg"
+        },
+        {
+          measure: "pressão arterial diastólica",
+          tag: "diastolic",
+          unit: "mmHg"
+        },
+        { measure: "pulsação arterial", tag: "pulse", unit: "bpm" },
+        { measure: "oximetria do pulso", tag: "spo2", unit: "%" },
+        { measure: "peso", tag: "weight", unit: "Kg" },
+        { measure: "gordura corporal", tag: "bodyfat", unit: "%" },
+        { measure: "massa óssea", tag: "bonemass", unit: "%" },
+        { measure: "massa muscular", tag: "musclemass", unit: "%" },
+        { measure: "gordura visceral", tag: "visceralfat", unit: "%" },
+        { measure: "água", tag: "water", unit: "%" },
+        { measure: "calorias", tag: "callories", unit: "%" },
+        { measure: "passos", tag: "steps", unit: "" },
+        { measure: "metros", tag: "meters", unit: "m" },
+        { measure: "frequência cardíaca", tag: "heartrate", unit: "bpm" },
+        { measure: "temperatura corporal", tag: "bodytemp", unit: "ºC" }
       ],
       selected_measure: null
     };
@@ -86,6 +94,7 @@ export default {
         event_bus.$emit("waiting", true);
         this.item.tag = this.selected_measure.tag;
         this.item.measure = this.selected_measure.measure;
+        this.item.unit = this.selected_measure.unit;
         event_bus.$data.http
           .put("/sensormodel/" + this.item.id, this.item)
           .then(response => {

@@ -36,11 +36,11 @@ export default {
     return {
       equipments: [
         { name: "Zolertia Re-Mote", tag: "zolertiaremote" },
-        { name: "MySignals blood pressure", tag: "bloodpressure" },
-        { name: "MySignals body temperature", tag: "bodytemperature" },
-        { name: "MySignals body pulse", tag: "bodypulse" },
-        { name: "MySignals body scale", tag: "bodyscale" },
-        { name: "Xiaomi MiBand", tag: "bandfitness" }
+        { name: "Pressão Arterial", tag: "bloodpressure" },
+        { name: "Temperatura", tag: "bodytemperature" },
+        { name: "Pulsometro", tag: "bodypulse" },
+        { name: "Balança", tag: "bodyscale" },
+        { name: "Bracelete", tag: "bandfitness" }
       ],
       types: ["environmental", "wearable", "non-wearable"]
     };

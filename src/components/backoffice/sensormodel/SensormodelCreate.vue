@@ -22,7 +22,7 @@
               <v-text-field label="Minimum acceptable" v-model="sensor.min_acceptable"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
-              <v-text-field :rules="[() => sensor.min_acceptable < sensor.max_acceptable || 'Maximum acceptable must be greater Minimum acceptable']" label="Maximum acceptable" v-model="sensor.max_acceptable" append-icon="fas fa-angle-down"></v-text-field>
+              <v-text-field :rules="[() => sensor.min_acceptable < sensor.max_acceptable || 'Maximum acceptable must be greater Minimum acceptable']" label="Maximum acceptable" v-model="sensor.max_acceptable"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
               <v-text-field label="Minimum possible" v-model="sensor.min_possible"></v-text-field>
@@ -56,28 +56,37 @@ export default {
         max_acceptable: 1,
         min_possible: 0,
         max_possible: 1,
-        tag: ""
+        tag: "",
+        unit: ""
       },
       items: [
-        { measure: "temperature", tag: "temp" },
-        { measure: "humidity", tag: "humi" },
-        { measure: "carbon dioxide", tag: "dioxi" },
-        { measure: "carbon monoxide", tag: "mono" },
-        { measure: "systolic", tag: "systolic" },
-        { measure: "diastolic", tag: "diastolic" },
-        { measure: "pulse", tag: "pulse" },
-        { measure: "pulse oximetry", tag: "spo2" },
-        { measure: "weight", tag: "weight" },
-        { measure: "body fat", tag: "bodyfat" },
-        { measure: "bone mass", tag: "bonemass" },
-        { measure: "muscle mass", tag: "musclemass" },
-        { measure: "visceral fat", tag: "visceralfat" },
-        { measure: "water", tag: "water" },
-        { measure: "calories", tag: "callories" },
-        { measure: "steps", tag: "steps" },
-        { measure: "meters", tag: "meters" },
-        { measure: "heart rate", tag: "heartrate" },
-        { measure: "body temperature", tag: "bodytemp" }
+        { measure: "temperatura", tag: "temp", unit: "ºC" },
+        { measure: "humidade", tag: "humi", unit: "%" },
+        { measure: "dióxido de carbon", tag: "dioxi", unit: "ppm" },
+        { measure: "monóxido de carbono", tag: "mono", unit: "ppm" },
+        {
+          measure: "pressão arterial sistólica",
+          tag: "systolic",
+          unit: "mmHg"
+        },
+        {
+          measure: "pressão arterial diastólica",
+          tag: "diastolic",
+          unit: "mmHg"
+        },
+        { measure: "pulsação arterial", tag: "pulse", unit: "bpm" },
+        { measure: "oximetria do pulso", tag: "spo2", unit: "%" },
+        { measure: "peso", tag: "weight", unit: "Kg" },
+        { measure: "gordura corporal", tag: "bodyfat", unit: "%" },
+        { measure: "massa óssea", tag: "bonemass", unit: "%" },
+        { measure: "massa muscular", tag: "musclemass", unit: "%" },
+        { measure: "gordura visceral", tag: "visceralfat", unit: "%" },
+        { measure: "água", tag: "water", unit: "%" },
+        { measure: "calorias", tag: "callories", unit: "%" },
+        { measure: "passos", tag: "steps", unit: "" },
+        { measure: "metros", tag: "meters", unit: "m" },
+        { measure: "frequência cardíaca", tag: "heartrate", unit: "bpm" },
+        { measure: "temperatura corporal", tag: "bodytemp", unit: "ºC" }
       ],
       selected_measure: null,
       dialog_create_sensor: false
@@ -94,6 +103,7 @@ export default {
         event_bus.$emit("waiting", true);
         this.sensor.tag = this.selected_measure.tag;
         this.sensor.measure = this.selected_measure.measure;
+        this.sensor.unit = this.selected_measure.unit;
         event_bus.$data.http
           .post("/sensormodel", this.sensor)
           .then(response => {
