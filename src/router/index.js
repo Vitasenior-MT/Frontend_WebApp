@@ -11,24 +11,14 @@ import Signup from '@/components/auth/Register'
 
 // Frontend
 import Dashboard from '@/components/frontoffice/dashboard/Dashboard'
-import VitaboxHome from '@/components/frontoffice/vitabox/VitaboxHome'
-import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
-import VitaboxCreate from '@/components/frontoffice/vitabox/VitaboxCreate'
-import VitaboxEdit from '@/components/frontoffice/vitabox/VitaboxEdit'
-import VitaboxDelete from '@/components/frontoffice/vitabox/VitaboxDelete'
 
-import BoardHome from '@/components/frontoffice/board/BoardHome'
+import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
+
 import BoardDetail from '@/components/frontoffice/board/BoardDetail'
-import BoardCreate from '@/components/frontoffice/board/BoardCreate'
-import BoardEdit from '@/components/frontoffice/board/BoardEdit'
-import BoardDelete from '@/components/frontoffice/board/BoardDelete'
 
 import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
 
-import UserHome from '@/components/frontoffice/user/UserHome'
 import UserDetail from '@/components/frontoffice/user/UserDetail'
-import UserEdit from '@/components/frontoffice/user/UserEdit'
-import UpdatePhoto from '@/components/frontoffice/user/UpdatePhoto'
 
 // Backend
 import VitaboxList from '@/components/backoffice/vitabox/VitaboxList'
@@ -67,39 +57,9 @@ export default new Router({
       // beforeEnter: requireAuth
     },
     {
-      path: '/vitabox',
-      name: 'VitaboxHome',
-      component: VitaboxHome,
-      // beforeEnter: requireAuth
-    },
-    {
       path: '/vitabox/detail',
       name: 'VitaboxDetail',
       component: VitaboxDetail,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/vitabox/create',
-      name: 'VitaboxCreate',
-      component: VitaboxCreate,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/vitabox/edit',
-      name: 'VitaboxEdit',
-      component: VitaboxEdit,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/vitabox/delete',
-      name: 'VitaboxDelete',
-      component: VitaboxDelete,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/board',
-      name: 'BoardHome',
-      component: BoardHome,
       // beforeEnter: requireAuth
     },
     {
@@ -109,33 +69,9 @@ export default new Router({
       // beforeEnter: requireAuth
     },
     {
-      path: '/board/create',
-      name: 'BoardCreate',
-      component: BoardCreate,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/board/edit',
-      name: 'BoardEdit',
-      component: BoardEdit,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/board/delete',
-      name: 'BoardDelete',
-      component: BoardDelete,
-      // beforeEnter: requireAuth
-    },
-    {
       path: '/patient/detail',
       name: 'PatientDetail',
       component: PatientDetail,
-      // beforeEnter: requireAuth
-    },
-    {
-      path: '/user',
-      name: 'UserHome',
-      component: UserHome,
       // beforeEnter: requireAuth
     },
     {
@@ -145,23 +81,12 @@ export default new Router({
       // beforeEnter: requireAuth
     },
     {
-      path: '/user/edit',
-      name: 'UserEdit',
-      component: UserEdit,
-      // beforeEnter: requireAuth
-    },
-    {
       path: '/user/changepass',
       name: 'ChangePass',
       component: ChangePass,
       // beforeEnter: requireAuth
     },
-    {
-      path: '/user/updatephoto',
-      name: 'UpdatePhoto',
-      component: UpdatePhoto,
-      // beforeEnter: requireAuth
-    },
+
     // backoffice
     {
       path: '/backoffice/vitabox/list',

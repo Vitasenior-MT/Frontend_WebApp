@@ -6,16 +6,10 @@ import Cookies from 'js-cookie';
 Vue.use(Vuex)
 
 const state = {
-  vitaboxes: [],
-  vitabox: null,
+  vitabox: [],
   board: [],
   sensor: [],
-  vitaboxBoard: [],
   patient: [],
-  patientBoards: [],
-  patientBoard: [],
-  patientSensors: [],
-  patientSensor: [],
   user: {
     token: null,
     name: null,
@@ -30,9 +24,6 @@ const getters = {
 }
 
 const mutations = {
-  setVitaboxesData(state, vitaboxesData) {
-    state.vitaboxes = vitaboxesData;
-  },
   setVitaboxData(state, vitaboxData) {
     state.vitabox = vitaboxData;
   },
@@ -42,23 +33,8 @@ const mutations = {
   setSensorData(state, sensorData) {
     state.sensor = sensorData;
   },
-  setVitaboxBoardData(state, vitaboxBoardData) {
-    state.vitaboxBoard = vitaboxBoardData;
-  },
   setPatientData(state, patientData) {
     state.patient = patientData;
-  },
-  setPatientBoardsData(state, patientBoardsData) {
-    state.patientBoards = patientBoardsData;
-  },
-  setPatientBoardData(state, patientBoardData) {
-    state.patientBoard = patientBoardData;
-  },
-  setPatientSensorsData(state, patientSensorsData) {
-    state.patientSensors = patientSensorsData;
-  },
-  setPatientSensorData(state, patientSensorData) {
-    state.patientSensor = patientSensorData;
   },
   setUserData(state, userData) {
     state.user.token = userData.token;
@@ -70,9 +46,6 @@ const mutations = {
 }
 
 const actions = {
-  setVitaboxesData: ({
-    commit
-  }) => commit('setVitaboxesData'),
   setVitaboxData: ({
     commit
   }) => commit('setVitaboxData'),
@@ -82,30 +55,12 @@ const actions = {
   setSensorData: ({
     commit
   }) => commit('setSensorData'),
-  setVitaboxBoardData: ({
-    commit
-  }) => commit('setVitaboxBoardData'),
   setPatientData: ({
     commit
   }) => commit('setPatientData'),
-  setPatientBoardsData: ({
-    commit
-  }) => commit('setPatientBoardsData'),
-  setPatientBoardData: ({
-    commit
-  }) => commit('setPatientBoardData'),
-  setPatientSensosrData: ({
-    commit
-  }) => commit('setPatientSensorsData'),
-  setPatientSensorData: ({
-    commit
-  }) => commit('setPatientSensorData'),
   setUserData: ({
     commit
-  }) => commit('setUserData'),
-  setPhotoData: ({
-    commit
-  }) => commit('setPhotoData')
+  }) => commit('setUserData')
 }
 
 
