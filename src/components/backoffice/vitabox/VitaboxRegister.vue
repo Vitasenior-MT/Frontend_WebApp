@@ -38,7 +38,7 @@ export default {
     };
   },
   mounted() {
-   if (this.$store.state.user.token === null) {
+    if (this.$store.state.user.token === null) {
       this.$router.push("/");
       event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
     } else {
@@ -81,7 +81,10 @@ export default {
             email: this.email
           })
           .then(response => {
-            event_bus.$emit("success", "vitabox was successfully registered");
+            event_bus.$emit("toast", {
+              message: "vitabox was successfully registered",
+              type: "success"
+            });
             event_bus.$emit("waiting", false);
           })
           .catch(error => {

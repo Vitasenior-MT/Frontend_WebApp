@@ -128,7 +128,7 @@ export default {
       this.temp_model = item;
     },
     setItem(item) {
-      models.push(item);
+      this.models.push(item);
       event_bus.$emit("waiting", false);
     },
     editItem(item) {

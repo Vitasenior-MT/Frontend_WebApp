@@ -12,7 +12,10 @@
             <v-text-field :rules="[() => item.name.length > 3 || 'Board name is required']" label="Board name" v-model="item.name" append-icon="fas fa-angle-down"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6 md4>
-            <v-select :rules="[() => item.type.length > 1 || 'Board type is required']" :items="items" label="Board type" v-model="item.type" single-line append-icon="fas fa-angle-down"></v-select>
+            <v-select :rules="[() => item.type.length > 1 || 'Board type is required']" :items="types" label="Board type" v-model="item.type" single-line append-icon="fas fa-angle-down"></v-select>
+          </v-flex>
+          <v-flex xs12>
+            <v-select :rules="[() => item.tag.length > 1 || 'Board equipment is required']" :items="equipments" item-text="name" item-value="tag" label="Board equipment" v-model="item.tag" single-line append-icon="fas fa-angle-down"></v-select>
           </v-flex>
         </v-layout>
       </v-container>
@@ -31,7 +34,15 @@ export default {
   name: "edit_model",
   data: () => {
     return {
-      items: ["environmental", "wearable", "non-wearable"]
+      equipments: [
+        { name: "Zolertia Re-Mote", tag: "zolertiaremote" },
+        { name: "Pressão Arterial", tag: "bloodpressure" },
+        { name: "Temperatura", tag: "bodytemperature" },
+        { name: "Pulsometro", tag: "bodypulse" },
+        { name: "Balança", tag: "bodyscale" },
+        { name: "Bracelete", tag: "bandfitness" }
+      ],
+      types: ["environmental", "wearable", "non-wearable"]
     };
   },
   props: {
@@ -42,7 +53,7 @@ export default {
       this.$emit("close");
     },
     save() {
-      if (this.item.name !== "" && this.item.type !== "") {
+      if (this.item.name !== "" && this.item.type !== "" && this.item.tag !== "") {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
           .put("/boardmodel/" + this.item.id, this.item)

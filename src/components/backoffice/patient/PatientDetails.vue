@@ -31,29 +31,20 @@
               
               <v-divider></v-divider>
               <set-board-to-patient :patient="patient" :box="box" @added="(item)=>boardAdded(item)"></set-board-to-patient>
-              <v-layout row wrap>
-                <v-flex v-for="board in boards" :key="board.id" xs6 md12>
-                  <v-btn block color="secondary" class="my-0" dark @click="()=>{selected_board=board;selected_sensor='tab-'+board.Sensors[0].id}">{{board.Boardmodel.name}}</v-btn>
-                </v-flex>
-              </v-layout>
+              <v-expansion-panel>
+                <v-expansion-panel-content v-for="board in boards" :key="board.id" expand-icon="fas fa-angle-down">
+                  <div slot="header">{{board.Boardmodel.name}}</div>
+                  <sensor-graph :sensors="board.Sensors" :patient="patient.id"></sensor-graph>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
             </v-card-text>
           </v-card>
         </v-flex>
 
         <v-flex xs12 md8>
-          <div v-if="selected_board">
-            <v-tabs centered grow slider-color="primary_d" color="primary" v-model="selected_sensor" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left">
-              <v-tab v-for="sensor in selected_board.Sensors" :key="sensor.id" :href="`#tab-${sensor.id}`">
-                <label>{{sensor.Sensormodel.transducer}} - {{sensor.Sensormodel.measure}}</label>
-              </v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="selected_sensor">
-              <v-tab-item v-for="sensor in selected_board.Sensors" :key="sensor.id" :id="`tab-${sensor.id}`">
-                <sensor-graph :sensor="sensor" :patient="patient.id"></sensor-graph>
-              </v-tab-item>
-            </v-tabs-items>
-          </div>
+          
         </v-flex>
+
       </v-layout>
     </v-container>
 
@@ -100,6 +91,7 @@ export default {
         event_bus.$data.http
           .get("/patient/" + this.patient.id + "/board")
           .then(response => {
+            console.log(response.data.boards);
             this.boards = response.data.boards;
             this.sensors = this.boards.length > 0 ? this.boards[0].Sensors : [];
             event_bus.$emit("waiting", false);

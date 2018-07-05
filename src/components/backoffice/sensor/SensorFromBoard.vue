@@ -17,19 +17,6 @@
           <th class="text-xs-left" colspan="2">{{sensor.id}}</th>
         </tr>
       </table>
-      <div v-if="records" style="height: 220px;position:relative;">
-        <canvas class="sensor_graph" :id="sensor.id"></canvas>
-      </div>
-      <v-layout row wrap>
-        <v-flex class="py-0">
-          <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-          <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-        </v-flex>
-        <v-flex class="py-0">
-          <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-          <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-        </v-flex>
-      </v-layout>
     </v-card-text>
   </v-card>
 </template>
