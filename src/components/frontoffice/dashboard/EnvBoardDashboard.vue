@@ -88,7 +88,7 @@ export default {
 
 <style>
 .envIcon {
-  width: 5vh !important;
-  height: 5vh !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 </style>

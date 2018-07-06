@@ -165,7 +165,8 @@ export default {
 }
 
 .gridPatient {
-  padding: 0 45px;
+  padding-left: 45px;
+  padding-bottom: 40px;
 }
 
 .envGridSensors {

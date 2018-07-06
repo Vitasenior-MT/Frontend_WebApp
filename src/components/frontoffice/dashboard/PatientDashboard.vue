@@ -36,7 +36,7 @@
                 <span>Sensor Details</span>
               </v-tooltip>
             </v-card-title>
-            <div v-if="records" style="height:40vh; position:relative;">
+            <div v-if="records" style="height:250px; position:relative;">
               <canvas :id=" this.selectedSensorGraph.sensor.id"></canvas>
             </div>
             <v-layout row wrap>
@@ -67,7 +67,7 @@
             <v-card light flat hover style="height:100%">
               <a @click="showGraph(item)">
                 <v-card-title primary class="title">
-                  {{ item.sensor.last_values ? item.sensor.last_values[0] : 'none' }}
+                  {{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}
                 </v-card-title>
                 <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
               </a>

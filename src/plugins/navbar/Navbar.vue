@@ -1,5 +1,5 @@
 <template>
-  <div id="navbar">
+  <div id="navbar" >
 
     <v-navigation-drawer v-if="logged" v-bind:class="drawer" app width="250" id="side_bar" mobile-break-point=960>
 
@@ -23,7 +23,7 @@
 
     </v-navigation-drawer>
 
-    <v-toolbar class="primary--text raven" id="top_bar">
+    <v-toolbar class="primary--text raven" id="top_bar" >
     <v-btn v-if="logged" @click.stop="drawer = !drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
     <v-toolbar-title>
       <v-btn flat to="/" color="primary" class="top_bar_item subheading">
@@ -122,9 +122,9 @@ export default {
   padding-top: 5%;
 }
 #top_bar {
-  height: 56px !important;
+  height: 70px !important;
 }
 .top_bar_item {
-  height: 56px !important;
+  height: 70px !important;
 }
 </style>
