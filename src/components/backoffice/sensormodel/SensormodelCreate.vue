@@ -16,7 +16,7 @@
               <v-text-field :rules="[() => sensor.transducer.length > 3 || 'Transducer name is required']" label="Transducer name" v-model="sensor.transducer"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
-              <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" single-line append-icon="fas fa-angle-down"></v-select>
+              <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" return-object single-line append-icon="fas fa-angle-down"></v-select>
             </v-flex>
             <v-flex xs12 sm6>
               <v-text-field label="Minimum acceptable" v-model="sensor.min_acceptable"></v-text-field>
@@ -193,6 +193,7 @@ export default {
         this.sensor.measure = this.selected_measure.measure;
         this.sensor.unit = this.selected_measure.unit;
         this.sensor.to_read = this.selected_measure.to_read;
+        console.log(this.sensor);
         event_bus.$data.http
           .post("/sensormodel", this.sensor)
           .then(response => {

@@ -19,6 +19,10 @@ Vue.use(Vuetify, {
     primary_d: '#2f835d',
     primary_s: '#daf1e7',
     warning: '#e6ac00'
+  },
+  icons: {
+    checkboxOn: 'fas fa-check-square',
+    checkboxOff: 'far fa-square'
   }
 });
 Vue.config.productionTip = false

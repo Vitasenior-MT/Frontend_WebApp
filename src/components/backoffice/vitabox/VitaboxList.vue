@@ -8,7 +8,7 @@
         </v-flex>
         <v-flex lg10 md9>
           <div class="ml-5">
-            <v-select prepend-icon="fas fa-search" append-icon="fas fa-angle-down" label="Search" autocomplete cache-items :items="vitaboxes" item-text="address" :search-input.sync="search" v-model="select"></v-select>
+            <v-autocomplete :items="vitaboxes" item-text="address" return-object :search-input.sync="search" v-model="select" prepend-icon="fas fa-search" append-icon="fas fa-angle-down" label="Search" cache-items></v-autocomplete>
           </div>
         </v-flex>
       </v-layout>

@@ -25,13 +25,13 @@
         <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
         <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-        <td class="text-xs-left" v-if="props.item.active === true"><v-icon>fas fa-check-circle</v-icon></td>
-        <td class="text-xs-left" v-else><v-icon>fas fa-times-circle</v-icon></td>
         <td class="text-xs-left">{{ props.item.updated_at }}</td>
+        <td class="text-xs-left">
+          <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
+        </td>
         <td class="justify-left layout px-0">
-          <v-btn @click='goToBoardDetails(props.item)'>
-            <v-icon >fas fa-info-circle</v-icon>
-          </v-btn>
+          <v-btn @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
+          <remove-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item" @remove="()=>boards.splice(boards.indexOf(props.item), 1)"></remove-board>
         </td>
       </template>
       <template slot="no-data">
@@ -45,21 +45,32 @@
             <v-icon>fas fa-long-arrow-alt-left </v-icon>
       </v-btn>
     </v-flex>
+
+    <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
   </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+import BoardAdd from "@/components/frontoffice/board/BoardAdd.vue";
+import BoardDisable from "@/components/frontoffice/board/BoardDisable.vue";
+import BoardRemove from "@/components/frontoffice/board/BoardRemove.vue";
+
 export default {
+  components: {
+    "add-board": BoardAdd,
+    "disable-board": BoardDisable,
+    "remove-board": BoardRemove
+  },
   data() {
     return {
       headers: [
-        { text: "Board", value: "board", sortable: false },
-        { text: "Location", value: "description", sortable: false },
+        { text: "Board", value: "name", sortable: false },
+        { text: "Description", value: "description", sortable: false },
         { text: "MAC", value: "mac_address", sortable: false },
-        { text: "Active?", value: "active", sortable: false },
         { text: "Last Update", value: "updated_at", sortable: false },
-        { text: "Details", value: "name", sortable: false }
+        { text: "State", sortable: false },
+        { text: "Actions", sortable: false }
       ],
       boards: [],
       map: null,

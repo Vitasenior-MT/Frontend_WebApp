@@ -61,11 +61,12 @@ export default {
         event_bus.$data.http
           .post("/vitabox/" + this.box.id + "/board", this.board)
           .then(response => {
-            this.$emit("update", response.data.board);
+            this.$emit("addboard", response.data.board);
             event_bus.$emit(
               "success",
               "board was successfully added to vitabox"
             );
+            event_bus.$emit("waiting", false);
           })
           .catch(error => {
             if (error.response) {
