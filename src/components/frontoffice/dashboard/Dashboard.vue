@@ -2,7 +2,7 @@
   <v-content fluid grid-list-sm >
      <v-flex d-flex xs12 sm12 md12 lg12 style="padding-bottom:5px">
         <v-card dark flat>
-          <v-list>
+          <v-list v-if="this.$store.state.vitabox">
             <v-list-tile>
               <v-list-tile-content>
                 <v-list-tile-title>Location</v-list-tile-title>

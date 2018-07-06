@@ -6,10 +6,10 @@ import Cookies from 'js-cookie';
 Vue.use(Vuex)
 
 const state = {
-  vitabox: [],
-  board: [],
-  sensor: [],
-  patient: [],
+  vitabox: null,
+  board: null,
+  sensor: null,
+  patient: null,
   user: {
     token: null,
     name: null,

@@ -1,16 +1,6 @@
 <template>
   <v-list id="frontoffice" class="office_menu"  three-line>
-    <!-- <router-link v-for='(link,index) in links.frontoffice' :key='link.name + index' :to='link.path'>
-      <v-list-tile class="office_options office_notchoosen ash--text">
-        <v-list-tile-action>
-          <v-icon v-if="link.icon">{{link.icon}}</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title v-text="link.name"></v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-divider inset light></v-divider>
-    </router-link> -->
+    
     <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
     <v-divider v-if="item == vitaboxes[0]" class="vitaboxDivider"></v-divider>
     <v-divider v-else class="vitaboxDivider" :inset="true"></v-divider>
@@ -74,6 +64,8 @@ export default {
         .get("/vitabox")
         .then(response => {
           this.vitaboxes = response.data.vitaboxes;
+          if (response.data.vitaboxes.length > 0)
+            this.selectedVitabox(response.data.vitaboxes[0]);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
