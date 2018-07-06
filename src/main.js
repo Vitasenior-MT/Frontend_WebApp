@@ -18,7 +18,7 @@ Vue.use(Vuetify, {
     primary_l: '#8fd6b6',
     primary_d: '#2f835d',
     primary_s: '#daf1e7',
-    warning: '#e6ac00'
+    warning: '#e6ac00',
   }
 });
 Vue.config.productionTip = false
