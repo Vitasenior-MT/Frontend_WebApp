@@ -1,6 +1,6 @@
 <template>
-  <v-list id="frontoffice" class="office_menu">
-    <router-link v-for='(link,index) in links.frontoffice' :key='link.name + index' :to='link.path'>
+  <v-list id="frontoffice" class="office_menu"  three-line>
+    <!-- <router-link v-for='(link,index) in links.frontoffice' :key='link.name + index' :to='link.path'>
       <v-list-tile class="office_options office_notchoosen ash--text">
         <v-list-tile-action>
           <v-icon v-if="link.icon">{{link.icon}}</v-icon>
@@ -10,16 +10,20 @@
         </v-list-tile-content>
       </v-list-tile>
       <v-divider inset light></v-divider>
-    </router-link>
+    </router-link> -->
     <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
-      <v-list-tile class="office_options office_notchoosen ash--text">
-        <v-list-tile-action>
+    <v-divider v-if="item == vitaboxes[0]" class="vitaboxDivider"></v-divider>
+    <v-divider v-else class="vitaboxDivider" :inset="true"></v-divider>
+      <v-list-tile class="vitaboxSelector">
+        <v-list-tile-avatar style="color:#3faf7d">
           <v-icon>fa fa-tv</v-icon>
-        </v-list-tile-action>
+        </v-list-tile-avatar>
         <v-list-tile-content>
-          <v-list-tile-title > Vitabox - {{ item.address }}</v-list-tile-title>
+          <v-list-tile-title style="color:#3faf7d;">Vitabox</v-list-tile-title>
+          <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
+      <v-divider v-if="item == vitaboxes[vitaboxes.length-1]" class="vitaboxDivider"></v-divider>
     </router-link>
   </v-list>  
   
@@ -91,5 +95,16 @@ export default {
 };
 </script>
 
+<style>
+.vitaboxSelector:hover {
+  /* color: yellow !important; */
+  background-color: #5b5b5b !important;
+}
+
+.vitaboxDivider {
+  /* color: yellow !important; */
+  background-color: white !important;
+}
+</style>
 
 

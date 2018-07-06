@@ -17,6 +17,7 @@ import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
 import BoardDetail from '@/components/frontoffice/board/BoardDetail'
 
 import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
+import AlertList from '@/components/frontoffice/alerts/AlertList'
 
 import UserDetail from '@/components/frontoffice/user/UserDetail'
 
@@ -72,6 +73,12 @@ export default new Router({
       path: '/patient/detail',
       name: 'PatientDetail',
       component: PatientDetail,
+      // beforeEnter: requireAuth
+    },
+    {
+      path: '/alerts/list',
+      name: 'AlertList',
+      component: AlertList,
       // beforeEnter: requireAuth
     },
     {

@@ -1,13 +1,62 @@
 <template>
-  <div>
-    <v-stepper non-linear>
-      <v-stepper-header>
-        <v-stepper-step step="1" editable>Select campaign settings</v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step step="2" editable>Create an ad group</v-stepper-step>
-        <v-divider></v-divider>
-        <v-stepper-step step="3" editable>Create an ad</v-stepper-step>
-      </v-stepper-header>
-    </v-stepper>
-  </div>
+  <v-content >
+    <v-layout wrap>
+      <v-flex v-if="this.vitaboxwarnings.length > 0">
+        <v-stepper vertical non-linear v-for="item in vitaboxwarnings" :key="item.id" >
+          <v-stepper-step step="1" editable >Name of step 1</v-stepper-step>
+          <v-stepper-content step="1">
+            <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
+            <v-btn color="primary" @click.native="e13 = 2">Continue</v-btn>
+            <v-btn flat>Cancel</v-btn>
+          </v-stepper-content>
+        </v-stepper>
+      </v-flex>
+      <v-flex v-else>
+        <v-card dark>
+          <v-card-title primary class="title">There are no vitabox warnings!</v-card-title>
+          <v-card-text primary> ---- </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-content>
 </template>
+
+<script>
+import { event_bus } from "@/plugins/bus.js";
+
+export default {
+  data() {
+    return {
+      e13: 2,
+      vitaboxwarnings: [],
+    };
+  },
+  created(){
+    this.getVitaboxWarnings();
+  },
+  methods: {
+    getVitaboxWarnings() {
+      event_bus.$emit("waiting", true);
+      this.vitaboxwarnings = [];
+      event_bus.$data.http
+        .get("/vitabox/" + this.$store.state.vitabox.id + "/warning")
+        .then(response => {
+          this.vitaboxwarnings = response.data.warnings;
+          console.log(response.data.warnings);
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", { message: error.message, type: "error" });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    }
+  }
+};
+</script>

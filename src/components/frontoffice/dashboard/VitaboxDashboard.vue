@@ -151,6 +151,7 @@ export default {
         });
     },
     selectedPatient(patientData) {
+      this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
     }
