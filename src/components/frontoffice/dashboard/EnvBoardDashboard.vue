@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" class="envGridSensors px-0">
+    <v-container dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" class="envGridSensors">
       <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
           <v-flex xs4 sm3 md3>  
@@ -40,12 +40,12 @@
       <v-layout row wrap>
         <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
           <div v-if="item.sensor">
-            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[0] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable" class="red darken-1">
-              <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+            <v-card class="vitaboxBoardSelector red darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[item.sensor.last_values.length-1] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable">
+              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
-            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-else class="green darken-1">
-              <v-card-title primary class="title">{{ item.last_values }}</v-card-title>
+            <v-card class="vitaboxBoardSelector green darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-else>
+              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
           </div>
@@ -90,5 +90,9 @@ export default {
 .envIcon {
   width: 40px !important;
   height: 40px !important;
+}
+
+.vitaboxBoardSelector:hover {
+  background-color: #5b5b5b !important;
 }
 </style>

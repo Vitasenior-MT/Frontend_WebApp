@@ -1,30 +1,21 @@
 <template>
-  <v-container class="gridPatient" >
-    <v-layout v-if="boardSensors.length > 0" wrap>
-      <v-flex d-flex md4 lg2>
-        <v-layout wrap>
-          <v-container grid-list text-xs-center>
-            <v-flex d-flex sm12 md12 lg12 >
-              <v-card flat>
-                <v-avatar size="150px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
-                <v-card flat>
-                  <h3 class="headline mb-0">{{ this.selectedPatient.name }}</h3>
-                </v-card>
-                <v-card flat>
-                  <v-tooltip bottom>
-                    <v-btn slot="activator" @click.native='goToPatientProfile(this.selectedPatient)'>
-                      <v-icon>fas fa-info-circle</v-icon>
-                    </v-btn>
-                    <span>Patient Details</span>
-                  </v-tooltip>
-                </v-card>
-              </v-card>
-            </v-flex>
-          </v-container>
+  <v-container class="gridPatient" style="max-width:100%; padding-right:30px">
+    <v-layout v-if="boardSensors.length > 0" wrap >
+      <v-flex md4 lg2>
+        <v-layout class="text-md-center" style="height:100%">
+          <v-card class="patientDetailsSelector" style="width:100%; padding-top:40px; padding-bottom:10px" flat @click.native='goToPatientProfile(selectedPatient)'>
+            <v-avatar size="150px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
+            <br>
+            <h3 class="headline mb-0" >{{ this.selectedPatient.name }}</h3>
+            <br>
+            <span class="white--text" >
+              <v-icon color="green darken-3">fas fa-info-circle</v-icon> Press for more details
+            </span>
+          </v-card>
         </v-layout>
       </v-flex>
       <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
-        <v-container>
+        <v-container style="padding-top:0px; padding-left:0px; padding-bottom:0px">
           <v-card light flat>
             <v-card-title primary class="title">
               {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}
@@ -61,20 +52,18 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-container fluid align-center justify-center>
-      <v-layout wrap>
-        <v-flex xs6 sm3 md3 lg3  v-for="item in boardSensors" :key="item.id">
-            <v-card light flat hover style="height:100%">
-              <a @click="showGraph(item)">
-                <v-card-title primary class="title">
-                  {{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}
-                </v-card-title>
-                <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
-              </a>
-            </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>  
+    <v-layout wrap align-center justify-center style="padding-right:15px;">
+      <v-flex xs6 sm3 md3 lg3  v-for="item in boardSensors" :key="item.id">
+          <v-card class="patientBoardSelector" light flat style="height:100%">
+            <a @click="showGraph(item)">
+              <v-card-title primary class="title">
+                {{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}
+              </v-card-title>
+              <v-card-text primary>{{ item.sensor.Sensormodel.measure }}</v-card-text>
+            </a>
+          </v-card>
+      </v-flex>
+    </v-layout> 
   </v-container>
 </template>
 
@@ -272,4 +261,11 @@ export default {
 </script>
 
 <style>
+.patientDetailsSelector:hover {
+  background-color: #5b5b5b !important;
+}
+
+.patientBoardSelector:hover {
+  background-color: #5b5b5b !important;
+}
 </style>
