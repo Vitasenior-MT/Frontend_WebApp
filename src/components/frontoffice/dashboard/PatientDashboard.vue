@@ -1,5 +1,5 @@
 <template>
-  <v-container class="gridPatient" style="max-width:100%; padding-right:40px">
+  <v-container class="gridPatient" style="max-width:100%; padding-right:40px;">
     <v-layout v-if="boardSensors.length > 0" wrap >
       <v-flex sm12 md4 lg2>
         <v-layout class="text-md-center" style="height:100%">
@@ -9,7 +9,7 @@
             <h3 class="headline mb-0" >{{ this.selectedPatient.name }}</h3>
             <br>
             <span class="white--text" >
-              <v-icon color="green darken-3">fas fa-info-circle</v-icon> Press for more details
+              <v-icon color="primary" style="padding-right:10px;">fas fa-info-circle</v-icon> Press for more details
             </span>
           </v-card>
         </v-layout>
@@ -37,7 +37,6 @@
                 <span>Sensor Details</span>
               </v-tooltip>
             </v-layout>
-           
             <div v-if="records" style="height:250px; position:relative;">
               <canvas :id=" this.selectedSensorGraph.sensor.id"></canvas>
             </div>

@@ -151,7 +151,7 @@ export default {
         });
     },
     checkNulls(sensors) {
-      return sensors != null;
+      return sensors.sensor != null;
     },
     selectedPatient(patientData) {
       this.$store.commit("setPatientData", patientData);
@@ -171,10 +171,6 @@ export default {
   padding-left: 45px;
   padding-top: 0px;
   padding-bottom: 40px;
-}
-
-.envGridSensors {
-  padding: 5px;
 }
 
 #carousel-view .fade {

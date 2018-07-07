@@ -10,7 +10,7 @@
       </v-list-tile-avatar>
       <v-list-tile-content>
         <v-list-tile-title style="color:#3faf7d;">Vitabox</v-list-tile-title>
-         <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
+        <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
       </v-list-tile-content>
     </v-list-tile>
     <v-divider v-if="item == vitaboxes[vitaboxes.length-1]" class="vitaboxDivider"></v-divider>
