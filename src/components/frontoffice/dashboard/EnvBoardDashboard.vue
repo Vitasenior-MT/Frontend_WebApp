@@ -1,17 +1,15 @@
 <template>
-    <v-container dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" class="envGridSensors">
+    <v-container dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" style="padding-top:0px">
       <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
           <v-flex xs4 sm3 md3>  
             <v-card class="red darken-4" style="height:100%">
-              <v-container fill-height align-content-center>
-                <v-avatar class="envIcon">
-                  <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
-                  <img v-if="type == 'humidade (%)'" src="@/assets/humi_icon.svg">
-                  <img v-if="type == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
-                  <img v-if="type == 'dioxi. carbono (ppm)'" src="@/assets/dioxi_icon.svg">
-                </v-avatar>
-              </v-container>
+              <v-avatar class="envIcon">
+                <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
+                <img v-if="type == 'humidade (%)'" src="@/assets/humi_icon.svg">
+                <img v-if="type == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
+                <img v-if="type == 'dioxi. carbono (ppm)'" src="@/assets/dioxi_icon.svg">
+              </v-avatar>
             </v-card>
           </v-flex>
           <v-flex xs8 sm9 md9>  
@@ -90,9 +88,11 @@ export default {
 .envIcon {
   width: 40px !important;
   height: 40px !important;
+  padding-top:50%;
 }
 
 .vitaboxBoardSelector:hover {
+  cursor: pointer;
   background-color: #5b5b5b !important;
 }
 </style>

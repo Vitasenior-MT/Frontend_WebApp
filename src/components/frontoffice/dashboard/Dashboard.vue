@@ -45,7 +45,7 @@ export default {
 
 <style>
 .vitaboxDetailsSelector:hover {
-  /* color: yellow !important; */
+  cursor: pointer;
   background-color: #5b5b5b !important;
 }
 
