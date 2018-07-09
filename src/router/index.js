@@ -6,13 +6,15 @@ import Home from '@/components/Home'
 import NotFoundView from '@/components/404.vue'
 
 import ChangePass from '@/components/auth/ChgPwd'
-import Signin from '@/components/auth/Index'
+import Signin from '@/components/auth/Login'
 import Signup from '@/components/auth/Register'
+import Forgot from '@/components/auth/Forgot'
 
 // Frontend
 import Dashboard from '@/components/frontoffice/dashboard/Dashboard'
 
 import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
+import VitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
 
 import BoardDetail from '@/components/frontoffice/board/BoardDetail'
 
@@ -22,15 +24,15 @@ import AlertList from '@/components/frontoffice/alerts/AlertList'
 import UserDetail from '@/components/frontoffice/user/UserDetail'
 
 // Backend
-import VitaboxList from '@/components/backoffice/vitabox/VitaboxList'
-import VitaboxRegister from '@/components/backoffice/vitabox/VitaboxRegister'
-import UserList from '@/components/backoffice/users/UserList'
-import Boardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
-import Sensormodel from '@/components/backoffice/sensormodel/SensormodelList'
-import Profilemodel from '@/components/backoffice/profile/ProfileList'
-import Utils from '@/components/backoffice/utils/utils'
-import BoardDashboard from '@/components/backoffice/board/BoardDetails'
-import PatientDashboard from '@/components/backoffice/patient/PatientDetails'
+import BOVitaboxList from '@/components/backoffice/vitabox/VitaboxList'
+import BOVitaboxRegister from '@/components/backoffice/vitabox/VitaboxRegister'
+import BOUserList from '@/components/backoffice/users/UserList'
+import BOBoardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
+import BOSensormodel from '@/components/backoffice/sensormodel/SensormodelList'
+import BOProfilemodel from '@/components/backoffice/profile/ProfileList'
+import BOUtils from '@/components/backoffice/utils/utils'
+import BOBoardDashboard from '@/components/backoffice/board/BoardDetails'
+import BOPatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
 Vue.use(Router)
 
@@ -47,6 +49,11 @@ export default new Router({
       component: Signup
     },
     {
+      path: '/forgot',
+      name: "Forgot",
+      component: Forgot
+    },
+    {
       path: '/',
       name: 'Home',
       component: Home
@@ -61,6 +68,12 @@ export default new Router({
       path: '/vitabox/detail',
       name: 'VitaboxDetail',
       component: VitaboxDetail,
+      // beforeEnter: requireAuth
+    },
+    {
+      path: '/vitabox/register',
+      name: 'VitaboxRegister',
+      component: VitaboxRegister,
       // beforeEnter: requireAuth
     },
     {
@@ -97,49 +110,49 @@ export default new Router({
     // backoffice
     {
       path: '/backoffice/vitabox/list',
-      name: 'VitaboxList',
-      component: VitaboxList
+      name: 'BOVitaboxList',
+      component: BOVitaboxList
     },
     {
       path: '/backoffice/vitabox/register',
-      name: 'VitaboxRegister',
-      component: VitaboxRegister
+      name: 'BOVitaboxRegister',
+      component: BOVitaboxRegister
     },
     {
       path: '/backoffice/user',
-      name: 'UserList',
-      component: UserList
+      name: 'BOUserList',
+      component: BOUserList
     },
     {
       path: '/backoffice/boardmodel',
-      name: 'Boardmodel',
-      component: Boardmodel
+      name: 'BOBoardmodel',
+      component: BOBoardmodel
     },
     {
       path: '/backoffice/sensormodel',
-      name: 'Sensormodel',
-      component: Sensormodel
+      name: 'BOSensormodel',
+      component: BOSensormodel
     },
     {
       path: '/backoffice/profilemodel',
-      name: 'Profilemodel',
-      component: Profilemodel
+      name: 'BOProfilemodel',
+      component: BOProfilemodel
     },
     {
       path: '/backoffice/utils',
-      name: 'Utils',
-      component: Utils
+      name: 'BOUtils',
+      component: BOUtils
     },
     {
       path: '/backoffice/dashboard/board',
-      name: 'BoardDashboard',
-      component: BoardDashboard,
+      name: 'BOBoardDashboard',
+      component: BOBoardDashboard,
       props: true
     },
     {
       path: '/backoffice/dashboard/patient',
-      name: 'PatientDashboard',
-      component: PatientDashboard,
+      name: 'BOPatientDashboard',
+      component: BOPatientDashboard,
       props: true
     },
     // not found handler

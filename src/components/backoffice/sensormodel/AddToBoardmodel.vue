@@ -7,7 +7,7 @@
       
       <v-form class="white pt-2">
         <v-container fill-height d-inline-flex class="py-0">
-          <v-select label="Search" autocomplete cache-items :items="sensors" :search-input.sync="search" v-model="selected" append-icon="fas fa-angle-down">
+          <v-autocomplete label="Search" cache-items :items="sensors" :search-input.sync="search" v-model="selected" append-icon="fas fa-angle-down">
             <template slot="selection" slot-scope="data">
               <label class="black--text title">{{ data.item.transducer }} : {{ data.item.measure }}</label>
             </template>
@@ -17,7 +17,7 @@
                 <v-list-tile-sub-title v-html="data.item.measure"></v-list-tile-sub-title>
               </v-list-tile-content>
             </template>
-          </v-select>
+          </v-autocomplete>
           <v-btn id="add_sensor_submit_button" dark color="ash" block @click.native="save">Submit</v-btn>
         </v-container>
       </v-form>

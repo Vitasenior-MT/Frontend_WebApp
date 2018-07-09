@@ -20,7 +20,8 @@ const state = {
 }
 
 const getters = {
-  user: state => state.user
+  user: state => state.user,
+  vitabox: state => state.vitabox
 }
 
 const mutations = {
@@ -42,6 +43,17 @@ const mutations = {
     state.user.email = userData.email;
     state.user.photo = userData.photo;
     state.user.is_admin = userData.is_admin;
+  },
+  cleanData(state) {
+    state.vitabox = null;
+    state.board = null;
+    state.sensor = null;
+    state.patient = null;
+    state.user.token = null;
+    state.user.name = null;
+    state.user.email = null;
+    state.user.photo = null;
+    state.user.is_admin = null;
   }
 }
 
@@ -60,7 +72,10 @@ const actions = {
   }) => commit('setPatientData'),
   setUserData: ({
     commit
-  }) => commit('setUserData')
+  }) => commit('setUserData'),
+  cleanData: ({
+    commit
+  }) => commit('cleanData')
 }
 
 

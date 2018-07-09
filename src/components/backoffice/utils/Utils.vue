@@ -103,36 +103,53 @@ export default {
         });
     },
     createBoard() {
-       if (this.board.mac_addr !== ""){
-         this.board.mac_addr =
-          this.board.mac_addr.substring(0, 2) +
-          ":" +
-          this.board.mac_addr.substring(2, 4) +
-          ":" +
-          this.board.mac_addr.substring(4, 6) +
-          ":" +
-          this.board.mac_addr.substring(6, 8) +
-          ":" +
-          this.board.mac_addr.substring(8, 10) +
-          ":" +
-          this.board.mac_addr.substring(10, 12) +
-          ":" +
-          this.board.mac_addr.substring(12, 14) +
-          ":" +
-          this.board.mac_addr.substring(14);
-      event_bus.$data.http
-        .post("/board", this.board)
-        .then(response => {
-          this.new_board = response.data;
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("error", error.response.data);
-          } else {
-            event_bus.$emit("error", error.message);
-          }
-        });
-       } else {
+      if (this.board.mac_addr !== "") {
+        console.log(this.board.mac_addr.length);
+        if (this.board.mac_addr.length === 16) {
+          this.board.mac_addr =
+            this.board.mac_addr.substring(0, 2) +
+            ":" +
+            this.board.mac_addr.substring(2, 4) +
+            ":" +
+            this.board.mac_addr.substring(4, 6) +
+            ":" +
+            this.board.mac_addr.substring(6, 8) +
+            ":" +
+            this.board.mac_addr.substring(8, 10) +
+            ":" +
+            this.board.mac_addr.substring(10, 12) +
+            ":" +
+            this.board.mac_addr.substring(12, 14) +
+            ":" +
+            this.board.mac_addr.substring(14);
+        }
+        if (this.board.mac_addr.length === 12) {
+          this.board.mac_addr =
+            this.board.mac_addr.substring(0, 2) +
+            ":" +
+            this.board.mac_addr.substring(2, 4) +
+            ":" +
+            this.board.mac_addr.substring(4, 6) +
+            ":" +
+            this.board.mac_addr.substring(6, 8) +
+            ":" +
+            this.board.mac_addr.substring(8, 10) +
+            ":" +
+            this.board.mac_addr.substring(10);
+        }
+        event_bus.$data.http
+          .post("/board", this.board)
+          .then(response => {
+            this.new_board = response.data;
+          })
+          .catch(error => {
+            if (error.response) {
+              console.log(error.response.data);
+            } else {
+              console.log(error.message);
+            }
+          });
+      } else {
         event_bus.$emit("toast", {
           message: "insert all fields",
           type: "error"

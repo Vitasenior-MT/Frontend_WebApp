@@ -37,6 +37,16 @@ export default {
       password: ""
     };
   },
+  mounted() {
+    this.$el.addEventListener("keypress", event => {
+      if (event.key == "Enter") this.registerUser();
+    });
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener("keypress", event => {
+      if (event.key == "Enter") this.registerUser();
+    });
+  },
   methods: {
     registerUser() {
       event_bus.$emit("waiting", true);
@@ -83,7 +93,7 @@ export default {
 </script>
 
 <style>
-#register{
+#register {
   padding-bottom: 5px;
 }
 #register_title {

@@ -4,12 +4,10 @@
     <v-container class="pl-0 mb-2">
       <v-layout row wrap>
         <v-flex lg2 md3>
-          <v-btn color="primary" block dark to="/backoffice/vitabox/register">Register Vitabox</v-btn>
+          <v-btn color="primary" dark to="/backoffice/vitabox/register">Register Vitabox</v-btn>
         </v-flex>
         <v-flex lg10 md9>
-          <div class="ml-5">
             <v-autocomplete :items="vitaboxes" item-text="address" return-object :search-input.sync="search" v-model="select" prepend-icon="fas fa-search" append-icon="fas fa-angle-down" label="Search" cache-items></v-autocomplete>
-          </div>
         </v-flex>
       </v-layout>
       <br>

@@ -11,17 +11,7 @@
     </v-card-title>
     <v-card-text>
       <v-container grid-list-md>
-        <v-layout wrap>
-          <v-flex xs12 md8>
-            <v-text-field :rules="[() => model.name.length > 3 || 'Board name is required']" label="Board name" v-model="model.name"></v-text-field>
-          </v-flex>
-          <v-flex xs12 md4>
-            <v-select :rules="[() => model.type.length > 1 || 'Board type is required']" :items="types" label="Board type" v-model="model.type" single-line append-icon="fas fa-angle-down"></v-select>
-          </v-flex>
-          <v-flex xs12>
-            <v-select :rules="[() => model.tag.length > 1 || 'Board equipment is required']" :items="equipments" item-text="name" item-value="tag" label="Board equipment" v-model="model.tag" single-line append-icon="fas fa-angle-down"></v-select>
-          </v-flex>
-        </v-layout>
+        <v-select :rules="[() => model.tag.length > 1 || 'Board equipment is required']" :items="equipments" item-text="name" label="Board equipment" v-model="model" single-line append-icon="fas fa-angle-down" return-object></v-select>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -45,21 +35,48 @@ export default {
         type: "",
         tag: ""
       },
-      types: ["environmental", "wearable", "non-wearable"],
       equipments: [
-        { name: "Zolertia Re-Mote", tag: "zolertiaremote" },
-        { name: "Pressão Arterial", tag: "bloodpressure" },
-        { name: "Temperatura", tag: "bodytemperature" },
-        { name: "Pulsometro", tag: "bodypulse" },
-        { name: "Balança", tag: "bodyscale" },
-        { name: "Bracelete", tag: "bandfitness" }
+        {
+          name: "Zolertia Re-Mote",
+          tag: "zolertiaremote",
+          type: "environmental"
+        },
+        {
+          name: "Pressão Arterial",
+          tag: "bloodpressure",
+          type: "non-wearable"
+        },
+        {
+          name: "Temperatura",
+          tag: "bodytemperature",
+          type: "non-wearable"
+        },
+        {
+          name: "Pulsometro",
+          tag: "bodypulse",
+          type: "non-wearable"
+        },
+        {
+          name: "Balança",
+          tag: "bodyscale",
+          type: "non-wearable"
+        },
+        {
+          name: "Bracelete",
+          tag: "bandfitness",
+          type: "wearable"
+        }
       ],
       dialog_create_model: false
     };
   },
   methods: {
     save() {
-      if (this.model.name !== "" && this.model.type !== "" && this.model.tag !== "") {
+      if (
+        this.model.name !== "" &&
+        this.model.type !== "" &&
+        this.model.tag !== ""
+      ) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
           .post("/boardmodel", this.model)

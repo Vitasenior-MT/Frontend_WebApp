@@ -17,7 +17,7 @@
       <v-divider light></v-divider>
 
       <v-list v-if="patients.length>0">
-        <router-link v-for="patient in patients" :key="patient.id" :to="{name: 'PatientDashboard', params: { patient:patient, box:item } }">
+        <router-link v-for="patient in patients" :key="patient.id" :to="{name: 'BOPatientDashboard', params: { patient:patient, box:item } }">
           <v-list-tile two-line @click="()=>{}">
             <v-list-tile-content>
               <v-list-tile-title class="raven--text">{{patient.name}}</v-list-tile-title>

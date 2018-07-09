@@ -7,17 +7,7 @@
     </v-card-title>
     <v-card-text v-if="item">
       <v-container grid-list-md>
-        <v-layout wrap>
-          <v-flex xs12 sm6 md8>
-            <v-text-field :rules="[() => item.name.length > 3 || 'Board name is required']" label="Board name" v-model="item.name" append-icon="fas fa-angle-down"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm6 md4>
-            <v-select :rules="[() => item.type.length > 1 || 'Board type is required']" :items="types" label="Board type" v-model="item.type" single-line append-icon="fas fa-angle-down"></v-select>
-          </v-flex>
-          <v-flex xs12>
-            <v-select :rules="[() => item.tag.length > 1 || 'Board equipment is required']" :items="equipments" item-text="name" item-value="tag" label="Board equipment" v-model="item.tag" single-line append-icon="fas fa-angle-down"></v-select>
-          </v-flex>
-        </v-layout>
+        <v-text-field :rules="[() => item.name.length > 3 || 'Board name is required']" label="Board name" v-model="item.name"></v-text-field>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -32,19 +22,6 @@ import { event_bus } from "@/plugins/bus.js";
 
 export default {
   name: "edit_model",
-  data: () => {
-    return {
-      equipments: [
-        { name: "Zolertia Re-Mote", tag: "zolertiaremote" },
-        { name: "Pressão Arterial", tag: "bloodpressure" },
-        { name: "Temperatura", tag: "bodytemperature" },
-        { name: "Pulsometro", tag: "bodypulse" },
-        { name: "Balança", tag: "bodyscale" },
-        { name: "Bracelete", tag: "bandfitness" }
-      ],
-      types: ["environmental", "wearable", "non-wearable"]
-    };
-  },
   props: {
     item: Object
   },

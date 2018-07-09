@@ -11,7 +11,7 @@
     </v-card-actions>
     
     <v-card-text>
-      <v-list v-if="sensors.length>0" class="px-4">
+      <v-list v-if="sensors && sensors.length>0" class="px-4">
         <template v-for="(sensor, index) in sensors">
           <v-divider :key="index" light></v-divider>
           <v-list-tile :key="sensor.id"  @click="()=>{}">

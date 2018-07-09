@@ -47,6 +47,7 @@
     </v-flex>
 
     <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
+    <add-patient v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addpatient="(patient)=>patients.push(patient)"></add-patient>
   </v-content>
 </template>
 
@@ -55,12 +56,14 @@ import { event_bus } from "@/plugins/bus.js";
 import BoardAdd from "@/components/frontoffice/board/BoardAdd.vue";
 import BoardDisable from "@/components/frontoffice/board/BoardDisable.vue";
 import BoardRemove from "@/components/frontoffice/board/BoardRemove.vue";
+import PatientAdd from "@/components/frontoffice/patient/PatientAdd.vue";
 
 export default {
   components: {
     "add-board": BoardAdd,
     "disable-board": BoardDisable,
-    "remove-board": BoardRemove
+    "remove-board": BoardRemove,
+    "add-patient": PatientAdd
   },
   data() {
     return {
@@ -73,6 +76,7 @@ export default {
         { text: "Actions", sortable: false }
       ],
       boards: [],
+      patients: [],
       map: null,
       marker: null
     };

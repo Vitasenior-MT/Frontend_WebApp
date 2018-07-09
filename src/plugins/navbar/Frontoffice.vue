@@ -1,22 +1,23 @@
 <template>
-  <v-list id="frontoffice" class="office_menu"  three-line>
-    
-    <router-link v-for="item in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
-    <v-divider v-if="item == vitaboxes[0]" class="vitaboxDivider"></v-divider>
-    <v-divider v-else class="vitaboxDivider" :inset="true"></v-divider>
-      <v-list-tile class="vitaboxSelector">
-        <v-list-tile-avatar style="color:#3faf7d">
-          <v-icon>fa fa-tv</v-icon>
-        </v-list-tile-avatar>
-        <v-list-tile-content>
-          <v-list-tile-title style="color:#3faf7d;">Vitabox</v-list-tile-title>
-          <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-divider v-if="item == vitaboxes[vitaboxes.length-1]" class="vitaboxDivider"></v-divider>
-    </router-link>
-  </v-list>  
-  
+  <div id="frontoffice">
+    <v-btn small color="primary" class="mt-0" block dark to="/vitabox/register">Register Vitabox</v-btn>
+    <v-divider class="vitaboxDivider"></v-divider>
+    <v-list class="office_menu py-0" three-line>
+      <router-link v-for="(item, index) in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
+      <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
+        <v-list-tile class="vitaboxSelector">
+          <v-list-tile-avatar style="color:#3faf7d">
+            <v-icon>fa fa-tv</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title style="color:#3faf7d;">Vitabox</v-list-tile-title>
+            <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </router-link>
+    </v-list>
+    <v-divider class="vitaboxDivider"></v-divider>
+  </div>
 </template>
 
 <script>
@@ -33,39 +34,20 @@ export default {
   },
   created() {
     this.getVitaboxes();
-  },
-  mounted() {
-    this.links.frontoffice.map((item, index) => {
-      if (item.path === this.$route.path) this.select(index);
+    event_bus.$on("new_vitabox", box => {
+      this.vitaboxes.push(box);
     });
   },
-  watch: {
-    $route: function(route) {
-      this.links.frontoffice.map((item, index) => {
-        if (item.path === route.path) this.select(index);
-      });
-    }
-  },
   methods: {
-    select(i) {
-      if (this.selected !== -1) {
-        document.getElementsByClassName("office_options")[
-          this.selected
-        ].className =
-          "office_options office_notchoosen ash--text";
-      }
-      document.getElementsByClassName("office_options")[i].className =
-        "office_options";
-      this.selected = i;
-    },
     getVitaboxes() {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox")
         .then(response => {
           this.vitaboxes = response.data.vitaboxes;
-          if (response.data.vitaboxes.length > 0)
+          if (response.data.vitaboxes.length > 0) {
             this.selectedVitabox(response.data.vitaboxes[0]);
+          }
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -89,12 +71,10 @@ export default {
 
 <style>
 .vitaboxSelector:hover {
-  /* color: yellow !important; */
   background-color: #5b5b5b !important;
 }
 
 .vitaboxDivider {
-  /* color: yellow !important; */
   background-color: white !important;
 }
 </style>

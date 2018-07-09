@@ -17,7 +17,7 @@
       <v-divider light></v-divider>
 
       <v-list v-if="boards.length>0">
-        <router-link v-for="board in boards" :key="board.id" :to="{name: 'BoardDashboard', params: { board:board, box:item } }">
+        <router-link v-for="board in boards" :key="board.id" :to="{name: 'BOBoardDashboard', params: { board:board, box:item } }">
           <v-list-tile two-line @click="()=>{}">
             <v-list-tile-content>
               <v-list-tile-title class="raven--text">{{board.Boardmodel.name}} - {{board.description}}</v-list-tile-title>

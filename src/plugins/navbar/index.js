@@ -37,13 +37,6 @@ const links = {
       icon: 'fas fa-question',
       path: '/backoffice/utils'
     }
-  ],
-  frontoffice: [
-    {
-      name: 'Change Password',
-      icon: 'fas fa-key',
-      path: '/user/changepass'
-    }
   ]
 };
 

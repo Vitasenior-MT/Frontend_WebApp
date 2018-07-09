@@ -2,11 +2,13 @@
   <v-app>
     <progress-bar></progress-bar>
 
-    <navbar @logout="logout" :logged="logged" :isadmin="is_admin"></navbar>
+    <navbar :logged="logged" :isadmin="is_admin"></navbar>
 
     <main>
       <transition name="fade">
-        <router-view></router-view>
+        <div id="navpanel">
+          <router-view></router-view>
+        </div>
       </transition>
     </main>
 
@@ -43,21 +45,11 @@ export default {
       }
       event_bus.$emit("waiting", false);
     });
-  },
-  methods: {
-    logout() {
-      event_bus.$emit("waiting", true);
-      this.$router.push("/");
-      this.$store.commit("setUserData", {
-        token: null,
-        name: null,
-        email: null,
-        photo: null,
-        is_admin: null
-      });
+    event_bus.$on("logout", () => {
       this.logged = false;
-      event_bus.$emit("waiting", false);
-    }
+      this.$router.push("/");
+      this.$store.commit("cleanData");
+    });
   },
   components: {
     foot: Footer,
@@ -112,16 +104,24 @@ i {
   padding: 1%;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition-property: opacity;
-  transition-duration: .25s;
+  transition-duration: 0.25s;
 }
 
 .fade-enter-active {
-  transition-delay: .25s;
+  transition-delay: 0.25s;
 }
 
-.fade-enter, .fade-leave-active {
-  opacity: 0
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+#navpanel{
+  padding-top: 65px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

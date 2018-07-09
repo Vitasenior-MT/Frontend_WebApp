@@ -1,55 +1,58 @@
 <template>
-<v-card id="forgot">
-  <v-stepper v-model="step">
-    <v-stepper-header>
-      <v-stepper-step step="1" >Forgot password</v-stepper-step>
-      <v-divider></v-divider>
-      <v-stepper-step step="2" >Reset Password</v-stepper-step>
-    </v-stepper-header>
-    <v-stepper-items style="height:308px !important;">
-      <v-stepper-content step="1">
-        <v-card-text class="mb-3">
-          <p class="subheading">Please insert your email.</p>
-          <v-form>
-            <v-text-field prepend-icon="fas fa-envelope" v-model="forgot_email" name="email" label="Email" id="forgot_email" type="text"></v-text-field>
-          </v-form>
-          <p class="mb-5">You'll receive a code that will be valid for 1 hour to reset your password.</p>
-        </v-card-text>
-        <br>
-        <v-card-actions>
-          <v-btn @click.native="close" flat color="grey">
-            <v-icon dark>fas fa-undo</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn class="raven primary--text" @click.native="forgot">
-            Send
-            <v-icon dark right>fas fa-share-square</v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-stepper-content>
-      <v-stepper-content step="2">
-        <v-card-text>
-          <v-form>
-            <v-text-field prepend-icon="fas fa-key" v-model="token" name="token" label="Code" id="token" type="text"></v-text-field>
-            <v-text-field prepend-icon="fas fa-lock" v-model="new_password" name="new_password" label="Password" id="new_password" type="password"></v-text-field>
-            <v-text-field prepend-icon="fas fa-lock" v-model="confirm_password" :rules="[() => confirm_password === new_password || 'Password don\'t match']" name="confirm_password" label="Confirm password" id="confirm_password" type="password"></v-text-field>
-          </v-form>
-        </v-card-text>
-        <br><br><br>
-        <v-card-actions>
-          <v-btn @click.native="close" flat color="grey">
-            <v-icon dark>fas fa-undo</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn class="raven primary--text" @click.native="reset">
-            Submit
-            <v-icon dark right>fas fa-external-link-alt</v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-stepper-content>
-    </v-stepper-items>
-  </v-stepper>
-</v-card>
+  <v-content id="auth">
+    <v-container fill-height>
+      <v-layout justify-center wrap align-center class="pb-5 mb-5">
+        <v-flex id="auth_card">
+          <v-card id="forgot">
+            <v-stepper v-model="step">
+              <v-stepper-header>
+                <v-stepper-step step="1" >Forgot password</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step step="2" >Reset Password</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items style="height:308px !important;">
+                <v-stepper-content step="1">
+                  <v-card-text class="pb-2">
+                    <p class="subheading">Please insert your email.</p>
+                    <v-form>
+                      <v-text-field prepend-icon="fas fa-envelope" v-model="forgot_email" name="email" label="Email" id="forgot_email" type="text"></v-text-field>
+                    </v-form>
+                    <p class="mb-5">You'll receive a code that will be valid for 1 hour to reset your password.</p>
+                  </v-card-text>
+                  <br>
+                  <v-card-actions>
+                    <v-btn flat class="primary--text" to="/signin">Login</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn class="raven primary--text" @click.native="forgot">
+                      Send
+                      <v-icon dark right>fas fa-share-square</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-stepper-content>
+                <v-stepper-content step="2">
+                  <v-card-text class="pb-1">
+                    <v-form>
+                      <v-text-field prepend-icon="fas fa-key" v-model="token" name="token" label="Code" id="token" type="text"></v-text-field>
+                      <v-text-field prepend-icon="fas fa-lock" v-model="new_password" name="new_password" label="Password" id="new_password" type="password"></v-text-field>
+                      <v-text-field prepend-icon="fas fa-lock" v-model="confirm_password" :rules="[() => confirm_password === new_password || 'Password don\'t match']" name="confirm_password" label="Confirm password" id="confirm_password" type="password"></v-text-field>
+                    </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn flat class="primary--text" to="/signin">Login</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn class="raven primary--text" @click.native="reset">
+                      Submit
+                      <v-icon dark right>fas fa-external-link-alt</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
@@ -66,6 +69,20 @@ export default {
       step: 1,
       success_msg: ""
     };
+  },
+  mounted() {
+    this.$el.addEventListener("keypress", event => {
+      if (event.key == "Enter")
+        if (this.step === 1) this.forgot();
+        else this.reset();
+    });
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener("keypress", event => {
+      if (event.key == "Enter")
+        if (this.step === 1) this.forgot();
+        else this.reset();
+    });
   },
   methods: {
     forgot() {
@@ -121,5 +138,25 @@ export default {
 }
 .stepper__content {
   padding: 0;
+}
+
+@media only screen and (orientation: portrait) {
+  #auth {
+    background-image: url("../../assets/2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+  }
+}
+@media only screen and (orientation: landscape) {
+  #auth {
+    background-image: url("../../assets/1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+  }
+}
+#auth_card {
+  max-width: 400px;
 }
 </style>
