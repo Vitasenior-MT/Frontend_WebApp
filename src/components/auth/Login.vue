@@ -6,10 +6,8 @@
           <v-card id="login" >
             <v-card-title id="login_title"><p class="title mb-0">Login</p></v-card-title>
             <v-card-text id="login_box">
-              <v-form>
                   <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Email" id="email" type="text"></v-text-field>
                   <v-text-field prepend-icon="fas fa-lock" v-model="password" name="password" label="Password" id="password" type="password"></v-text-field>
-              </v-form>
               <v-btn small block flat class="primary--text" to="/forgot">forgot password</v-btn>
             </v-card-text>
             <v-card-actions class="bottom_action">
@@ -39,12 +37,12 @@ export default {
     };
   },
   mounted() {
-    document.addEventListener("keypress", event => {
+    this.$el.addEventListener("keypress", event => {
       if (event.key == "Enter") this.login();
     });
   },
   beforeDestroy() {
-    document.removeEventListener("keypress", event => {
+    this.$el.removeEventListener("keypress", event => {
       if (event.key == "Enter") this.login();
     });
   },
@@ -81,12 +79,6 @@ export default {
           }
           event_bus.$emit("waiting", false);
         });
-    },
-    forgotSw() {
-      this.$emit("forgot");
-    },
-    registerSw() {
-      this.$emit("register");
     }
   }
 };

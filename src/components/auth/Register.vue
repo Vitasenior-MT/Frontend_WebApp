@@ -84,9 +84,6 @@ export default {
           }
           event_bus.$emit("waiting", false);
         });
-    },
-    close() {
-      this.$emit("close");
     }
   }
 };

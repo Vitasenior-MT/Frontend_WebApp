@@ -1,22 +1,20 @@
 <template>
-    <v-container grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" class="envGridSensors px-0">
+    <v-container dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor" style="padding-top:0px">
       <v-flex style="padding:5px" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
-          <v-flex xs4 sm3 md3>  
-            <v-card class="red darken-4" style="height:100%">
-              <v-container fill-height align-content-center>
-                <v-avatar class="envIcon">
-                  <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
-                  <img v-if="type == 'humidade (%)'" src="@/assets/humi_icon.svg">
-                  <img v-if="type == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
-                  <img v-if="type == 'dioxi. carbono (ppm)'" src="@/assets/dioxi_icon.svg">
-                </v-avatar>
-              </v-container>
+          <v-flex xs4 sm3 md3 style=" padding:0px">  
+            <v-card class="red darken-4" style="height:100%; padding-right:0px">
+              <v-avatar class="envIcon">
+                <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
+                <img v-if="type == 'humidade (%)'" src="@/assets/humi_icon.svg">
+                <img v-if="type == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
+                <img v-if="type == 'dioxi. carbono (ppm)'" src="@/assets/dioxi_icon.svg">
+              </v-avatar>
             </v-card>
           </v-flex>
-          <v-flex xs8 sm9 md9>  
-            <v-card class="red darken-1">
-              <v-card-text headline class="text-md-center">{{ getAverageValue() }}</v-card-text>
+          <v-flex xs8 sm9 md9 style="padding:0px">  
+            <v-card class="red darken-1" style="padding-left:0p">
+              <v-card-text class="title text-md-center">{{ getAverageValue() }}</v-card-text>
               <v-card-text primary>{{ type }}</v-card-text>
             </v-card>
           </v-flex>
@@ -24,15 +22,20 @@
       </v-flex>
       <v-flex style="padding:5px" v-else>
         <v-layout row>
-          <v-flex xs4 sm2>
-            <v-card class="green darken-4" style="height:100%">
-               <v-avatar ><img src="@/assets/logo.png"></v-avatar>
+          <v-flex xs4 sm3 md3 style=" padding:0px"> 
+            <v-card class="green darken-4" style="height:100%; padding-right:0px">
+              <v-avatar class="envIcon">
+                <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
+                <img v-if="type == 'humidade (%)'" src="@/assets/humi_icon.svg">
+                <img v-if="type == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
+                <img v-if="type == 'dioxi. carbono (ppm)'" src="@/assets/dioxi_icon.svg">
+              </v-avatar>
             </v-card>
           </v-flex>
-          <v-flex xs8 sm10>  
-            <v-card hover @click="goToTypeDetails(sensors)" class="green darken-1">
-              <v-card-title>{{ type }}</v-card-title>
-              <v-card-text primary>{{ getAverageValue() }}</v-card-text>
+          <v-flex xs8 sm9 md9 style="padding:0px">  
+            <v-card class="green darken-1" style="padding-left:0p">
+              <v-card-text headline class="text-md-center">{{ getAverageValue() }}</v-card-text>
+              <v-card-text primary>{{ type }}</v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
@@ -40,12 +43,12 @@
       <v-layout row wrap>
         <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
           <div v-if="item.sensor">
-            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[0] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable" class="red darken-1">
-              <v-card-title primary class="title">{{ item.last_values ? item.last_values[0]:'none' }}</v-card-title>
+            <v-card class="vitaboxBoardSelector red darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[item.sensor.last_values.length-1] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable">
+              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
-            <v-card hover @click.native="goToBoardDetails(item.board, item.sensor)" v-else class="green darken-1">
-              <v-card-title primary class="title">{{ item.last_values }}</v-card-title>
+            <v-card class="vitaboxBoardSelector green darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-else>
+              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
           </div>
@@ -88,7 +91,13 @@ export default {
 
 <style>
 .envIcon {
-  width: 5vh !important;
-  height: 5vh !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding-top: 45%;
+}
+
+.vitaboxBoardSelector:hover {
+  cursor: pointer;
+  background-color: #5b5b5b !important;
 }
 </style>

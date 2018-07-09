@@ -119,9 +119,10 @@ i {
   opacity: 0;
 }
 
-#navpanel{
+#navpanel {
   padding-top: 65px;
   padding-left: 10px;
   padding-right: 10px;
+  height: 100%;
 }
 </style>

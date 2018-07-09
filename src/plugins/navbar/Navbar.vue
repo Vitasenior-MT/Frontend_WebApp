@@ -1,5 +1,5 @@
 <template>
-  <div id="navbar">
+  <div id="navbar" >
 
     <div v-if="logged">
       <v-navigation-drawer v-if="fixed" app width="250" id="side_bar">
@@ -11,17 +11,19 @@
       </v-navigation-drawer>
 
       <v-toolbar fixed class="primary--text raven" id="top_bar">
-        <v-btn v-if="logged" @click.stop="drawer=!drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
+        <v-btn @click.stop="drawer=!drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
         <v-toolbar-title>
             <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <warning v-if="logged"></warning>
+        <v-toolbar-items>
+          <warning :isadmin="isadmin"></warning>
+        </v-toolbar-items>
       </v-toolbar>
     </div>
 
     <div v-else>
-      <v-toolbar class="primary--text raven" id="top_bar">
+      <v-toolbar fixed class="primary--text raven" id="top_bar">
         <v-toolbar-title>
             <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
         </v-toolbar-title>
@@ -80,9 +82,9 @@ export default {
   height: 56px !important;
 }
 #top_bar {
-  height: 56px !important;
+  height: 70px !important;
 }
 .top_bar_item {
-  height: 56px !important;
+  height: 70px !important;
 }
 </style>
