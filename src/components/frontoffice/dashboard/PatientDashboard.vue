@@ -291,4 +291,6 @@ export default {
 .bioIcon {
   padding-top:10%;
 }
+
+
 </style>
