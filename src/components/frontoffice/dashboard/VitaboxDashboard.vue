@@ -1,6 +1,6 @@
 <template>
   <v-container style="padding:0px; max-width:100%">
-    <v-card dark flat v-if="patients.length > 0">
+    <v-card style="height:100%" dark flat v-if="patients.length > 0">
       <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
         <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
           <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>

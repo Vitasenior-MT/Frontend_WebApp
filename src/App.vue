@@ -121,8 +121,8 @@ i {
 
 #navpanel {
   padding-top: 65px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
   height: 100%;
 }
 </style>

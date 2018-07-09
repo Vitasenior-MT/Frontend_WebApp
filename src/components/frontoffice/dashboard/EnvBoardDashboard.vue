@@ -96,6 +96,12 @@ export default {
   padding-top: 45%;
 }
 
+.vitaboxBoardSelector {
+-moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 5px #000000;
+}
+
 .vitaboxBoardSelector:hover {
   cursor: pointer;
   background-color: #5b5b5b !important;

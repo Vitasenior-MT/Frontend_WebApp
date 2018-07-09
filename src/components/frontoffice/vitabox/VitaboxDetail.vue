@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content style="padding-left:240px;">
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
     <v-list dark>
       <v-list-tile>
@@ -19,6 +19,32 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
+    <v-flex style="padding:0px">
+      <v-menu offset-y transition="slide-y-transition" style="width:100%;">
+        <v-card class="vitaboxUserMenuSelector" slot="activator" dark style="width:100%;">
+          <v-card-title class="title">
+            <v-icon color="primary" style="padding-right:10px">fas fa-user-tag</v-icon>
+            Users from this vitabox:
+            <v-spacer></v-spacer>
+            <v-icon>fas fa-angle-down</v-icon>
+          </v-card-title>
+        </v-card>
+        <v-list>
+          <v-template dark v-for="item in vitaboxUsers" :key="item.id" @click="gotoUserProfile(item)">
+            <v-divider v-if="item == vitaboxUsers[0]" class="userDivider"></v-divider>
+            <v-divider v-else class="userDivider" :inset="true"></v-divider>
+            <v-list-tile avatar class="vitaboxUserSelector">
+              <v-list-tile-avatar style="color:#3faf7d"><img src="@/assets/logo.png"></v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                <v-list-tile-sub-title>Name</v-list-tile-sub-title>
+              </v-list-tile-content> 
+            </v-list-tile>
+            <v-divider v-if="item == vitaboxUsers[vitaboxUsers.length-1]" class="userDivider"></v-divider>
+          </v-template>
+        </v-list>
+      </v-menu>
+    </v-flex>
     <div id="google-map-box"></div>
     <v-data-table :headers="headers" :items="boards" hide-actions class="elevation-1" dark >
       <template slot="items" slot-scope="props">
@@ -83,6 +109,7 @@ export default {
   },
   created() {
     this.getBoards();
+    this.getUsers();
   },
   mounted() {
     let myLatLng = new google.maps.LatLng(
@@ -100,6 +127,29 @@ export default {
     });
   },
   methods: {
+    getUsers() {
+      event_bus.$emit("waiting", true);
+      event_bus.$data.http
+        .get("/vitabox/" + this.$store.state.vitabox.id + "/user")
+        .then(response => {
+          this.vitaboxUsers = response.data.users;
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", { message: error.message, type: "error" });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    },
+        gotoUserProfile(user){
+      this.$router.push("/user/detail");
+    },
     getBoards() {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
@@ -132,5 +182,18 @@ export default {
 #google-map-box {
   width: 100%;
   height: 400px;
+}
+.vitaboxUserMenuSelector:hover {
+  cursor: pointer;
+  background-color: #5b5b5b !important;
+}
+
+.userDivider {
+  background-color: black !important;
+}
+
+.vitaboxUserSelector:hover {
+  cursor: pointer;
+  background-color: #b4b2b2 !important;
 }
 </style>
