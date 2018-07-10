@@ -2,13 +2,24 @@
   <v-container class="gridSensor">
     <v-card light >
       <v-card dark>
-        <v-flex wrap>
+        <v-flex>
           <v-layout>
-            <v-card-title primary class="title" style="width:60vh">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</v-card-title>
-            <v-card-text style="width:80vh">
-              <v-icon small>fas fa-calendar-alt</v-icon>
-              Última actualização: {{ this.lastrecord }}
-            </v-card-text>
+            <v-avatar style="padding-left:20px; padding-top:20px;">
+              <img v-if="selectedSensor.Sensormodel.measure == 'peso'" src="@/assets/Body_Scale_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'p.a. sistólica'" src="@/assets/Blood_Pressure_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'p.a. diastólica'" src="@/assets/Blood_Pressure_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pressão Arterial'" src="@/assets/Blood_Pressure_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'passos'" src="@/assets/Smartband_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Bracelete'" src="@/assets/Smartband_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'temperatura corp.'" src="@/assets/Body_Temp_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'oximetria'" src="@/assets/Spo2_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pulsometro'" src="@/assets/Spo2_Icon.png">
+            </v-avatar>
+            <span class="title" style="color:#3faf7d; padding-left:20px; padding-top:20px;">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
+            <v-spacer></v-spacer>
+            <v-icon small>fas fa-calendar-alt</v-icon>
+            <span style="padding-left:10px; padding-top:25px;"> Última actualização:  {{ this.lastrecord }} </span>
+            <v-spacer></v-spacer>
             <v-menu
               ref="menu1"
               :close-on-content-click="false"
@@ -181,7 +192,6 @@ export default {
             this.designGraph();
             this.lastrecord = this.records[this.records.length-1].datetime;
             this.lastrecord = new Date(this.lastrecord).toLocaleDateString("pt-pt", this.options);
-            console.log(this.lastrecord);
           })
           .catch(error => {
             if (error.response) {

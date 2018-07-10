@@ -22,7 +22,7 @@
       </v-flex>
       <v-flex style="padding:5px" v-else>
         <v-layout row>
-          <v-flex xs4 sm3 md3 style=" padding:0px"> 
+          <v-flex xs4 sm3 md3 style="padding:0px"> 
             <v-card class="green darken-4" style="height:100%; padding-right:0px">
               <v-avatar class="envIcon">
                 <img v-if="type == 'temperatura (ºC)'" src="@/assets/temp_icon.svg">
@@ -41,7 +41,7 @@
         </v-layout>
       </v-flex>
       <v-layout row wrap>
-        <v-flex sm4 md6 lg4 v-for="item in sensors" :key="item.id" style="padding:5px" >
+        <v-flex v-for="item in sensors" :key="item.id" style="padding:5px" >
           <div v-if="item.sensor">
             <v-card class="vitaboxBoardSelector red darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[item.sensor.last_values.length-1] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable">
               <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}</v-card-title>
@@ -94,6 +94,12 @@ export default {
   width: 40px !important;
   height: 40px !important;
   padding-top: 45%;
+}
+
+.vitaboxBoardSelector {
+-moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 5px #000000;
 }
 
 .vitaboxBoardSelector:hover {

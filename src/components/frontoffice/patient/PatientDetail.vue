@@ -1,10 +1,10 @@
 <template>
-  <v-content >
-    <v-layout row wrap align-center>
+  <v-content style="padding-left:240px">
+    <v-layout wrap>
       <v-flex xs12 md4>
-        <v-card dark flat style="height:70vh;">
+        <v-card dark flat class="pa-0" style="height:100%;">
           <div class="text-xs-center">
-            <v-avatar size="150px" style="margin-top:10vh">
+            <v-avatar size="150px" style="margin-top:10%">
               <img
               class="img-circle elevation-7 mb-1"
               src="@/assets/logo.png"
@@ -20,7 +20,7 @@
         </v-card>
       </v-flex>
       <v-flex xs12 md8>
-        <v-card dark flat style="height:70vh;">
+        <v-card dark flat style="height:70%;">
           <v-data-table
             :headers="headers"
             :items="this.$store.state.patient.Profiles"
