@@ -2,11 +2,7 @@
   <div id="navbar" >
 
     <div v-if="logged">
-      <v-navigation-drawer app v-if="fixed" width="250" class="pa-0">
-        <sidemenu :isadmin="isadmin"></sidemenu>
-      </v-navigation-drawer>
-
-      <v-navigation-drawer app v-else v-model="drawer" absolute temporary width="250" class="pa-0">
+      <v-navigation-drawer app fixed v-model="drawer" width="250" class="pa-0">
         <sidemenu :isadmin="isadmin"></sidemenu>
       </v-navigation-drawer>
 
@@ -23,7 +19,7 @@
     </div>
 
     <div v-else>
-      <v-toolbar fixed class="primary--text raven" >
+      <v-toolbar app fixed class="primary--text raven" >
         <v-toolbar-title>
             <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
         </v-toolbar-title>
@@ -49,7 +45,7 @@ export default {
   },
   data: () => {
     return {
-      drawer: false,
+      drawer: true,
       fixed: true
     };
   },
