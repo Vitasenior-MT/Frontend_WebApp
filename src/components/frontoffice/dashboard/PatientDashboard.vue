@@ -18,11 +18,11 @@
         </v-layout>
       </v-flex>
       <v-flex sm12 md4 lg2 class="pa-0">
-        <v-layout class="text-md-center" style="height:100%">
+        <v-layout style="height:100%">
           <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
-            <v-avatar size="150px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
+            <v-avatar size="150px" style="margin-top:10px; margin-left:30%; margin-right:25%;"><img src="@/assets/logo.png"></v-avatar>
             <br>
-            <span class="white--text" >
+            <span class="white--text" style="padding-left:20%;">
               <v-icon color="primary" style="padding-right:10px;">fas fa-info-circle</v-icon> Press for more details
             </span>
           </v-card>
