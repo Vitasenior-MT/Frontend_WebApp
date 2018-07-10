@@ -123,6 +123,6 @@ i {
   padding-top: 65px;
   padding-left: 10px;
   padding-right: 10px;
-  height: 100%;
+  height: calc(100% - 36);
 }
 </style>

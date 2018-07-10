@@ -20,8 +20,7 @@ const state = {
 }
 
 const getters = {
-  user: state => state.user,
-  vitabox: state => state.vitabox
+  vitabox: state => { return state.vitabox }
 }
 
 const mutations = {

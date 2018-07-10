@@ -2,18 +2,18 @@
   <div id="navbar" >
 
     <div v-if="logged">
-      <v-navigation-drawer v-if="fixed" app width="250" id="side_bar">
+      <v-navigation-drawer app v-if="fixed" width="250" class="pa-0">
         <sidemenu :isadmin="isadmin"></sidemenu>
       </v-navigation-drawer>
 
-      <v-navigation-drawer v-else v-model="drawer" app width="250" id="side_bar">
+      <v-navigation-drawer app v-else v-model="drawer" absolute temporary width="250" class="pa-0">
         <sidemenu :isadmin="isadmin"></sidemenu>
       </v-navigation-drawer>
 
-      <v-toolbar fixed class="primary--text raven" id="top_bar">
-        <v-btn @click.stop="drawer=!drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
+      <v-toolbar fixed class="primary--text raven" >
+        <v-btn @click.stop="drawer = !drawer" flat dark icon><v-icon>fas fa-bars</v-icon></v-btn>
         <v-toolbar-title>
-            <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
+          <v-avatar><img src="../../assets/logo.png"></v-avatar>Vitasenior
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
@@ -23,7 +23,7 @@
     </div>
 
     <div v-else>
-      <v-toolbar fixed class="primary--text raven" id="top_bar">
+      <v-toolbar fixed class="primary--text raven" >
         <v-toolbar-title>
             <v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior
         </v-toolbar-title>
@@ -53,6 +53,11 @@ export default {
       fixed: true
     };
   },
+  watch: {
+    drawer(x) {
+      console.log(x);
+    }
+  },
   mounted() {
     this.resize();
     window.addEventListener("resize", this.resize);
@@ -71,20 +76,3 @@ export default {
   }
 };
 </script>
-
-<style>
-#side_bar {
-  padding: 0;
-}
-#top_menu {
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-    0 1px 10px 0 rgba(0, 0, 0, 0.12);
-  height: 56px !important;
-}
-#top_bar {
-  height: 70px !important;
-}
-.top_bar_item {
-  height: 70px !important;
-}
-</style>

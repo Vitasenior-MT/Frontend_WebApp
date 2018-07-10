@@ -1,6 +1,7 @@
 <template>
-  <v-container id="dashboardMain" class="dashboardMain" fluid grid-list-sm align-center>
-    <v-layout wrap>
+<v-content>
+  <v-container class="dashboardMain pa-0" fluid grid-list-sm align-center>
+    <v-layout wrap fill-height>
       <v-flex xs12 sm12 md12 lg4 sl4>
         <v-layout class="text-md-left">
           <v-card dark style="width:100%; height:56px;">
@@ -8,7 +9,8 @@
             <v-icon>fa fa-compass</v-icon>
           </v-avatar>
             <span style="color:#3faf7d;">Location:</span>
-            <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
+            <span v-if="this.$store.state.vitabox" style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
+            <span v-else style="padding-left:50px;">No vitabox selected</span>
           </v-card>
         </v-layout>
       </v-flex>
@@ -48,8 +50,9 @@
         </v-layout>
       </v-flex>
     </v-layout>  
-    <vitaboxDashboard :selectedVitabox="$store.state.vitabox"></vitaboxDashboard>
-  </v-container>  
+    <vitaboxDashboard :vitabox="$store.state.vitabox"></vitaboxDashboard>
+  </v-container>
+  </v-content>  
 </template>
 
 <script>
@@ -62,11 +65,11 @@ export default {
   },
   data: () => {
     return {
-      vitaboxUsers: null
+      vitaboxUsers: []
     };
   },
   created() {
-    this.getUsers();
+    // this.getUsers();
   },
   methods: {
     getUsers() {
@@ -108,13 +111,6 @@ export default {
 .vitaboxUserSelector:hover {
   cursor: pointer;
   background-color: #5b5b5b !important;
-}
-
-.dashboardMain {
-  background-color: #3faf7d !important;
-  padding-left:250px; 
-  padding-top:0px; 
-  padding-right:0px;
 }
 
 .userDivider {

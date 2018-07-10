@@ -11,7 +11,7 @@
       <v-card-title primary class="title">This vitabox does not have patient data associated</v-card-title>
       <v-card-text primary>Sorry</v-card-text>
     </v-card>
-    <v-card dark flat v-if="vitaboxBoardSensors.length > 0" style="padding-bottom:40px; " >
+    <v-card dark flat v-if="hasboards" style="padding-bottom:40px; " >
       <v-layout wrap>
         <v-flex v-if="tempSensors.every(checkNulls) > 0">
           <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
@@ -42,14 +42,12 @@ import EnvBoardDashboard from "./EnvBoardDashboard.vue";
 export default {
   name: "vitaboxDashboard",
   props: {
-    selectedVitabox: Object
+    vitabox: Object
   },
   data() {
     return {
       patients: [],
-      patientBoards: [],
-      vitaboxBoards: [],
-      vitaboxBoardSensors: [],
+      hasboards: false,
       tempSensors: [],
       humiSensors: [],
       monoSensors: [],
@@ -60,22 +58,20 @@ export default {
     patientDashboard: PatientDashboard,
     envBoardDashboard: EnvBoardDashboard
   },
-  created() {
-    this.getPatients();
-    this.getVitaboxBoards();
-  },
   watch: {
-    selectedVitabox(val) {
-      this.getPatients();
-      this.getVitaboxBoards();
+    vitabox(x) {
+      if (x) {
+        this.getPatients(x.id);
+        this.getVitaboxBoards(x.id);
+      }
     }
   },
   methods: {
-    getPatients() {
+    getPatients(vitabox_id) {
       event_bus.$emit("waiting", true);
       this.patients = [];
       event_bus.$data.http
-        .get("/vitabox/" + this.selectedVitabox.id + "/patient")
+        .get("/vitabox/" + vitabox_id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
           if (this.patients.length > 0) {
@@ -95,16 +91,16 @@ export default {
           event_bus.$emit("waiting", false);
         });
     },
-    getVitaboxBoards() {
+    getVitaboxBoards(vitabox_id) {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/vitabox/" + this.selectedVitabox.id + "/board")
+        .get("/vitabox/" + vitabox_id + "/board")
         .then(response => {
-          this.vitaboxBoards = response.data.boards;
-          this.vitaboxBoardSensors = this.vitaboxBoards.filter(
+          let boardSensors = response.data.boards.filter(
             board => board.Boardmodel.type === "environmental"
           );
-          this.tempSensors = this.vitaboxBoardSensors.map(board => {
+          this.hasboards = boardSensors.length > 0;
+          this.tempSensors = boardSensors.map(board => {
             return {
               board: board,
               sensor: board.Sensors.filter(
@@ -112,7 +108,7 @@ export default {
               )[0]
             };
           });
-          this.humiSensors = this.vitaboxBoardSensors.map(board => {
+          this.humiSensors = boardSensors.map(board => {
             return {
               board: board,
               sensor: board.Sensors.filter(
@@ -120,7 +116,7 @@ export default {
               )[0]
             };
           });
-          this.monoSensors = this.vitaboxBoardSensors.map(board => {
+          this.monoSensors = boardSensors.map(board => {
             return {
               board: board,
               sensor: board.Sensors.filter(
@@ -128,7 +124,7 @@ export default {
               )[0]
             };
           });
-          this.dioxiSensors = this.vitaboxBoardSensors.map(board => {
+          this.dioxiSensors = boardSensors.map(board => {
             return {
               board: board,
               sensor: board.Sensors.filter(

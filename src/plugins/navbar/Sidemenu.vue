@@ -1,8 +1,8 @@
 <template>
   <div id="sidemenu">
     <v-toolbar class="primary--text raven" id="top_menu">
-      <v-toolbar-title v-if="isadmin"><v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Backoffice</v-toolbar-title>
-      <v-toolbar-title v-else><v-avatar size="25px"><img src="../../assets/logo.png"></v-avatar>Vitasenior</v-toolbar-title>
+      <v-toolbar-title v-if="isadmin"><v-avatar><img src="../../assets/logo.png"></v-avatar>Backoffice</v-toolbar-title>
+      <v-toolbar-title v-else><v-avatar><img src="../../assets/logo.png"></v-avatar>Vitasenior</v-toolbar-title>
     </v-toolbar>
     
     <div id="body_menu" class="raven">
@@ -48,11 +48,15 @@ export default {
 </script>
 
 <style>
+#top_menu {
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+    0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
 #sidemenu {
   height: 100%;
 }
 #body_menu {
-  height: calc(100% - 56px - 36px);
+  height: calc(100% - 64px - 36px);
   position: relative;
   overflow-y: auto;
 }
