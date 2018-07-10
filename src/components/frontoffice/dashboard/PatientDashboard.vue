@@ -1,12 +1,26 @@
 <template>
   <v-container class="gridPatient" style="max-width:100%; padding-right:40px;">
-    <v-layout v-if="boardSensors.length > 0" wrap >
+    <v-layout v-if="boardSensors.length > 0" row wrap >
+      <v-flex xs12 class="pa-0">
+        <v-layout class="text-md-center">
+          <v-card style="width: 100%; padding-top: 10px; padding-bottom: 40px;" flat>
+            <v-card-title primary-title>
+              <div>
+                <h1 class="main-title mb-0">
+                  Patient - 
+                  <span class="thin">
+                    {{ this.selectedPatient.name}}
+                  </span>
+                </h1>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-layout>
+      </v-flex>
       <v-flex sm12 md4 lg2 class="pa-0">
-        <v-layout class="text-md-center" style="height:100% margin-top:2px">
+        <v-layout class="text-md-center" style="height:100%">
           <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
             <v-avatar size="150px" style="margin-top:10px"><img src="@/assets/logo.png"></v-avatar>
-            <br>
-            <h3 class="headline mb-0" >{{ this.selectedPatient.name }}</h3>
             <br>
             <span class="white--text" >
               <v-icon color="primary" style="padding-right:10px;">fas fa-info-circle</v-icon> Press for more details
@@ -23,7 +37,7 @@
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'p.a. diastólica'" src="@/assets/Blood_Pressure_Icon.png">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pressão Arterial'" src="@/assets/Blood_Pressure_Icon.png">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'passos'" src="@/assets/Smartband_Icon.png">
-                <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Bracelete'" src="@/assets/Smartband_Icon.png">
+                <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'freq. cardíaca'" src="@/assets/Smartband_Icon.png">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'temperatura corp.'" src="@/assets/Body_Temp_Icon.png">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'oximetria'" src="@/assets/Spo2_Icon.png">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pulsometro'" src="@/assets/Spo2_Icon.png">
@@ -64,7 +78,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout wrap justify-center>
+    <v-layout wrap justify-center style="padding-top:10px">
       <v-flex xs12 sm12 md4 lg2 v-for="item in boardSensors" :key="item.id">
           <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="showGraph(item)">
             <v-avatar class="bioAvatar" style="padding-left:10px;">
@@ -73,7 +87,7 @@
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'p.a. diastólica'" src="@/assets/Blood_Pressure_Icon.png">
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'pulsação' &&  item.board.Boardmodel.name == 'Pressão Arterial'" src="@/assets/Blood_Pressure_Icon.png">
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'passos'" src="@/assets/Smartband_Icon.png">
-                <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'pulsação' &&  item.board.Boardmodel.name == 'Bracelete'" src="@/assets/Smartband_Icon.png">
+                <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'freq. cardíaca'" src="@/assets/Smartband_Icon.png">
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'temperatura corp.'" src="@/assets/Body_Temp_Icon.png">
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'oximetria'" src="@/assets/Spo2_Icon.png">
                 <img class="bioLogo" v-if="item.sensor.Sensormodel.measure == 'pulsação' &&  item.board.Boardmodel.name == 'Pulsometro'" src="@/assets/Spo2_Icon.png">

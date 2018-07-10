@@ -1,8 +1,8 @@
 <template>
-  <v-container style="padding:0px; max-width:100%">
+  <v-container style="max-width:100%; padding-right:0px; padding-left:0px;">
     <v-layout wrap row>
       <v-flex xs12>
-        <v-card dark flat v-if="patients.length > 0">
+        <v-card dark flat v-if="patients.length > 0" style="padding-top:10px">
           <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
             <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
               <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
@@ -10,8 +10,15 @@
           </v-carousel>
         </v-card>
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs12 style="padding-top:20px">
         <v-card dark flat style="padding-bottom:40px; " >
+          <v-flex xs12>
+            <v-layout class="text-md-center" style="height:100%">
+              <v-card style="width: 100%; padding-top: 30px; padding-bottom: 30px;" flat>
+                <h2 class="main-title">Envorinmental Sensors</h2>
+              </v-card>
+            </v-layout>
+          </v-flex>
           <v-layout wrap>
             <v-flex v-if="tempSensors.every(checkNulls) > 0">
               <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>

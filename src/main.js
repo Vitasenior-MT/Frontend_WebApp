@@ -23,6 +23,9 @@ Vue.use(Vuetify, {
   icons: {
     checkboxOn: 'fas fa-check-square',
     checkboxOff: 'far fa-square'
+  },
+  loaders: {
+    scss: 'style!css!sass'
   }
 });
 Vue.config.productionTip = false

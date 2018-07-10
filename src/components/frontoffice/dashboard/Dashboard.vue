@@ -1,17 +1,33 @@
 <template>
   <v-content>
-    <v-container id="dashboardMain" class="dashboardMain" fluid grid-list-sm align-center>
-      <v-layout wrap>
-        <v-flex xs12 sm12 md12 lg8 sl9>
-          <v-layout class="text-md-left">
-            <v-card dark style="width:100%; height:56px;">
-            <v-avatar style="color:#3faf7d; ">
-              <v-icon>fa fa-compass</v-icon>
-            </v-avatar>
-              <span style="color:#3faf7d;">Location:</span>
-              <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
-            </v-card>
-          </v-layout>
+    <v-container fluid grid-list-sm align-center>
+      <v-layout wrap style="padding-bottom:15px">
+        <v-flex class="text-md-center" xs12 style="padding:0px">
+          <v-card dark style="width: 100%; padding-top: 20px; padding-bottom: 60px;" flat>
+            <v-card-title primary-title>
+              <div>
+                <h1 class="main-title mb-0">
+                  Vitabox - 
+                  <span class="thin">
+                    {{ this.$store.state.vitabox.address}}
+                  </span>
+                </h1>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-flex>
+        <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left" style="padding-top:2px; padding-left:0px; padding-right:0px; padding-bottom:0px">
+          <v-card dark style="width:100%; height:56px;">
+            <v-layout row>
+              <v-avatar style="color:#3faf7d;">
+                <v-icon>fa fa-compass</v-icon>
+              </v-avatar>
+              <h4 style="padding-top:12.5px;">
+                <span style="color:#3faf7d;">Location:</span>
+                <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
+              </h4>
+            </v-layout>
+          </v-card>
         </v-flex>
         <v-flex xs12 sm12 md12 lg4 sl3>
           <v-layout class="text-md-center">
@@ -65,4 +81,35 @@ export default {
 .userDivider {
   background-color: black !important;
 }
+
+.main-title {
+   position: absolute;
+   margin: 0;
+   padding: 0;
+   color:#3faf7d;
+   font-size: 20px;
+   text-align: center;
+   top: 50%;
+   left: 50%;
+   -webkit-transform: translate3d(-50%, -50%, 0);
+   transform: translate3d(-50%, -50%, 0);
+}
+
+.demo .main-title {
+   text-transform: uppercase;
+   font-size: 4.2em;
+   letter-spacing: 0.1em;
+}
+
+.main-title .thin {
+  font-weight: 200;
+  color: #F9F1E9;
+}
+
+@media only screen and (max-width: 768px) {
+   .demo .main-title {
+      font-size: 3em;
+   }
+}
+
 </style>
