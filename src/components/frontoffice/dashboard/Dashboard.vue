@@ -1,29 +1,31 @@
 <template>
-  <v-container id="dashboardMain" class="dashboardMain" fluid grid-list-sm align-center>
-    <v-layout wrap>
-      <v-flex xs12 sm12 md12 lg8 sl9>
-        <v-layout class="text-md-left">
-          <v-card dark style="width:100%; height:56px;">
-          <v-avatar style="color:#3faf7d; ">
-            <v-icon>fa fa-compass</v-icon>
-          </v-avatar>
-            <span style="color:#3faf7d;">Location:</span>
-            <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
-          </v-card>
-        </v-layout>
-      </v-flex>
-      <v-flex xs12 sm12 md12 lg4 sl3>
-        <v-layout class="text-md-center">
-          <v-card class="vitaboxDetailsSelector" dark style="height:56px; width:100%; padding-top:12px; padding-bottom:12px;" align-content-center align-center @click.native='goToVitaboxDetails($store.state.vitabox)'>
-            <span class="white--text" style="padding-right:50px;">
-                <v-icon color="primary" style="width:50px;">fas fa-info-circle</v-icon> Press for more details
-            </span>
-          </v-card>
-        </v-layout>
-      </v-flex>
-    </v-layout>  
-    <vitaboxDashboard :selectedVitabox="$store.state.vitabox"></vitaboxDashboard>
-  </v-container>  
+  <v-content>
+    <v-container id="dashboardMain" class="dashboardMain" fluid grid-list-sm align-center>
+      <v-layout wrap>
+        <v-flex xs12 sm12 md12 lg8 sl9>
+          <v-layout class="text-md-left">
+            <v-card dark style="width:100%; height:56px;">
+            <v-avatar style="color:#3faf7d; ">
+              <v-icon>fa fa-compass</v-icon>
+            </v-avatar>
+              <span style="color:#3faf7d;">Location:</span>
+              <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
+            </v-card>
+          </v-layout>
+        </v-flex>
+        <v-flex xs12 sm12 md12 lg4 sl3>
+          <v-layout class="text-md-center">
+            <v-card class="vitaboxDetailsSelector" dark style="height:56px; width:100%; padding-top:12px; padding-bottom:12px;" align-content-center align-center @click.native='goToVitaboxDetails($store.state.vitabox)'>
+              <span class="white--text" style="padding-right:50px;">
+                  <v-icon color="primary" style="width:50px;">fas fa-info-circle</v-icon> Press for more details
+              </span>
+            </v-card>
+          </v-layout>
+        </v-flex>
+      </v-layout>  
+      <vitaboxDashboard :selectedVitabox="$store.state.vitabox"></vitaboxDashboard>
+    </v-container> 
+  </v-content> 
 </template>
 
 <script>
@@ -61,10 +63,9 @@ export default {
 }
 
 .dashboardMain {
-  background-color: #3faf7d !important;
   width:100%;
-  padding-left:250px; 
   padding-top:5px; 
+  padding-left:0px;
   padding-right:0px;
   padding-bottom:0px;
 }

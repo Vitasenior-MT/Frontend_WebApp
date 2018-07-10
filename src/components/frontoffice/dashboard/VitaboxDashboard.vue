@@ -1,36 +1,34 @@
 <template>
   <v-container style="padding:0px; max-width:100%">
-    <v-card style="height:100%" dark flat v-if="patients.length > 0">
-      <v-carousel :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
-        <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
-          <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
-        </v-carousel-item>
-      </v-carousel>
-    </v-card>
-    <v-card dark v-else flat style="padding:0px">
-      <v-card-title primary class="title">This vitabox does not have patient data associated</v-card-title>
-      <v-card-text primary>Sorry</v-card-text>
-    </v-card>
-    <v-card dark flat v-if="vitaboxBoardSensors.length > 0" style="padding-bottom:40px; " >
-      <v-layout wrap>
-        <v-flex v-if="tempSensors.every(checkNulls) > 0">
-          <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
-        </v-flex>
-        <v-flex v-if="humiSensors.every(checkNulls) > 0">
-          <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
-        </v-flex>
-        <v-flex v-if="monoSensors.every(checkNulls) > 0">
-          <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
-        </v-flex>
-        <v-flex v-if="dioxiSensors.every(checkNulls) > 0">
-          <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>
-        </v-flex>
-      </v-layout>
-    </v-card>
-    <v-card v-else flat style="padding-top:10px">
-      <v-card-title primary class="title">This vitabox does not have environmental data associated</v-card-title>
-      <v-card-text primary>Sorry</v-card-text>
-    </v-card> 
+    <v-layout wrap row>
+      <v-flex xs12>
+        <v-card dark flat v-if="patients.length > 0">
+          <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
+            <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
+              <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
+            </v-carousel-item>
+          </v-carousel>
+        </v-card>
+      </v-flex>
+      <v-flex xs12>
+        <v-card dark flat style="padding-bottom:40px; " >
+          <v-layout wrap>
+            <v-flex v-if="tempSensors.every(checkNulls) > 0">
+              <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
+            </v-flex>
+            <v-flex v-if="humiSensors.every(checkNulls) > 0">
+              <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
+            </v-flex>
+            <v-flex v-if="monoSensors.every(checkNulls) > 0">
+              <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
+            </v-flex>
+            <v-flex v-if="dioxiSensors.every(checkNulls) > 0">
+              <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -154,7 +152,6 @@ export default {
       return sensors.sensor != null;
     },
     selectedPatient(patientData) {
-      this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
     }
@@ -163,14 +160,8 @@ export default {
 </script>
 
 <style lang="stylus">
-.carousel {
-  height: inherit !important;
-}
-
-.gridPatient {
-  padding-left: 45px;
-  padding-top: 0px;
-  padding-bottom: 40px;
+.patientCarousel {
+  height: 100%;
 }
 
 #carousel-view .fade {

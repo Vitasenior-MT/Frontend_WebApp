@@ -108,6 +108,7 @@ export default {
     };
   },
   created() {
+    this.$store.commit("setPatientData", this.selectedPatient);
     this.getPatientBoards();
   },
   mounted() {
@@ -288,6 +289,12 @@ export default {
 </script>
 
 <style>
+.gridPatient {
+  padding-left: 45px;
+  padding-top: 0px;
+  padding-bottom: 40px;
+}
+
 .animated {
   -webkit-animation-duration: 0.5s;
   animation-duration: 0.5s;
