@@ -126,8 +126,47 @@ i {
 
 #navpanel {
   padding-top: 65px;
-  padding-left: 10px;
-  padding-right: 10px;
   height: calc(100% - 36);
+  background: linear-gradient(-45deg, #7741f4, #42f4a1);
+	background-size: 400% 400%;
+	-webkit-animation: Gradient 5s ease infinite;
+	-moz-animation: Gradient 5s ease infinite;
+	animation: Gradient 5s ease infinite;
+}
+
+@-webkit-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@-moz-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
 }
 </style>
