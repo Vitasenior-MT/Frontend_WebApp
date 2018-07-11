@@ -6,12 +6,12 @@
       <router-link v-for="(item, index) in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
       <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
         <v-list-tile class="vitaboxSelector">
-          <v-list-tile-avatar style="color:#3faf7d">
+          <v-list-tile-avatar class="primary--text">
             <v-icon>fa fa-tv</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title style="color:#3faf7d;">Vitabox</v-list-tile-title>
-            <v-list-tile-sub-title style="color:white; font-size:small">{{ item.address }}</v-list-tile-sub-title>
+            <v-list-tile-title class="primary--text">Vitabox</v-list-tile-title>
+            <v-list-tile-sub-title class="white--text" small>{{ item.address }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </router-link>

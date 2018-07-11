@@ -1,8 +1,8 @@
 <template>
-  <v-container style="max-width:100%; padding-right:0px; padding-left:0px;">
+  <v-container class="pl-0 pr-0" style="max-width:100%;">
     <v-layout wrap row>
       <v-flex xs12>
-        <v-card dark flat v-if="patients.length > 0" style="padding-top:10px">
+        <v-card class="pt-2" dark flat v-if="patients.length > 0">
           <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
             <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
               <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
@@ -10,12 +10,12 @@
           </v-carousel>
         </v-card>
       </v-flex>
-      <v-flex xs12 style="padding-top:20px">
-        <v-card dark flat style="padding-bottom:40px; " >
+      <v-flex class="pt-2" xs12>
+        <v-card class="pb-3" dark flat>
           <v-flex xs12>
             <v-layout class="text-md-center" style="height:100%">
-              <v-card style="width: 100%; padding-top:50px;" flat>
-                <h2 class="main-title">Envorinmental Sensors</h2>
+              <v-card class="pt-5" style="width: 100%;" flat>
+                <h2 class="main-title primary--text">Envorinmental Sensors</h2>
               </v-card>
             </v-layout>
           </v-flex>
@@ -159,7 +159,6 @@ export default {
       return sensors.sensor != null;
     },
     selectedPatient(patientData) {
-      //this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
     }

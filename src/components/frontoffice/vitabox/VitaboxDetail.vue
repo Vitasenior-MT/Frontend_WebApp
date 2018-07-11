@@ -70,7 +70,7 @@
             <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
             <td class="text-xs-left">{{ props.item.description }}</td>
             <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-            <td class="text-xs-left">{{ props.item.updated_at }}</td>
+            <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
             <td class="text-xs-left">
               <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
             </td>
@@ -114,11 +114,27 @@ export default {
   },
   data() {
     return {
+      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
       headers: [
         { text: "Board", value: "name", sortable: false, class: "headers" },
-        { text: "Description", value: "description", sortable: false, class: "headers" },
-        { text: "MAC", value: "mac_address", sortable: false, class: "headers" },
-        { text: "Last Update", value: "updated_at", sortable: false, class: "headers" },
+        {
+          text: "Description",
+          value: "description",
+          sortable: false,
+          class: "headers"
+        },
+        {
+          text: "MAC",
+          value: "mac_address",
+          sortable: false,
+          class: "headers"
+        },
+        {
+          text: "Last Update",
+          value: "updated_at",
+          sortable: false,
+          class: "headers"
+        },
         { text: "State", sortable: false, class: "headers" },
         { text: "Actions", sortable: false, class: "headers" }
       ],
@@ -168,7 +184,7 @@ export default {
           event_bus.$emit("waiting", false);
         });
     },
-        gotoUserProfile(user){
+    gotoUserProfile(user) {
       this.$router.push("/user/detail");
     },
     getBoards() {
@@ -219,6 +235,6 @@ export default {
 }
 
 .headers {
-    color: #3faf7d !important;
+  color: #3faf7d !important;
 }
 </style>

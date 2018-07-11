@@ -34,7 +34,7 @@
               <v-list-tile-title  v-else><v-icon>fas fa-times-circle</v-icon> </v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-content>
-              <v-list-tile-sub-title style="color:#3faf7d;"> Last Update</v-list-tile-sub-title>
+              <v-list-tile-sub-title style="color:#3faf7d;">Last Update</v-list-tile-sub-title>
               <v-list-tile-title>{{ $store.state.board.updated_at }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>

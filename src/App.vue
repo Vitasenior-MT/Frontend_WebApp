@@ -124,55 +124,13 @@ i {
   padding-right:25px; 
   padding-left:25px;
   height: 100% ;
-  background: linear-gradient(-45deg, #7741f4, #42f4a1, #7741f4);
-	background-size: 400% 400%;
-	-webkit-animation: Gradient 5s ease infinite;
-	-moz-animation: Gradient 5s ease infinite;
-	animation: Gradient 5s ease infinite;
+  background-image: linear-gradient(to right top, #845ec2, #d65db1, #d65db1, #ff9671, #ffc75f, #f9f871);
 }
-
-@-webkit-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
-}
-
-@-moz-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
-}
-
-@keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
-}
-
 
 .main-title {
    position: absolute;
    margin: 0;
    padding: 0;
-   color:#3faf7d;
    font-size: 20px;
    text-align: center;
    top: 50%;
