@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <v-container fluid grid-list-sm align-center>
+    <v-container class="pa-0" fluid grid-list-sm align-center>
       <v-layout wrap style="padding-bottom:0px">
         <v-flex class="text-md-center" xs12 style="padding:0px">
           <v-card dark style="width: 100%; padding-top: 30px; padding-bottom: 60px;" flat>

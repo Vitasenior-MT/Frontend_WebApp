@@ -1,7 +1,7 @@
 <template>
     <v-content style="height:100%">
       <v-flex xs12 class="pa-0">
-        <v-layout class="text-md-center" style="padding-left:25px; padding-right:25px; padding-top:25px;">
+        <v-layout class="text-md-center">
           <v-card dark style="width: 100%; padding-top: 10px;" flat>
             <v-card-title primary-title>
               <div>
@@ -16,7 +16,7 @@
           </v-card>
         </v-layout>
       </v-flex>
-      <v-flex xs12 style="padding-left:25px; padding-right:25px; padding-bottom:25px;">
+      <v-flex xs12 style="padding-bottom:25px;">
         <v-list dark >
           <v-list-tile>
             <v-list-tile-content>
@@ -40,7 +40,7 @@
           </v-list-tile>
         </v-list>
       </v-flex>
-      <v-flex style="padding-left:25px; padding-right:25px;" wrap>
+      <v-flex wrap>
           <v-card dark v-if="sensors.length > 0">
               <v-carousel lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle" style="height:75%" hide-delimiters>
                 <v-carousel-item v-for="item in sensors" :key="item.id">
@@ -49,8 +49,8 @@
               </v-carousel>
           </v-card>
       </v-flex>
-      <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px">
-        <v-btn dark @click="$router.go(-1)">
+      <v-flex style="padding-bottom:20px; padding-top:10px;">
+        <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
           <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
         </v-btn>
       </v-flex>

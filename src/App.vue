@@ -120,7 +120,9 @@ i {
 }
 
 #navpanel {
-  padding-top: 65px;
+  padding-top: 90px;
+  padding-right:25px; 
+  padding-left:25px;
   height: 100% ;
   background: linear-gradient(-45deg, #7741f4, #42f4a1, #7741f4);
 	background-size: 400% 400%;
