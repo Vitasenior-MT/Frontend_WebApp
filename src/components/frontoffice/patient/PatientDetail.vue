@@ -1,22 +1,63 @@
 <template>
-  <v-content style="padding-left:240px">
-    <v-layout wrap>
-      <v-flex xs12 md4>
-        <v-card dark flat class="pa-0" style="height:100%;">
+  <v-content style="height:100%">
+    <v-layout wrap style="padding-right:25px; padding-top:25px; padding-left:25px">
+      <v-flex class="text-md-center" xs12 style="padding-bottom:20px">
+        <v-card dark style="width: 100%; padding-bottom: 20px;" flat>
+          <v-card-title primary-title>
+            <div>
+              <h1 class="main-title mb-0">
+                Patient - 
+                <span class="thin">
+                  {{ this.$store.state.patient.name}}
+                </span>
+              </h1>
+            </div>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+      
+      <v-flex xs12 md4 >
+        <v-card dark flat style="height:100%; padding-bottom:10px">
           <div class="text-xs-center">
-            <v-avatar size="150px" style="margin-top:10%">
+            <v-avatar size="150px" style="margin-top:10%; margin-bottom:10px">
               <img
               class="img-circle elevation-7 mb-1"
               src="@/assets/logo.png"
               >
             </v-avatar>
-            <div class="headline">{{ this.$store.state.patient.name }}</div>
-            <div class="subheading text-xs-center grey--text pt-1 pb-1">{{ this.$store.state.patient.id }}</div>
-            <div class="subheading text-xs-center grey--text pt-1 pb-1">{{ this.$store.state.patient.birthdate }}</div>
-            <div class="subheading text-xs-center grey--text pt-1 pb-1">{{ this.$store.state.patient.gender }}</div>
-            <div class="subheading text-xs-center grey--text pt-1 pb-1">{{ this.$store.state.patient.weight }} kg</div>
-            <div class="subheading text-xs-center grey--text pt-1 pb-1">{{ this.$store.state.patient.height }} m</div>
           </div>
+          <v-list dark >
+            <v-list-tile >
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">ID</v-list-tile-sub-title>
+                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.id }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content >
+                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Birthdate</v-list-tile-sub-title>
+                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.birthdate }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Gender</v-list-tile-sub-title>
+                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.gender }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Weight</v-list-tile-sub-title>
+                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.weight }} kg</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Height</v-list-tile-sub-title>
+                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.height }} m</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-card>
       </v-flex>
       <v-flex xs12 md8>
@@ -48,10 +89,10 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-flex style="margin-bottom: 40px">
-        <v-btn dark @click="$router.go(-1)">
-            <v-icon>fas fa-long-arrow-alt-left </v-icon>
-        </v-btn>
+    <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px">
+      <v-btn dark @click="$router.go(-1)">
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
+      </v-btn>
     </v-flex>
 
     <add-board v-if="$store.state.vitabox.sponsor"></add-board>
@@ -71,11 +112,11 @@ export default {
       measures: [],
       dialog: false,
       headers: [
-        { text: "Profile", value: "profile", sortable: false },
-        { text: "Measure", value: "measure", sortable: false },
-        { text: "Min", value: "min", sortable: false },
-        { text: "Max", value: "max", sortable: false },
-        { text: "Actions", value: "actions", sortable: false }
+        { text: "Profile", value: "profile", sortable: false, class: "headers" },
+        { text: "Measure", value: "measure", sortable: false, class: "headers" },
+        { text: "Min", value: "min", sortable: false, class: "headers" },
+        { text: "Max", value: "max", sortable: false, class: "headers" },
+        { text: "Actions", value: "actions", sortable: false, class: "headers" }
       ],
       editedIndex: -1,
       editedItem: {
@@ -154,5 +195,8 @@ export default {
 };
 </script>
 
-<style >
+<style>
+.headers {
+    color: #3faf7d !important;
+}
 </style>

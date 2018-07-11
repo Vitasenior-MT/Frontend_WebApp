@@ -14,7 +14,7 @@
         <v-card dark flat style="padding-bottom:40px; " >
           <v-flex xs12>
             <v-layout class="text-md-center" style="height:100%">
-              <v-card style="width: 100%; padding-top: 30px; padding-bottom: 30px;" flat>
+              <v-card style="width: 100%; padding-top:50px;" flat>
                 <h2 class="main-title">Envorinmental Sensors</h2>
               </v-card>
             </v-layout>
@@ -62,6 +62,10 @@ export default {
   components: {
     patientDashboard: PatientDashboard,
     envBoardDashboard: EnvBoardDashboard
+  },
+  created(){
+    this.getPatients(this.$store.state.vitabox.id);
+    this.getVitaboxBoards(this.$store.state.vitabox.id);
   },
   watch: {
     vitabox(x) {
@@ -155,6 +159,7 @@ export default {
       return sensors.sensor != null;
     },
     selectedPatient(patientData) {
+      //this.$store.commit("setPatientData", patientData);
       this.patientBoards = patientData.Boards;
       return patientData;
     }

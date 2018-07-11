@@ -61,8 +61,8 @@ export default {
 
 <style>
 img {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 #app {
@@ -126,47 +126,77 @@ i {
 
 #navpanel {
   padding-top: 65px;
-  height: calc(100% - 36);
-  background: linear-gradient(-45deg, #7741f4, #42f4a1);
-	background-size: 400% 400%;
-	-webkit-animation: Gradient 5s ease infinite;
-	-moz-animation: Gradient 5s ease infinite;
-	animation: Gradient 5s ease infinite;
+  height: 100%;
+  background: linear-gradient(-45deg, #7741f4, #42f4a1, #7741f4);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 5s ease infinite;
+  -moz-animation: Gradient 5s ease infinite;
+  animation: Gradient 5s ease infinite;
 }
 
 @-webkit-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @-moz-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.main-title {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  color: #3faf7d;
+  font-size: 20px;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.demo .main-title {
+  text-transform: uppercase;
+  font-size: 4.2em;
+  letter-spacing: 0.1em;
+}
+
+.main-title .thin {
+  font-weight: 200;
+  color: #f9f1e9;
+}
+
+@media only screen and (max-width: 768px) {
+  .demo .main-title {
+    font-size: 3em;
+  }
 }
 </style>
