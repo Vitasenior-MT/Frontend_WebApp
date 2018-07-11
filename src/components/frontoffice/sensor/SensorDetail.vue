@@ -4,7 +4,7 @@
       <v-card dark>
         <v-flex>
           <v-layout>
-            <v-avatar style="padding-left:20px; padding-top:20px;">
+            <!-- <v-avatar style="padding-left:20px; padding-top:20px;">
               <img v-if="selectedSensor.Sensormodel.measure == 'peso'" src="@/assets/Body_Scale_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'p.a. sistólica'" src="@/assets/Blood_Pressure_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'p.a. diastólica'" src="@/assets/Blood_Pressure_Icon.png">
@@ -14,53 +14,19 @@
               <img v-if="selectedSensor.Sensormodel.measure == 'temperatura corp.'" src="@/assets/Body_Temp_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'oximetria'" src="@/assets/Spo2_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pulsometro'" src="@/assets/Spo2_Icon.png">
-            </v-avatar>
+            </v-avatar> -->
             <span class="title" style="color:#3faf7d; padding-left:20px; padding-top:20px;">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
             <v-spacer></v-spacer>
             <v-icon small>fas fa-calendar-alt</v-icon>
             <span style="padding-left:10px; padding-top:25px;"> Última actualização:  {{ this.lastrecord }} </span>
             <v-spacer></v-spacer>
-            <v-menu
-              ref="menu1"
-              :close-on-content-click="false"
-              v-model="menu1"
-              :nudge-right="40"
-              :return-value.sync="date1"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              min-width="290px"
-            >
-              <v-text-field
-                slot="activator"
-                v-model="date1"
-                label="Pick Start Date"
-                prepend-icon="far fa-calendar"
-                readonly
-              ></v-text-field>
+            <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :nudge-right="40" :return-value.sync="date1" lazy transition="scale-transition" offset-y full-width min-width="290px" >
+              <v-text-field slot="activator" v-model="date1" label="Pick Start Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
               <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
               <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1, time1)"></v-time-picker>
             </v-menu>
-            <v-menu
-              ref="menu2"
-              :close-on-content-click="false"
-              v-model="menu2"
-              :nudge-right="40"
-              :return-value.sync="date2"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              min-width="290px"
-            >
-              <v-text-field
-                slot="activator"
-                v-model="date2"
-                label="Pick End Date"
-                prepend-icon="far fa-calendar"
-                readonly
-              ></v-text-field>
+            <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :nudge-right="40" :return-value.sync="date2" lazy transition="scale-transition" offset-y full-width min-width="290px" >
+              <v-text-field slot="activator" v-model="date2" label="Pick End Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
               <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
               <v-time-picker v-if="flag2 == true" v-model="time2" :min="checkTimeMin()" format="24hr" @change="saveTime2(date2, time2)"></v-time-picker>
             </v-menu>
@@ -96,12 +62,19 @@ export default {
   },
   data: () => {
     return {
-      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
+      options: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+      },
       flag1: false,
       date1: null,
       menu1: false,
       time1: null,
-      datetMin: null,
+      dateMin: null,
       timeMin: null,
       flag2: false,
       date2: null,
@@ -190,8 +163,11 @@ export default {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
-            this.lastrecord = this.records[this.records.length-1].datetime;
-            this.lastrecord = new Date(this.lastrecord).toLocaleDateString("pt-pt", this.options);
+            this.lastrecord = this.records[this.records.length - 1].datetime;
+            this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
+              "pt-pt",
+              this.options
+            );
           })
           .catch(error => {
             if (error.response) {

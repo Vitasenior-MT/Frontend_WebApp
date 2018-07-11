@@ -1,6 +1,7 @@
 <template>
   <v-expansion-panel id="add_board_to_patient" popout>
     <v-expansion-panel-content hide-actions>
+
       <div slot="header" id="add_board_to_patient_header">
         <label class="title">Boards</label>
         <v-btn color="primary" id="add_board_to_patient_icon" class="mt-0" small icon><v-icon>fas fa-plus-circle</v-icon></v-btn>
@@ -24,10 +25,6 @@ import { event_bus } from "@/plugins/bus.js";
 
 export default {
   name: "add_board_to_patient",
-  props: {
-    patient: Object,
-    box: Object
-  },
   data: () => {
     return {
       boards: [],
@@ -35,10 +32,9 @@ export default {
     };
   },
   mounted() {
-    if (this.box) {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/vitabox/" + this.box.id + "/board")
+        .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
         .then(response => {
           this.boards = response.data.boards.filter(
             board => board.Boardmodel.type !== "environmental"
@@ -59,12 +55,6 @@ export default {
           }
           event_bus.$emit("waiting", false);
         });
-    } else {
-      event_bus.$emit("toast", {
-        message: "Patient undefined",
-        type: "error"
-      });
-    }
   },
   methods: {
     save() {
@@ -72,11 +62,12 @@ export default {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
           .post("/board/" + this.selected.id + "/patient", {
-            patient_id: this.patient.id
+            patient_id: this.$store.state.patient.id
           })
           .then(response => {
-            this.$emit("added", this.selected.id);
+            this.$store.commit("addBoardToPatient", this.selected);
             event_bus.$emit("success", "board was successfully added to user");
+            event_bus.$emit("waiting", false);
           })
           .catch(error => {
             if (error.response) {

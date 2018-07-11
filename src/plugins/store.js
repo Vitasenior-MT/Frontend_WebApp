@@ -36,6 +36,9 @@ const mutations = {
   setPatientData(state, patientData) {
     state.patient = patientData;
   },
+  addBoardToPatient(state, board) {
+    state.patient.Boards.push(board);
+  },
   setUserData(state, userData) {
     state.user.token = userData.token;
     state.user.name = userData.name;
@@ -69,6 +72,9 @@ const actions = {
   setPatientData: ({
     commit
   }) => commit('setPatientData'),
+  addBoardToPatient: ({
+    commit
+  }) => commit('addBoardToPatient'),
   setUserData: ({
     commit
   }) => commit('setUserData'),

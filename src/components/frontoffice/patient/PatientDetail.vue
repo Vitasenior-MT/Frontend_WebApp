@@ -53,11 +53,17 @@
             <v-icon>fas fa-long-arrow-alt-left </v-icon>
         </v-btn>
     </v-flex>
+
+    <add-board v-if="$store.state.vitabox.sponsor"></add-board>
+    <div v-for="item in $store.state.patient.Boards" :key="item.id">{{item}}<br><br></div>
+    <add-doctor v-if="$store.state.vitabox.sponsor"></add-doctor>
   </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
+import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 
 export default {
   data() {
@@ -99,6 +105,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$store.state.patient);
     this.getMeasures();
   },
   methods: {
@@ -139,6 +146,10 @@ export default {
       }
       this.close();
     }
+  },
+  components: {
+    "add-board": SetBoard,
+    "add-doctor": SetDoctor
   }
 };
 </script>
