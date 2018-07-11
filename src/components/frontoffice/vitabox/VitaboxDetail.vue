@@ -1,79 +1,100 @@
 <template>
   <v-content style="padding-left:240px;">
-    <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-    <v-list dark>
-      <v-list-tile>
-        <v-list-tile-content>
-          <v-list-tile-title>Location</v-list-tile-title>
-          {{ $store.state.vitabox.address }}
-        </v-list-tile-content>
-        <v-list-tile-content >
-          <v-list-tile-title>Registered</v-list-tile-title>
-          <v-icon v-if="this.$store.state.vitabox.registered === true">fas fa-check-circle</v-icon> 
-          <v-icon v-else>fas fa-times-circle</v-icon>
-        </v-list-tile-content>
-        <v-list-tile-content>
-          <v-list-tile-title>Active</v-list-tile-title>
-          <v-icon v-if="this.$store.state.vitabox.active === true">fas fa-check-circle</v-icon> 
-          <v-icon v-else>fas fa-times-circle</v-icon> 
-        </v-list-tile-content>
-      </v-list-tile>
-    </v-list>
-    <v-flex style="padding:0px">
-      <v-menu offset-y transition="slide-y-transition" style="width:100%;">
-        <v-card class="vitaboxUserMenuSelector" slot="activator" dark style="width:100%;">
-          <v-card-title class="title">
-            <v-icon color="primary" style="padding-right:10px">fas fa-user-tag</v-icon>
-            Users from this vitabox:
-            <v-spacer></v-spacer>
-            <v-icon>fas fa-angle-down</v-icon>
+    <v-layout wrap style="padding-right:25px; padding-top:25px; padding-left:25px">
+      <v-flex class="text-md-center" xs12 style="padding:0px">
+        <v-card dark style="width: 100%; padding-bottom: 10px;" flat>
+          <v-card-title primary-title>
+            <div>
+              <h1 class="main-title mb-0">
+                Vitabox - 
+                <span class="thin">
+                  {{ this.$store.state.vitabox.address}}
+                </span>
+              </h1>
+            </div>
           </v-card-title>
         </v-card>
-        <v-list>
-          <v-template dark v-for="item in vitaboxUsers" :key="item.id" @click="gotoUserProfile(item)">
-            <v-divider v-if="item == vitaboxUsers[0]" class="userDivider"></v-divider>
-            <v-divider v-else class="userDivider" :inset="true"></v-divider>
-            <v-list-tile avatar class="vitaboxUserSelector">
-              <v-list-tile-avatar style="color:#3faf7d"><img src="@/assets/logo.png"></v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                <v-list-tile-sub-title>Name</v-list-tile-sub-title>
-              </v-list-tile-content> 
-            </v-list-tile>
-            <v-divider v-if="item == vitaboxUsers[vitaboxUsers.length-1]" class="userDivider"></v-divider>
-          </v-template>
+      </v-flex>
+      <v-flex xs12>
+        <v-list dark >
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-sub-title style="color:#3faf7d;">Location</v-list-tile-sub-title>
+              <v-list-tile-title>{{ $store.state.vitabox.address }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content >
+              <v-list-tile-sub-title style="color:#3faf7d;">Registered</v-list-tile-sub-title>
+              <v-list-tile-title v-if="this.$store.state.vitabox.registered === true"><v-icon >fas fa-check-circle</v-icon></v-list-tile-title>
+              <v-list-tile-title v-else><v-icon>fas fa-times-circle</v-icon></v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-sub-title style="color:#3faf7d;">Active</v-list-tile-sub-title>
+              <v-list-tile-title v-if="this.$store.state.vitabox.active === true"><v-icon >fas fa-check-circle</v-icon> </v-list-tile-title>
+              <v-list-tile-title  v-else><v-icon>fas fa-times-circle</v-icon> </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </v-list>
-      </v-menu>
-    </v-flex>
-    <div id="google-map-box"></div>
-    <v-data-table :headers="headers" :items="boards" hide-actions class="elevation-1" dark >
-      <template slot="items" slot-scope="props">
-        <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
-        <td class="text-xs-left">{{ props.item.description }}</td>
-        <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-        <td class="text-xs-left">{{ props.item.updated_at }}</td>
-        <td class="text-xs-left">
-          <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
-        </td>
-        <td class="justify-left layout px-0">
-          <v-btn @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
-          <remove-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item" @remove="()=>boards.splice(boards.indexOf(props.item), 1)"></remove-board>
-        </td>
-      </template>
-      <template slot="no-data">
-        <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-          Sorry, nothing to display here :(
-        </v-alert>
-      </template>
-    </v-data-table>
-    <v-flex style="margin-bottom: 40px">
+      </v-flex>
+      <v-flex xs12 style="padding-bottom:10px">
+        <v-menu offset-y transition="slide-y-transition" style="width:100%;">
+          <v-card class="vitaboxUserMenuSelector" slot="activator" dark style="width:100%;">
+            <v-card-title class="title">
+              <v-icon color="primary" style="padding-right:10px">fas fa-user-tag</v-icon>
+              Users from this vitabox:
+              <v-spacer></v-spacer>
+              <v-icon>fas fa-angle-down</v-icon>
+            </v-card-title>
+          </v-card>
+          <v-list>
+            <v-template dark v-for="item in vitaboxUsers" :key="item.id" @click="gotoUserProfile(item)">
+              <v-divider v-if="item == vitaboxUsers[0]" class="userDivider"></v-divider>
+              <v-divider v-else class="userDivider" :inset="true"></v-divider>
+              <v-list-tile avatar class="vitaboxUserSelector">
+                <v-list-tile-avatar style="color:#3faf7d"><img src="@/assets/logo.png"></v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                  <v-list-tile-sub-title>Name</v-list-tile-sub-title>
+                </v-list-tile-content> 
+              </v-list-tile>
+              <v-divider v-if="item == vitaboxUsers[vitaboxUsers.length-1]" class="userDivider"></v-divider>
+            </v-template>
+          </v-list>
+        </v-menu>
+      </v-flex>
+      <v-flex xs12 style="padding:0px">
+        <div id="google-map-box"></div>
+      </v-flex>
+      <v-flex xs12 style="padding-top:10px">
+        <v-data-table :headers="headers" :items="boards" hide-actions class="elevation-1" dark >
+          <template slot="items" slot-scope="props">
+            <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
+            <td class="text-xs-left">{{ props.item.description }}</td>
+            <td class="text-xs-left">{{ props.item.mac_addr }}</td>
+            <td class="text-xs-left">{{ props.item.updated_at }}</td>
+            <td class="text-xs-left">
+              <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
+            </td>
+            <td class="justify-left layout px-0">
+              <v-btn @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
+              <remove-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item" @remove="()=>boards.splice(boards.indexOf(props.item), 1)"></remove-board>
+            </td>
+          </template>
+          <template slot="no-data">
+            <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+              Sorry, nothing to display here :(
+            </v-alert>
+          </template>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
+    <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px;">
       <v-btn dark @click="$router.go(-1)">
-            <v-icon>fas fa-long-arrow-alt-left </v-icon>
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
       </v-btn>
     </v-flex>
-
     <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
     <add-patient v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addpatient="(patient)=>patients.push(patient)"></add-patient>
+    
   </v-content>
 </template>
 
@@ -94,12 +115,12 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Board", value: "name", sortable: false },
-        { text: "Description", value: "description", sortable: false },
-        { text: "MAC", value: "mac_address", sortable: false },
-        { text: "Last Update", value: "updated_at", sortable: false },
-        { text: "State", sortable: false },
-        { text: "Actions", sortable: false }
+        { text: "Board", value: "name", sortable: false, class: "headers" },
+        { text: "Description", value: "description", sortable: false, class: "headers" },
+        { text: "MAC", value: "mac_address", sortable: false, class: "headers" },
+        { text: "Last Update", value: "updated_at", sortable: false, class: "headers" },
+        { text: "State", sortable: false, class: "headers" },
+        { text: "Actions", sortable: false, class: "headers" }
       ],
       boards: [],
       patients: [],
@@ -195,5 +216,9 @@ export default {
 .vitaboxUserSelector:hover {
   cursor: pointer;
   background-color: #b4b2b2 !important;
+}
+
+.headers {
+    color: #3faf7d !important;
 }
 </style>

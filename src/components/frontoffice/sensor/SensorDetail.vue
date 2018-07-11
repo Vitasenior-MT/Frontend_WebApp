@@ -1,7 +1,23 @@
 <template>
   <v-container class="gridSensor">
-    <v-card light >
-      <v-card dark>
+    <v-card light flat>
+      <v-card dark flat>
+        <v-flex xs12 class="pa-0">
+          <v-layout class="text-md-center" style="padding-left:25px; padding-right:25px;">
+            <v-card dark style="width:100%; padding-bottom: 10px;" flat>
+              <v-card-title primary-title>
+                <div>
+                  <h1 class="main-title mb-0">
+                    Sensor - 
+                    <span class="thin">
+                      {{ this.selectedSensor.Sensormodel.measure }}
+                    </span>
+                  </h1>
+                </div>
+              </v-card-title>
+            </v-card>
+          </v-layout>
+        </v-flex>
         <v-flex>
           <v-layout>
             <v-avatar style="padding-left:20px; padding-top:20px;">
@@ -14,6 +30,10 @@
               <img v-if="selectedSensor.Sensormodel.measure == 'temperatura corp.'" src="@/assets/Body_Temp_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'oximetria'" src="@/assets/Spo2_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'pulsação' &&  selectedSensorGraph.board.Boardmodel.name == 'Pulsometro'" src="@/assets/Spo2_Icon.png">
+              <img v-if="selectedSensor.Sensormodel.measure == 'temperatura'" src="@/assets/temp_icon.svg">
+              <img v-if="selectedSensor.Sensormodel.measure == 'humidade'" src="@/assets/humi_icon.svg">
+              <img v-if="selectedSensor.Sensormodel.measure == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
+              <img v-if="selectedSensor.Sensormodel.measure == 'CO2'" src="@/assets/dioxi_icon.svg">
             </v-avatar>
             <span class="title" style="color:#3faf7d; padding-left:20px; padding-top:20px;">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
             <v-spacer></v-spacer>

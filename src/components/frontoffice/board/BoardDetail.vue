@@ -1,28 +1,46 @@
 <template>
-    <v-content>
-      <v-list dark>
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-title>Location</v-list-tile-title>
-            <v-icon v-if="this.$store.state.board.Boardmodel.name == null">fas fa-times-circle</v-icon> 
-              {{ $store.state.board.Boardmodel.name }}
-          </v-list-tile-content>
-          <v-list-tile-content >
-            <v-list-tile-title>MAC</v-list-tile-title>
-            {{ $store.state.board.mac_addr }}
-          </v-list-tile-content>
-          <v-list-tile-content>
-            <v-list-tile-title>Active</v-list-tile-title>
-            <v-icon v-if="this.$store.state.board.active === true">fas fa-check-circle</v-icon> 
-            <v-icon v-else>fas fa-times-circle</v-icon> 
-          </v-list-tile-content>
-          <v-list-tile-content >
-            <v-list-tile-title>Last Update</v-list-tile-title>
-            {{ $store.state.board.updated_at }}
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-      <v-flex wrap>
+    <v-content style="height:100%">
+      <v-flex xs12 class="pa-0">
+        <v-layout class="text-md-center" style="padding-left:25px; padding-right:25px; padding-top:25px;">
+          <v-card dark style="width: 100%; padding-top: 10px;" flat>
+            <v-card-title primary-title>
+              <div>
+                <h1 class="main-title mb-0">
+                  Board - 
+                  <span class="thin">
+                    {{ this.$store.state.board.Boardmodel.name}}
+                  </span>
+                </h1>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-layout>
+      </v-flex>
+      <v-flex xs12 style="padding-left:25px; padding-right:25px; padding-bottom:25px;">
+        <v-list dark >
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-sub-title style="color:#3faf7d;">Location</v-list-tile-sub-title>
+              <v-list-tile-title v-if="this.$store.state.board.description == null">Body</v-list-tile-title>
+              <v-list-tile-title v-else>{{ $store.state.board.description }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content >
+              <v-list-tile-sub-title style="color:#3faf7d;">MAC</v-list-tile-sub-title>
+              <v-list-tile-title>{{ $store.state.board.mac_addr }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-sub-title style="color:#3faf7d;">Active</v-list-tile-sub-title>
+              <v-list-tile-title v-if="this.$store.state.board.active === true"><v-icon >fas fa-check-circle</v-icon> </v-list-tile-title>
+              <v-list-tile-title  v-else><v-icon>fas fa-times-circle</v-icon> </v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-sub-title style="color:#3faf7d;"> Last Update</v-list-tile-sub-title>
+              <v-list-tile-title>{{ $store.state.board.updated_at }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-flex>
+      <v-flex style="padding-left:25px; padding-right:25px;" wrap>
           <v-card dark v-if="sensors.length > 0">
               <v-carousel lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" delimiter-icon="fas fa-circle" style="height:75%" hide-delimiters>
                 <v-carousel-item v-for="item in sensors" :key="item.id">
@@ -31,9 +49,9 @@
               </v-carousel>
           </v-card>
       </v-flex>
-      <v-flex style="margin-bottom: 40px">
+      <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px">
         <v-btn dark @click="$router.go(-1)">
-          <v-icon>fas fa-long-arrow-alt-left </v-icon>
+          <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
         </v-btn>
       </v-flex>
     </v-content>
@@ -57,7 +75,6 @@ export default {
   },
   methods: {
     getSensors() {
-      //event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/board/" + this.$store.state.board.id + "/sensor")
         .then(response => {
@@ -72,7 +89,6 @@ export default {
           } else {
             event_bus.$emit("toast", { message: error.message, type: "error" });
           }
-          //event_bus.$emit("waiting", false);
         });
     }
   }

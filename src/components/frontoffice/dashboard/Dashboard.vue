@@ -1,9 +1,9 @@
 <template>
   <v-content>
     <v-container fluid grid-list-sm align-center>
-      <v-layout wrap style="padding-bottom:15px">
+      <v-layout wrap style="padding-bottom:0px">
         <v-flex class="text-md-center" xs12 style="padding:0px">
-          <v-card dark style="width: 100%; padding-top: 20px; padding-bottom: 60px;" flat>
+          <v-card dark style="width: 100%; padding-top: 30px; padding-bottom: 60px;" flat>
             <v-card-title primary-title>
               <div>
                 <h1 class="main-title mb-0">
@@ -80,36 +80,6 @@ export default {
 
 .userDivider {
   background-color: black !important;
-}
-
-.main-title {
-   position: absolute;
-   margin: 0;
-   padding: 0;
-   color:#3faf7d;
-   font-size: 20px;
-   text-align: center;
-   top: 50%;
-   left: 50%;
-   -webkit-transform: translate3d(-50%, -50%, 0);
-   transform: translate3d(-50%, -50%, 0);
-}
-
-.demo .main-title {
-   text-transform: uppercase;
-   font-size: 4.2em;
-   letter-spacing: 0.1em;
-}
-
-.main-title .thin {
-  font-weight: 200;
-  color: #F9F1E9;
-}
-
-@media only screen and (max-width: 768px) {
-   .demo .main-title {
-      font-size: 3em;
-   }
 }
 
 </style>

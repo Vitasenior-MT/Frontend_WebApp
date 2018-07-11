@@ -3,7 +3,7 @@
     <v-layout v-if="boardSensors.length > 0" row wrap >
       <v-flex xs12 class="pa-0">
         <v-layout class="text-md-center">
-          <v-card style="width: 100%; padding-top: 10px; padding-bottom: 40px;" flat>
+          <v-card style="width: 100%; padding-bottom: 20px;" flat>
             <v-card-title primary-title>
               <div>
                 <h1 class="main-title mb-0">
@@ -20,16 +20,16 @@
       <v-flex sm12 md4 lg2 class="pa-0">
         <v-layout style="height:100%">
           <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
-            <v-avatar size="150px" style="margin-top:10px; margin-left:30%; margin-right:25%;"><img src="@/assets/logo.png"></v-avatar>
+            <v-avatar size="150px" style="margin-top:10px; margin-left:25%; margin-right:25%;"><img src="@/assets/logo.png"></v-avatar>
             <br>
-            <span class="white--text" style="padding-left:20%;">
+            <span class="white--text" style="padding-left:15%;">
               <v-icon color="primary" style="padding-right:10px;">fas fa-info-circle</v-icon> Press for more details
             </span>
           </v-card>
         </v-layout>
       </v-flex>
       <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
-          <v-card id="bioGraph" class="animated fadeIn" light flat style="padding-top:0px; padding-left:0px; padding-bottom:0px">
+          <v-card id="bioGraph" light flat style="padding-top:0px; padding-left:0px; padding-bottom:0px">
             <v-layout row>
               <v-avatar style="padding-left:5px; padding-top:5px;">
                 <img v-if="selectedSensorGraph.sensor.Sensormodel.measure == 'peso'" src="@/assets/Body_Scale_Icon.png">
@@ -307,36 +307,6 @@ export default {
   padding-left: 45px;
   padding-top: 0px;
   padding-bottom: 40px;
-}
-
-.animated {
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.fadeIn {
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
 }
 
 .patientDetailsSelector {
