@@ -18,6 +18,11 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-flex style="padding-bottom:20px; padding-top:10px;">
+      <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
+      </v-btn>
+    </v-flex>
   </v-content>
 </template>
 

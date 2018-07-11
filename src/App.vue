@@ -6,7 +6,7 @@
 
     <main>
       <transition name="fade">
-        <div id="navpanel">
+        <div id="navpanel" class="bckground1">
           <router-view></router-view>
         </div>
       </transition>
@@ -29,7 +29,8 @@ export default {
   data() {
     return {
       logged: false,
-      is_admin: false
+      is_admin: false,
+      interval: null
     };
   },
   mounted() {
@@ -50,7 +51,18 @@ export default {
       this.$router.push("/");
       this.$store.commit("cleanData");
     });
+    // this.interval = window.setInterval(this.updateTransition, 5000);
   },
+  // beforeDestroy() {
+  //   window.clearInterval(this.interval);
+  // },
+  // methods: {
+  //   updateTransition() {
+  //     let el = document.getElementById("navpanel");
+  //     if (el.style.backgroundColor == "rgb(66, 244, 161)") el.style.backgroundColor = "rgb(107, 131, 254)";
+  //     else el.style.backgroundColor = "rgb(66, 244, 161)";
+  //   }
+  // },
   components: {
     foot: Footer,
     log: Log,
@@ -109,65 +121,16 @@ i {
   padding: 1%;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition-property: opacity;
-  transition-duration: 0.25s;
-}
-
-.fade-enter-active {
-  transition-delay: 0.25s;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-
 #navpanel {
-  padding-top: 65px;
+  padding-top: 90px;
+  padding-right: 25px;
+  padding-left: 25px;
   height: 100%;
-  background: linear-gradient(-45deg, #7741f4, #42f4a1, #7741f4);
-  background-size: 400% 400%;
-  -webkit-animation: Gradient 5s ease infinite;
-  -moz-animation: Gradient 5s ease infinite;
-  animation: Gradient 5s ease infinite;
-}
-
-@-webkit-keyframes Gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@-moz-keyframes Gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes Gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  background-color: rgb(66, 244, 161);
+  /* -webkit-transition: all 2s linear;
+  -moz-transition: all 2s linear;
+  -o-transition: all 2s linear;
+  transition: all 2s linear; */
 }
 
 .main-title {

@@ -1,6 +1,6 @@
 <template>
-  <v-content style="padding-left:240px;">
-    <v-layout wrap style="padding-right:25px; padding-top:25px; padding-left:25px">
+  <v-content>
+    <v-layout wrap>
       <v-flex class="text-md-center" xs12 style="padding:0px">
         <v-card dark style="width: 100%; padding-bottom: 10px;" flat>
           <v-card-title primary-title>
@@ -87,8 +87,8 @@
         </v-data-table>
       </v-flex>
     </v-layout>
-    <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px;">
-      <v-btn dark @click="$router.go(-1)">
+    <v-flex style="padding-bottom:20px; padding-top:10px;">
+      <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
       </v-btn>
     </v-flex>

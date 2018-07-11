@@ -1,6 +1,6 @@
 <template>
   <v-content style="height:100%">
-    <v-layout wrap style="padding-right:25px; padding-top:25px; padding-left:25px">
+    <v-layout wrap>
       <v-flex class="text-md-center" xs12 style="padding-bottom:20px">
         <v-card dark style="width: 100%; padding-bottom: 20px;" flat>
           <v-card-title primary-title>
@@ -15,15 +15,11 @@
           </v-card-title>
         </v-card>
       </v-flex>
-      
       <v-flex xs12 md4 >
         <v-card dark flat style="height:100%; padding-bottom:10px">
           <div class="text-xs-center">
             <v-avatar size="150px" style="margin-top:10%; margin-bottom:10px">
-              <img
-              class="img-circle elevation-7 mb-1"
-              src="@/assets/logo.png"
-              >
+              <img class="img-circle elevation-7 mb-1" src="@/assets/logo.png">
             </v-avatar>
           </div>
           <v-list dark >
@@ -89,8 +85,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-flex style="padding-bottom:20px; padding-top:10px; padding-left:15px">
-      <v-btn dark @click="$router.go(-1)">
+    <v-flex style="padding-bottom:20px; padding-top:10px;">
+      <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
       </v-btn>
     </v-flex>
