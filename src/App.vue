@@ -2,11 +2,11 @@
   <v-app>
     <progress-bar></progress-bar>
 
-    <navbar :logged="logged" :isadmin="is_admin"></navbar>
+    <navbar :logged="logged" :isadmin="is_admin" :isdoctor="is_doctor"></navbar>
 
     <main>
       <transition name="fade">
-        <div id="navpanel">
+        <div id="navpanel" class="bckground1">
           <router-view></router-view>
         </div>
       </transition>
@@ -29,15 +29,19 @@ export default {
   data() {
     return {
       logged: false,
-      is_admin: false
+      is_admin: false,
+      is_doctor: false,
+      interval: null
     };
   },
   mounted() {
     this.logged = this.$store.state.user.token ? true : false;
     this.is_admin = this.$store.state.user.is_admin ? true : false;
+    this.is_doctor = this.$store.state.user.is_doctor ? true : false;
     event_bus.$on("login", () => {
       this.logged = true;
       this.is_admin = this.$store.state.user.is_admin;
+      this.is_doctor = this.$store.state.user.is_doctor;
       if (this.is_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {
@@ -50,7 +54,18 @@ export default {
       this.$router.push("/");
       this.$store.commit("cleanData");
     });
+    // this.interval = window.setInterval(this.updateTransition, 5000);
   },
+  // beforeDestroy() {
+  //   window.clearInterval(this.interval);
+  // },
+  // methods: {
+  //   updateTransition() {
+  //     let el = document.getElementById("navpanel");
+  //     if (el.style.backgroundColor == "rgb(66, 244, 161)") el.style.backgroundColor = "rgb(107, 131, 254)";
+  //     else el.style.backgroundColor = "rgb(66, 244, 161)";
+  //   }
+  // },
   components: {
     foot: Footer,
     log: Log,
@@ -60,6 +75,11 @@ export default {
 </script>
 
 <style>
+img {
+  width: 100%;
+  height: auto;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -104,59 +124,47 @@ i {
   padding: 1%;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition-property: opacity;
-  transition-duration: 0.25s;
-}
-
-.fade-enter-active {
-  transition-delay: 0.25s;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-
 #navpanel {
   padding-top: 90px;
-  padding-right:25px; 
-  padding-left:25px;
-  height: 100% ;
-  background-image: linear-gradient(to right top, #845ec2, #d65db1, #d65db1, #ff9671, #ffc75f, #f9f871);
+  padding-right: 25px;
+  padding-left: 25px;
+  height: 100%;
+  background-image: linear-gradient(
+    to right top,
+    #845ec2,
+    #d65db1,
+    #d65db1,
+    #ff9671,
+    #ffc75f,
+    #f9f871
+  );
 }
-
 .main-title {
-   position: absolute;
-   margin: 0;
-   padding: 0;
-   font-size: 20px;
-   text-align: center;
-   top: 50%;
-   left: 50%;
-   -webkit-transform: translate3d(-50%, -50%, 0);
-   transform: translate3d(-50%, -50%, 0);
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
 }
-
 .demo .main-title {
-   text-transform: uppercase;
-   font-size: 4.2em;
-   letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 4.2em;
+  letter-spacing: 0.1em;
 }
-
 .main-title .thin {
   font-weight: 200;
-  color: #F9F1E9;
+  color: #f9f1e9;
 }
-
 @media only screen and (max-width: 768px) {
-   .demo .main-title {
-      font-size: 3em;
-   }
+  .demo .main-title {
+    font-size: 3em;
+  }
 }
-
 .headers {
-    color: #F37027 !important;
+  color: #f37027 !important;
 }
 </style>

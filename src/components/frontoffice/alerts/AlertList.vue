@@ -47,7 +47,6 @@ export default {
         .get("/vitabox/" + this.$store.state.vitabox.id + "/warning")
         .then(response => {
           this.vitaboxwarnings = response.data.warnings;
-          // console.log(response.data.warnings);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

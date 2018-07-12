@@ -7,6 +7,7 @@
     
     <div id="body_menu" class="raven">
       <backoffice v-if="isadmin"></backoffice>
+      <doctoroffice v-else-if="isdoctor"></doctoroffice>
       <frontoffice v-else></frontoffice>
     </div>
 
@@ -22,12 +23,14 @@
 <script>
 import Frontoffice from "./Frontoffice.vue";
 import Backoffice from "./Backoffice.vue";
+import Doctoroffice from "./Doctoroffice.vue";
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
   name: "sidemenu",
   props: {
-    isadmin: Boolean
+    isadmin: Boolean,
+    isdoctor: Boolean
   },
   data: () => {
     return {
@@ -42,7 +45,8 @@ export default {
   },
   components: {
     frontoffice: Frontoffice,
-    backoffice: Backoffice
+    backoffice: Backoffice,
+    doctoroffice: Doctoroffice
   }
 };
 </script>

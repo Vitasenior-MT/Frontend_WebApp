@@ -90,11 +90,18 @@
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
+
+    <add-board v-if="$store.state.vitabox.sponsor"></add-board>
+    <div v-for="item in $store.state.patient.Boards" :key="item.id">{{item}}<br><br></div>
+    <add-doctor v-if="$store.state.vitabox.sponsor"></add-doctor>
+    <div v-for="item in $store.state.patient.Doctors" :key="item.id">{{item}}<br><br></div>
   </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
+import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 
 export default {
   data() {
@@ -176,6 +183,10 @@ export default {
       }
       this.close();
     }
+  },
+  components: {
+    "add-board": SetBoard,
+    "add-doctor": SetDoctor
   }
 };
 </script>

@@ -15,7 +15,8 @@ const state = {
     name: null,
     email: null,
     photo: null,
-    is_admin: null
+    is_admin: false,
+    is_doctor: false
   }
 }
 
@@ -36,12 +37,19 @@ const mutations = {
   setPatientData(state, patientData) {
     state.patient = patientData;
   },
+  addBoardToPatient(state, board) {
+    state.patient.Boards.push(board);
+  },
+  addDoctorToPatient(state, user) {
+    state.patient.Doctors.push(user);
+  },
   setUserData(state, userData) {
     state.user.token = userData.token;
     state.user.name = userData.name;
     state.user.email = userData.email;
     state.user.photo = userData.photo;
     state.user.is_admin = userData.is_admin;
+    state.user.is_doctor = userData.is_doctor;
   },
   cleanData(state) {
     state.vitabox = null;
@@ -52,7 +60,8 @@ const mutations = {
     state.user.name = null;
     state.user.email = null;
     state.user.photo = null;
-    state.user.is_admin = null;
+    state.user.is_admin = false;
+    state.user.is_doctor = false;
   }
 }
 
@@ -69,6 +78,12 @@ const actions = {
   setPatientData: ({
     commit
   }) => commit('setPatientData'),
+  addBoardToPatient: ({
+    commit
+  }) => commit('addBoardToPatient'),
+  addDoctorToPatient: ({
+    commit
+  }) => commit('addDoctorToPatient'),
   setUserData: ({
     commit
   }) => commit('setUserData'),

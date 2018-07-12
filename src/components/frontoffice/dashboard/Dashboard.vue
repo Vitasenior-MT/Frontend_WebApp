@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.$store.state.vitabox">
     <v-container class="pa-0" fluid grid-list-sm align-center>
       <v-layout class="pb-0" wrap>
         <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">

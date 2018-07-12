@@ -6,8 +6,8 @@
           <v-card id="login" >
             <v-card-title id="login_title"><p class="title mb-0">Login</p></v-card-title>
             <v-card-text id="login_box">
-                  <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Email" id="email" type="text"></v-text-field>
-                  <v-text-field prepend-icon="fas fa-lock" v-model="password" name="password" label="Password" id="password" type="password"></v-text-field>
+                <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Email" id="email" type="text"></v-text-field>
+                <v-text-field prepend-icon="fas fa-lock" v-model="password" name="password" label="Password" id="password" type="password"></v-text-field>
               <v-btn small block flat class="primary--text" to="/forgot">forgot password</v-btn>
             </v-card-text>
             <v-card-actions class="bottom_action">
@@ -32,7 +32,7 @@ export default {
   name: "login",
   data: () => {
     return {
-      email: "admin@a.aa",
+      email: "jose@a.aa",
       password: "123qweASD"
     };
   },
@@ -59,7 +59,8 @@ export default {
               name: response.data.name,
               email: response.data.email,
               photo: response.data.photo,
-              is_admin: response.data.is_admin
+              is_admin: response.data.is_admin,
+              is_doctor: response.data.is_doctor
             });
             event_bus.$emit("login");
             event_bus.$emit("toast", {

@@ -1,6 +1,6 @@
 <template>
   <div v-if="complete>0" id="progressbar">
-        <img id="loadimage" src="../../assets/load2_A.gif">
+    <img id="loadimage" src="../../assets/load2_A.gif">
   </div>
 </template>
 
@@ -33,11 +33,23 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   justify-content: center;
 }
-#loadimage {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  max-width: 100%;
+
+@media only screen and (min-width: 960px) {
+  #loadimage {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width: 30%;
+  }
+}
+@media only screen and (max-width: 960px) {
+  #loadimage {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width:80%;
+  }
 }
 </style>

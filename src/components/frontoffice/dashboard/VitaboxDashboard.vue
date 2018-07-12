@@ -63,7 +63,7 @@ export default {
     patientDashboard: PatientDashboard,
     envBoardDashboard: EnvBoardDashboard
   },
-  created(){
+  created() {
     this.getPatients(this.$store.state.vitabox.id);
     this.getVitaboxBoards(this.$store.state.vitabox.id);
   },
