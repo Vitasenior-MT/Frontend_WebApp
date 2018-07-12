@@ -193,7 +193,6 @@ export default {
         this.sensor.measure = this.selected_measure.measure;
         this.sensor.unit = this.selected_measure.unit;
         this.sensor.to_read = this.selected_measure.to_read;
-        console.log(this.sensor);
         event_bus.$data.http
           .post("/sensormodel", this.sensor)
           .then(response => {

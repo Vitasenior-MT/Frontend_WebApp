@@ -43,7 +43,6 @@ export default {
           this.boards = response.data.boards.filter(
             board => board.Boardmodel.type !== "environmental"
           );
-          console.log(this.boards);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

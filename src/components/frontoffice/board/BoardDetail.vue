@@ -35,7 +35,7 @@
             </v-list-tile-content>
             <v-list-tile-content>
               <v-list-tile-sub-title class="primary--text">Last Update</v-list-tile-sub-title>
-              <v-list-tile-title>{{ $store.state.board.updated_at }}</v-list-tile-title>
+              <v-list-tile-title>{{ new Date(this.$store.state.board.updated_at).toLocaleDateString("pt-pt", options) }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -51,7 +51,7 @@
       </v-flex>
       <v-flex class="pb-2 pt-1">
         <v-btn dark class="ml-0" @click="$router.go(-1)">
-          <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span class="pl-1"> Go Back</v-span>
+          <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
         </v-btn>
       </v-flex>
     </v-content>
@@ -64,6 +64,7 @@ import SensorDetail from "../sensor/SensorDetail.vue";
 export default {
   data() {
     return {
+      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
       sensors: []
     };
   },

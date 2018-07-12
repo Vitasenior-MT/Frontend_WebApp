@@ -90,7 +90,7 @@
     </v-layout>
     <v-flex class="pb-2 pt-1">
       <v-btn dark class="ml-0" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span class="pl-1"> Go Back</v-span>
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
     <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>

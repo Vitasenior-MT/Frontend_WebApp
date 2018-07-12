@@ -51,7 +51,7 @@ export default {
   },
   watch: {
     drawer(x) {
-      console.log(x);
+      // console.log(x);
     }
   },
   mounted() {

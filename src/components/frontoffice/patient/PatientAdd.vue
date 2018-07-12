@@ -78,7 +78,7 @@ export default {
           .post("/vitabox/" + this.box.id + "/patient", this.patient)
           .then(response => {
             this.patient.id = response.data.id;
-            console.log(this.patient);
+            // console.log(this.patient);
             this.$emit("addpatient", this.patient);
             event_bus.$emit("toast", {
               message: "patient was successfully added to vitabox",
