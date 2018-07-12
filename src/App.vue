@@ -155,4 +155,8 @@ i {
       font-size: 3em;
    }
 }
+
+.headers {
+    color: #F37027 !important;
+}
 </style>

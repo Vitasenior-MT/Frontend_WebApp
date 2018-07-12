@@ -6,7 +6,7 @@
           <v-card class="pb-3" width="100%" flat>
             <v-card-title primary-title>
               <div>
-                <h1 class="main-title mb-0 primary--text">
+                <h1 class="main-title mb-0 primary_l--text">
                   Patient - 
                   <span class="thin">
                     {{ this.selectedPatient.name}}
@@ -23,7 +23,7 @@
             <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
             <br>
             <span class="white--text pl-5">
-              <v-icon color="primary">fas fa-info-circle</v-icon> Press for more details
+              <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
             </span>
           </v-card>
         </v-layout>
@@ -48,7 +48,7 @@
                 <span class="pa-3"> Última actualização:  {{ this.lastrecord }} </span>
               <v-spacer></v-spacer>
               <v-tooltip bottom >
-                <v-btn slot="activator" color="primary" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
+                <v-btn slot="activator" color="primary_d" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
                   <v-icon>fas fa-info-circle</v-icon>
                 </v-btn>
                 <span>Sensor Details</span>

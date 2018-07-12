@@ -15,7 +15,7 @@
           <v-flex xs12>
             <v-layout class="text-md-center" style="height:100%">
               <v-card class="pt-5" style="width: 100%;" flat>
-                <h2 class="main-title primary--text">Envorinmental Sensors</h2>
+                <h2 class="main-title primary_l--text">Envorinmental Sensors</h2>
               </v-card>
             </v-layout>
           </v-flex>

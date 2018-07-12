@@ -2,10 +2,10 @@
     <v-content style="height:100%">
       <v-flex xs12 class="pa-0">
         <v-layout class="text-md-center">
-          <v-card dark style="width: 100%; padding-top: 10px;" flat>
+          <v-card dark width="100%" class="pt-1" flat>
             <v-card-title primary-title>
               <div>
-                <h1 class="main-title mb-0">
+                <h1 class="primary_l--text main-title mb-0">
                   Board - 
                   <span class="thin">
                     {{ this.$store.state.board.Boardmodel.name}}
@@ -16,25 +16,25 @@
           </v-card>
         </v-layout>
       </v-flex>
-      <v-flex xs12 style="padding-bottom:25px;">
+      <v-flex xs12 class="pb-2">
         <v-list dark >
           <v-list-tile>
             <v-list-tile-content>
-              <v-list-tile-sub-title style="color:#3faf7d;">Location</v-list-tile-sub-title>
+              <v-list-tile-sub-title class="primary--text">Location</v-list-tile-sub-title>
               <v-list-tile-title v-if="this.$store.state.board.description == null">Body</v-list-tile-title>
               <v-list-tile-title v-else>{{ $store.state.board.description }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-content >
-              <v-list-tile-sub-title style="color:#3faf7d;">MAC</v-list-tile-sub-title>
+              <v-list-tile-sub-title class="primary--text">MAC</v-list-tile-sub-title>
               <v-list-tile-title>{{ $store.state.board.mac_addr }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-content>
-              <v-list-tile-sub-title style="color:#3faf7d;">Active</v-list-tile-sub-title>
+              <v-list-tile-sub-title class="primary--text">Active</v-list-tile-sub-title>
               <v-list-tile-title v-if="this.$store.state.board.active === true"><v-icon >fas fa-check-circle</v-icon> </v-list-tile-title>
               <v-list-tile-title  v-else><v-icon>fas fa-times-circle</v-icon> </v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-content>
-              <v-list-tile-sub-title style="color:#3faf7d;">Last Update</v-list-tile-sub-title>
+              <v-list-tile-sub-title class="primary--text">Last Update</v-list-tile-sub-title>
               <v-list-tile-title>{{ $store.state.board.updated_at }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -49,9 +49,9 @@
               </v-carousel>
           </v-card>
       </v-flex>
-      <v-flex style="padding-bottom:20px; padding-top:10px;">
-        <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
-          <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
+      <v-flex class="pb-2 pt-1">
+        <v-btn dark class="ml-0" @click="$router.go(-1)">
+          <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span class="pl-1"> Go Back</v-span>
         </v-btn>
       </v-flex>
     </v-content>

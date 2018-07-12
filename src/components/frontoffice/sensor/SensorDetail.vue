@@ -3,11 +3,11 @@
     <v-card light flat>
       <v-card dark flat>
         <v-flex xs12 class="pa-0">
-          <v-layout class="text-md-center" style="padding-left:25px; padding-right:25px;">
-            <v-card dark style="width:100%; padding-bottom: 10px;" flat>
+          <v-layout class="pl-3 pr-3 text-md-center">
+            <v-card dark width="100%" class="pb-1" flat>
               <v-card-title primary-title>
                 <div>
-                  <h1 class="main-title mb-0">
+                  <h1 class="primary_l--text main-title mb-0">
                     Sensor - 
                     <span class="thin">
                       {{ this.selectedSensor.Sensormodel.measure }}
@@ -20,7 +20,7 @@
         </v-flex>
         <v-flex>
           <v-layout>
-            <v-avatar style="padding-left:20px; padding-top:20px;">
+            <v-avatar class="pl-2 pt-2">
               <img v-if="selectedSensor.Sensormodel.measure == 'peso'" src="@/assets/Body_Scale_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'p.a. sistólica'" src="@/assets/Blood_Pressure_Icon.png">
               <img v-if="selectedSensor.Sensormodel.measure == 'p.a. diastólica'" src="@/assets/Blood_Pressure_Icon.png">
@@ -35,10 +35,10 @@
               <img v-if="selectedSensor.Sensormodel.measure == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
               <img v-if="selectedSensor.Sensormodel.measure == 'CO2'" src="@/assets/dioxi_icon.svg">
             </v-avatar>
-            <span class="title" style="color:#3faf7d; padding-left:20px; padding-top:20px;">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
+            <span class="pl-2 pt-3 title primary--text">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
             <v-spacer></v-spacer>
             <v-icon small>fas fa-calendar-alt</v-icon>
-            <span style="padding-left:10px; padding-top:25px;"> Última actualização:  {{ this.lastrecord }} </span>
+            <span class="pl-1 pt-4"> Última actualização:  {{ this.lastrecord }} </span>
             <v-spacer></v-spacer>
             <v-menu
               ref="menu1"
@@ -88,7 +88,7 @@
           </v-layout>
         </v-flex>
       </v-card>
-      <div v-if="records" style="height:50vh; position:relative;">
+      <div v-if="records" class="sensorGraph">
         <canvas :id=" this.selectedSensor.id"></canvas>
       </div>
       <v-layout row wrap>
@@ -116,7 +116,14 @@ export default {
   },
   data: () => {
     return {
-      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
+      options: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+      },
       flag1: false,
       date1: null,
       menu1: false,
@@ -210,8 +217,11 @@ export default {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
-            this.lastrecord = this.records[this.records.length-1].datetime;
-            this.lastrecord = new Date(this.lastrecord).toLocaleDateString("pt-pt", this.options);
+            this.lastrecord = this.records[this.records.length - 1].datetime;
+            this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
+              "pt-pt",
+              this.options
+            );
           })
           .catch(error => {
             if (error.response) {
@@ -371,5 +381,10 @@ export default {
 <style>
 .gridSensor {
   padding: 0 45px 60px 45px;
+}
+
+.sensorGraph {
+  height: 50vh;
+  position: relative;
 }
 </style>

@@ -19,9 +19,9 @@
         <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">
           <v-card dark style="width:100%;">
             <v-layout row>
-              <v-icon class="primary--text pt-0 pl-4">fa fa-compass</v-icon>
+              <v-icon class="primary_d--text pt-0 pl-4">fa fa-compass</v-icon>
               <h4 class="pa-3">
-                <span class="primary--text">Location:</span>
+                <span class="primary_l--text">Location:</span>
                 <span class="pl-5">{{ this.$store.state.vitabox.address }}</span>
               </h4>
             </v-layout>
@@ -31,7 +31,7 @@
           <v-layout>
             <v-card class="vitaboxDetailsSelector" dark style="height:54px; width:100%;" @click.native='goToVitaboxDetails($store.state.vitabox)'>
               <v-layout row>
-                <v-icon class="primary--text pt-3 pl-5">fa fa-info-circle</v-icon>
+                <v-icon class="primary_d--text pt-3 pl-5">fa fa-info-circle</v-icon>
                 <h4 class="pt-3">
                   <span class="pl-4">Press for more details</span>
                 </h4>
