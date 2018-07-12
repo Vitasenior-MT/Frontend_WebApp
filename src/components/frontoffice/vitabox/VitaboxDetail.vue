@@ -210,7 +210,7 @@ export default {
     },
     goToBoardDetails(boardData) {
       this.$store.commit("setBoardData", boardData);
-      this.$router.push("/board/detail");
+      this.$router.push("/frontoffice/board/detail");
     }
   }
 };

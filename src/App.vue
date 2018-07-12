@@ -41,7 +41,7 @@ export default {
       if (this.is_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {
-        this.$router.push("/dashboard");
+        this.$router.push("/frontoffice/dashboard");
       }
       event_bus.$emit("waiting", false);
     });

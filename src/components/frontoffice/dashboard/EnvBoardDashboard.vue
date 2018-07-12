@@ -83,7 +83,7 @@ export default {
     goToBoardDetails(boardData, sensorData) {
       this.$store.commit("setBoardData", boardData);
       this.$store.commit("setSensorData", sensorData);
-      this.$router.push("/board/detail");
+      this.$router.push("/frontoffice/board/detail");
     }
   }
 };

@@ -20,10 +20,10 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   methods: {
       changepass(){
-          this.$router.push("changepass");
+          this.$router.push("/frontoffice/changepass");
       },
       updatephoto(){
-          this.$router.push("updatephoto");
+          this.$router.push("/frontoffice/updatephoto");
       },
   }
 };

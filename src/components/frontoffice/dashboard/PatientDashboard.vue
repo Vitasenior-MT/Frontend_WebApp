@@ -71,9 +71,20 @@
       </v-flex>
     </v-layout>
     <v-layout v-else wrap>
-      <v-flex >
-        <v-card light>
-          <v-card-title primary class="title">This patient does not have biometric data associated</v-card-title>
+      <v-flex sm12 md4 lg2 class="pa-0">
+        <v-layout fill-height>
+          <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
+            <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
+            <br>
+            <span class="white--text pl-5">
+              <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
+            </span>
+          </v-card>
+        </v-layout>
+      </v-flex>
+      <v-flex sm12 md8 lg10>
+        <v-card light height="100%" class="text-md-center">
+          <v-card-title primary class="pt-5 title">This patient does not have biometric data associated</v-card-title>
           <v-card-text primary>Sorry</v-card-text>
         </v-card>
       </v-flex>
@@ -292,11 +303,11 @@ export default {
       this.$store.commit("setBoardData", boardData);
       this.$store.commit("setSensorData", sensorData);
       this.$store.commit("setPatientData", patientData);
-      this.$router.push("/board/detail");
+      this.$router.push("/frontoffice/board/detail");
     },
     goToPatientProfile(patientData) {
       this.$store.commit("setPatientData", patientData);
-      this.$router.push("/patient/detail");
+      this.$router.push("/frontoffice/patient/detail");
     }
   }
 };

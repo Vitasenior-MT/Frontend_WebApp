@@ -11,17 +11,13 @@ import Signup from '@/components/auth/Register'
 import Forgot from '@/components/auth/Forgot'
 
 // Frontend
-import Dashboard from '@/components/frontoffice/dashboard/Dashboard'
-
-import VitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
-import VitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
-
-import BoardDetail from '@/components/frontoffice/board/BoardDetail'
-
-import PatientDetail from '@/components/frontoffice/patient/PatientDetail'
+import FODashboard from '@/components/frontoffice/dashboard/Dashboard'
+import FOVitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
+import FOVitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
+import FOBoardDetail from '@/components/frontoffice/board/BoardDetail'
+import FOPatientDetail from '@/components/frontoffice/patient/PatientDetail'
 import AlertList from '@/components/frontoffice/alerts/AlertList'
-
-import UserDetail from '@/components/frontoffice/user/UserDetail'
+import FOUserDetail from '@/components/frontoffice/user/UserDetail'
 
 // Backend
 import BOVitaboxList from '@/components/backoffice/vitabox/VitaboxList'
@@ -59,52 +55,44 @@ export default new Router({
       component: Home
     },
     {
-      path: '/dashboard',
+      path: '/frontoffice/dashboard',
       name: 'Dashboard',
-      component: Dashboard,
-      // beforeEnter: requireAuth
+      component: FODashboard,
     },
     {
-      path: '/vitabox/detail',
+      path: '/frontoffice/vitabox/detail',
       name: 'VitaboxDetail',
-      component: VitaboxDetail,
-      // beforeEnter: requireAuth
+      component: FOVitaboxDetail,
     },
     {
-      path: '/vitabox/register',
+      path: '/frontoffice/vitabox/register',
       name: 'VitaboxRegister',
-      component: VitaboxRegister,
-      // beforeEnter: requireAuth
+      component: FOVitaboxRegister,
     },
     {
-      path: '/board/detail',
+      path: '/frontoffice/board/detail',
       name: 'BoardDetail',
-      component: BoardDetail,
-      // beforeEnter: requireAuth
+      component: FOBoardDetail,
     },
     {
-      path: '/patient/detail',
+      path: '/frontoffice/patient/detail',
       name: 'PatientDetail',
-      component: PatientDetail,
-      // beforeEnter: requireAuth
+      component: FOPatientDetail,
     },
     {
       path: '/alerts/list',
       name: 'AlertList',
       component: AlertList,
-      // beforeEnter: requireAuth
     },
     {
-      path: '/user/detail',
+      path: '/frontoffice/user/detail',
       name: 'UserDetail',
-      component: UserDetail,
-      // beforeEnter: requireAuth
+      component: FOUserDetail,
     },
     {
-      path: '/user/changepass',
+      path: '/frontoffice/user/changepass',
       name: 'ChangePass',
       component: ChangePass,
-      // beforeEnter: requireAuth
     },
 
     // backoffice

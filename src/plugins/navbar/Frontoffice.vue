@@ -1,9 +1,9 @@
 <template>
   <div id="frontoffice">
-    <v-btn small color="primary" class="mt-0" block dark to="/vitabox/register">Register Vitabox</v-btn>
+    <v-btn small color="primary" class="mt-0" block dark to="/frontoffice/vitabox/register">Register Vitabox</v-btn>
     <v-divider class="vitaboxDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
-      <router-link v-for="(item, index) in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/dashboard"'>
+      <router-link v-for="(item, index) in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/frontoffice/dashboard"'>
       <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
         <v-list-tile class="vitaboxSelector">
           <v-list-tile-avatar class="primary--text">

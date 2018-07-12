@@ -2,20 +2,6 @@
   <v-content>
     <v-container class="pa-0" fluid grid-list-sm align-center>
       <v-layout class="pb-0" wrap>
-        <!-- <v-flex class="text-md-center" xs12 style="padding:0px">
-          <v-card dark style="width: 100%; padding-top: 30px; padding-bottom: 60px;" flat>
-            <v-card-title primary-title>
-              <div>
-                <h1 class="main-title mb-0">
-                  Vitabox - 
-                  <span class="thin">
-                    {{ this.$store.state.vitabox.address}}
-                  </span>
-                </h1>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex> -->
         <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">
           <v-card dark style="width:100%;">
             <v-layout row>
@@ -61,7 +47,7 @@ export default {
   methods: {
     goToVitaboxDetails(vitaboxData) {
       this.$store.commit("setVitaboxData", vitaboxData);
-      this.$router.push("/vitabox/detail");
+      this.$router.push("/frontoffice/vitabox/detail");
     }
   }
 };
