@@ -10,7 +10,7 @@
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Doctor email" id="email" type="text"></v-text-field>
+            <v-text-field prepend-icon="fas fa-user-md" v-model="email" name="email" label="Doctor email" id="email" type="text"></v-text-field>
             <v-flex sm4 md3><v-btn block class=" mt-3" dark color="ash" @click.native="save">Save</v-btn></v-flex>
           </v-layout>
         </v-container>
@@ -32,15 +32,18 @@ export default {
   },
   methods: {
     save() {
-      if (this.selected !== null) {
+      if (this.email !== "" && this.email.indexOf("@") > -1) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
           .post("/patient/" + this.$store.state.patient.id + "/doctor", {
             email: this.email
           })
           .then(response => {
-            this.$store.commit("addBoardToPatient", this.selected);
-            event_bus.$emit("success", "doctor was successfully defined to user");
+            this.$store.commit("addDoctorToPatient", response.data.doctor);
+            event_bus.$emit(
+              "success",
+              "doctor was successfully defined to user"
+            );
             event_bus.$emit("waiting", false);
           })
           .catch(error => {

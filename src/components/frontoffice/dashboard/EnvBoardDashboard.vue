@@ -48,7 +48,7 @@
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
             <v-card class="vitaboxBoardSelector green darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-else>
-              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}}</v-card-title>
+              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]:'none' }}</v-card-title>
               <v-card-text primary>{{ item.board.description }}</v-card-text>
             </v-card>
           </div>

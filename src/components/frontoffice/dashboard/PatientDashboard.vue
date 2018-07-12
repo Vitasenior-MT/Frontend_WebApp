@@ -1,6 +1,5 @@
 <template>
-
-  <v-container class="gridPatient pr-5" style="max-width:100%;">
+  <v-container class="pr-5" style="max-width:100%;">
     <v-layout v-if="boardSensors.length > 0" row wrap >
       <v-flex xs12 class="pa-0">
         <v-layout class="text-md-center">

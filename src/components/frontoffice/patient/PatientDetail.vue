@@ -87,13 +87,14 @@
     </v-layout>
     <v-flex style="padding-bottom:20px; padding-top:10px;">
       <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span style="padding-left:10px"> Go Back</span>
       </v-btn>
     </v-flex>
 
     <add-board v-if="$store.state.vitabox.sponsor"></add-board>
     <div v-for="item in $store.state.patient.Boards" :key="item.id">{{item}}<br><br></div>
     <add-doctor v-if="$store.state.vitabox.sponsor"></add-doctor>
+    <div v-for="item in $store.state.patient.Doctors" :key="item.id">{{item}}<br><br></div>
   </v-content>
 </template>
 
@@ -142,7 +143,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.patient);
     this.getMeasures();
   },
   methods: {

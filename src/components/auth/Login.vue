@@ -32,7 +32,7 @@ export default {
   name: "login",
   data: () => {
     return {
-      email: "admin@a.aa",
+      email: "jose@a.aa",
       password: "123qweASD"
     };
   },

@@ -20,7 +20,7 @@
     </v-layout>
     <v-flex style="padding-bottom:20px; padding-top:10px;">
       <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left </v-icon> <v-span style="padding-left:10px"> Go Back</v-span>
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span style="padding-left:10px"> Go Back</span>
       </v-btn>
     </v-flex>
   </v-content>
@@ -47,7 +47,6 @@ export default {
         .get("/vitabox/" + this.$store.state.vitabox.id + "/warning")
         .then(response => {
           this.vitaboxwarnings = response.data.warnings;
-          console.log(response.data.warnings);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
