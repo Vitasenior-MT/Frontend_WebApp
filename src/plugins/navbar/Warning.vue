@@ -2,7 +2,7 @@
   <v-layout style="padding-top:15px">
     <v-badge v-model="show" overlap color="red">
       <span slot="badge" >3</span>
-      <v-btn v-if="!isadmin" color="primary" fab @click="show = !show" :to='"/alerts/list"' style="height:45px">
+      <v-btn v-if="!isadmin && !isdoctor" color="primary" fab @click="show = !show" :to='"/alerts/list"' style="height:45px">
         <v-icon color="white">fas fa-bell</v-icon>
       </v-btn>
       <v-btn v-else color="primary" fab @click="show = !show" style="height:45px">
@@ -16,7 +16,7 @@
 import socketio from "socket.io-client";
 
 export default {
-  props: { isadmin: Boolean },
+  props: { isadmin: Boolean, isdoctor: Boolean },
   data() {
     return {
       show: true,
@@ -24,22 +24,22 @@ export default {
     };
   },
   mounted() {
-    var socket = socketio("http://localhost:8000/", {
-      query: { token: this.$store.state.user.token }
-    });
+    var socket = socketio(
+      process.env.NODE_ENV === "production"
+        ? "https://vitasenior-worker.eu-gb.mybluemix.net"
+        : "http://192.168.161.79:8000",
+      {
+        query: { token: this.$store.state.user.token }
+      }
+    );
     socket.on("connect", function() {
-      console.log("connected: "); // true
-      console.log(socket);
+      console.log("connected: ", socket);
     });
     socket.on("message", function(data) {
       console.log("message: ", data);
     });
-    socket.on("data", function(data) {
-      console.log("data: ", data);
-    });
     socket.on("disconnect", function() {
-      console.log("disconnected: "); // true
-      console.log(socket);
+      console.log("disconnected: ", socket);
     });
     socket.on("unauthorized", function(error) {
       if (
@@ -49,24 +49,7 @@ export default {
         console.log("User's token has expired");
       }
     });
-    // this.initWS();
   }
-  // beforeDestroy() {
-  //   this.closeWS();
-  // },
-  // methods: {
-  //   initWS() {
-  //     this.socket.open();
-  //     console.log(this.socket);
-  //   },
-  //   closeWS() {
-  //     this.socket.close();
-  //   },
-  //   switchWS() {
-  //     if (this.socket.connected) this.closeWS();
-  //     else this.initWS();
-  //   }
-  // }
 };
 </script>
 

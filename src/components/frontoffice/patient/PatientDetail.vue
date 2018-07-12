@@ -1,11 +1,11 @@
 <template>
   <v-content style="height:100%">
     <v-layout wrap>
-      <v-flex class="text-md-center" xs12 style="padding-bottom:20px">
-        <v-card dark style="width: 100%; padding-bottom: 20px;" flat>
+      <v-flex class="pt-2 text-md-center" xs12>
+        <v-card dark width="100%" class="pb-2" flat>
           <v-card-title primary-title>
             <div>
-              <h1 class="main-title mb-0">
+              <h1 class="main-title mb-0 primary_l--text">
                 Patient - 
                 <span class="thin">
                   {{ this.$store.state.patient.name}}
@@ -16,40 +16,40 @@
         </v-card>
       </v-flex>
       <v-flex xs12 md4 >
-        <v-card dark flat style="height:100%; padding-bottom:10px">
+        <v-card dark flat height="100%" class="pb-1">
           <div class="text-xs-center">
-            <v-avatar size="150px" style="margin-top:10%; margin-bottom:10px">
+            <v-avatar size="150px" class="mt-1 mb-1">
               <img class="img-circle elevation-7 mb-1" src="@/assets/logo.png">
             </v-avatar>
           </div>
           <v-list dark >
             <v-list-tile >
               <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">ID</v-list-tile-sub-title>
+                <v-list-tile-sub-title class="text-xs-center primary--text">ID</v-list-tile-sub-title>
                 <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.id }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content >
-                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Birthdate</v-list-tile-sub-title>
+                <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
                 <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.birthdate }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Gender</v-list-tile-sub-title>
+                <v-list-tile-sub-title class="text-xs-center primary--text">Gender</v-list-tile-sub-title>
                 <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.gender }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Weight</v-list-tile-sub-title>
+                <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
                 <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.weight }} kg</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center" style="color:#3faf7d;">Height</v-list-tile-sub-title>
+                <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
                 <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.height }} m</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -57,7 +57,7 @@
         </v-card>
       </v-flex>
       <v-flex xs12 md8>
-        <v-card dark flat style="height:70%;">
+        <v-card dark flat height="70%">
           <v-data-table
             :headers="headers"
             :items="this.$store.state.patient.Profiles"
@@ -85,9 +85,9 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-flex style="padding-bottom:20px; padding-top:10px;">
-      <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span style="padding-left:10px"> Go Back</span>
+    <v-flex class="pb-2 pt-1">
+      <v-btn dark class="ml-0" @click="$router.go(-1)">
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
 
@@ -192,7 +192,4 @@ export default {
 </script>
 
 <style>
-.headers {
-    color: #3faf7d !important;
-}
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <v-container class="pr-5" style="max-width:100%;">
+  <v-container class="gridPatient">
     <v-layout v-if="boardSensors.length > 0" row wrap >
       <v-flex xs12 class="pa-0">
         <v-layout class="text-md-center">
-          <v-card style="width: 100%; padding-bottom: 20px;" flat>
+          <v-card class="pb-3" width="100%" flat>
             <v-card-title primary-title>
               <div>
-                <h1 class="main-title mb-0">
+                <h1 class="main-title mb-0 primary_l--text">
                   Patient - 
                   <span class="thin">
                     {{ this.selectedPatient.name}}
@@ -18,33 +18,34 @@
         </v-layout>
       </v-flex>
       <v-flex sm12 md4 lg2 class="pa-0">
-        <v-layout style="height:100%">
+        <v-layout fill-height>
           <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
-            <v-avatar size="150px" style="margin-top:10px; margin-left:25%; margin-right:25%;"><img src="@/assets/logo.png"></v-avatar>
+            <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
             <br>
-            <span class="white--text" style="padding-left:15%;">
-              <v-icon color="primary" style="padding-right:10px;">fas fa-info-circle</v-icon> Press for more details
+            <span class="white--text pl-5">
+              <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
             </span>
           </v-card>
         </v-layout>
       </v-flex>
       <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
-          <v-card id="bioGraph" light flat style="padding-top:0px; padding-left:0px; padding-bottom:0px">
+          <v-card class="bioGraphCard" light flat>
             <v-layout row>
               <v-avatar class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.png')"></v-avatar>
               <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
+
               <v-spacer></v-spacer>
                 <v-icon small>fas fa-calendar-alt</v-icon>
-                <span class="title" style="padding-left:10px; padding-top:15px;"> Última actualização:  {{ this.lastrecord }} </span>
+                <span class="pa-3"> Última actualização:  {{ this.lastrecord }} </span>
               <v-spacer></v-spacer>
               <v-tooltip bottom >
-                <v-btn slot="activator" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
+                <v-btn slot="activator" color="primary_d" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
                   <v-icon>fas fa-info-circle</v-icon>
                 </v-btn>
                 <span>Sensor Details</span>
               </v-tooltip>
             </v-layout>
-            <div v-if="records" style="height:250px; position:relative;">
+            <div v-if="records" id="bioGraph">
               <canvas :id="this.selectedSensorGraph.sensor.id"></canvas>
             </div>
             <v-layout row wrap>
@@ -68,13 +69,14 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout wrap justify-center style="padding-top:10px">
+    <v-layout wrap justify-center class="pt-1">
       <v-flex xs12 sm12 md4 lg2 v-for="item in boardSensors" :key="item.id">
           <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="showGraph(item)">
             <v-avatar class="bioAvatar" style="padding-left:10px;"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.png')"></v-avatar>
             <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}</span>
+
             <br>
-            <span style="padding-left:60px; color:#3faf7d;">{{ item.sensor.Sensormodel.measure }}</span>
+            <span class="pl-5 primary--text">{{ item.sensor.Sensormodel.measure }}</span>
           </v-card>
       </v-flex>
     </v-layout> 
@@ -287,6 +289,8 @@ export default {
   padding-left: 45px;
   padding-top: 0px;
   padding-bottom: 40px;
+  padding-right: 40px;
+  max-width: 100%; 
 }
 
 .patientDetailsSelector {
@@ -314,10 +318,28 @@ export default {
 
 .bioAvatar {
   padding-top: 10%;
+  padding-left:10px;
 }
 
 .bioLogo {
   height: 40px;
   width: 40px;
+}
+
+.bioGraphCard{
+  padding-top:0px; 
+  padding-left:0px; 
+  padding-bottom:0px
+}
+
+#bioGraph{
+  height:250px; 
+  position:relative;
+}
+
+.patientAvatar{
+  margin-top:10px; 
+  margin-left:25%; 
+  margin-right:25%;
 }
 </style>

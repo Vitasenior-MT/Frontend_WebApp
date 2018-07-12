@@ -14,10 +14,10 @@ Vue.use(Vuetify, {
     raven: '#212120',
     ash: '#5b5b5b',
     ash_l: '#fafafa',
-    primary: '#3faf7d',
-    primary_l: '#8fd6b6',
-    primary_d: '#2f835d',
-    primary_s: '#daf1e7',
+    primary: '#F37027',
+    primary_l: '#fc9c02',
+    primary_d: '#d65526',
+    primary_s: '#f9d3c5',
     warning: '#e6ac00'
   },
   icons: {

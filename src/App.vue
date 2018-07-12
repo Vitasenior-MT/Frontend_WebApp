@@ -2,7 +2,7 @@
   <v-app>
     <progress-bar></progress-bar>
 
-    <navbar :logged="logged" :isadmin="is_admin"></navbar>
+    <navbar :logged="logged" :isadmin="is_admin" :isdoctor="is_doctor"></navbar>
 
     <main>
       <transition name="fade">
@@ -30,15 +30,18 @@ export default {
     return {
       logged: false,
       is_admin: false,
+      is_doctor: false,
       interval: null
     };
   },
   mounted() {
     this.logged = this.$store.state.user.token ? true : false;
     this.is_admin = this.$store.state.user.is_admin ? true : false;
+    this.is_doctor = this.$store.state.user.is_doctor ? true : false;
     event_bus.$on("login", () => {
       this.logged = true;
       this.is_admin = this.$store.state.user.is_admin;
+      this.is_doctor = this.$store.state.user.is_doctor;
       if (this.is_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {
@@ -126,18 +129,20 @@ i {
   padding-right: 25px;
   padding-left: 25px;
   height: 100%;
-  background-color: rgb(66, 244, 161);
-  /* -webkit-transition: all 2s linear;
-  -moz-transition: all 2s linear;
-  -o-transition: all 2s linear;
-  transition: all 2s linear; */
+  background-image: linear-gradient(
+    to right top,
+    #845ec2,
+    #d65db1,
+    #d65db1,
+    #ff9671,
+    #ffc75f,
+    #f9f871
+  );
 }
-
 .main-title {
   position: absolute;
   margin: 0;
   padding: 0;
-  color: #3faf7d;
   font-size: 20px;
   text-align: center;
   top: 50%;
@@ -145,21 +150,21 @@ i {
   -webkit-transform: translate3d(-50%, -50%, 0);
   transform: translate3d(-50%, -50%, 0);
 }
-
 .demo .main-title {
   text-transform: uppercase;
   font-size: 4.2em;
   letter-spacing: 0.1em;
 }
-
 .main-title .thin {
   font-weight: 200;
   color: #f9f1e9;
 }
-
 @media only screen and (max-width: 768px) {
   .demo .main-title {
     font-size: 3em;
   }
+}
+.headers {
+  color: #f37027 !important;
 }
 </style>

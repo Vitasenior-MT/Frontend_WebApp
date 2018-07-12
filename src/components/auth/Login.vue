@@ -59,7 +59,8 @@ export default {
               name: response.data.name,
               email: response.data.email,
               photo: response.data.photo,
-              is_admin: response.data.is_admin
+              is_admin: response.data.is_admin,
+              is_doctor: response.data.is_doctor
             });
             event_bus.$emit("login");
             event_bus.$emit("toast", {

@@ -104,7 +104,7 @@ export default {
     },
     createBoard() {
       if (this.board.mac_addr !== "") {
-        console.log(this.board.mac_addr.length);
+        //console.log(this.board.mac_addr.length);
         if (this.board.mac_addr.length === 16) {
           this.board.mac_addr =
             this.board.mac_addr.substring(0, 2) +
@@ -144,9 +144,9 @@ export default {
           })
           .catch(error => {
             if (error.response) {
-              console.log(error.response.data);
+              // console.log(error.response.data);
             } else {
-              console.log(error.message);
+              // console.log(error.message);
             }
           });
       } else {

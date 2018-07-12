@@ -3,7 +3,7 @@
 
     <div v-if="logged">
       <v-navigation-drawer app fixed v-model="drawer" width="250" class="pa-0">
-        <sidemenu :isadmin="isadmin"></sidemenu>
+        <sidemenu :isadmin="isadmin" :isdoctor="isdoctor"></sidemenu>
       </v-navigation-drawer>
 
       <v-toolbar fixed class="primary--text raven" >
@@ -13,7 +13,7 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <warning :isadmin="isadmin"></warning>
+          <warning :isadmin="isadmin" :isdoctor="isdoctor"></warning>
         </v-toolbar-items>
       </v-toolbar>
     </div>
@@ -41,18 +41,14 @@ export default {
   name: "navbar",
   props: {
     logged: Boolean,
-    isadmin: Boolean
+    isadmin: Boolean,
+    isdoctor:Boolean
   },
   data: () => {
     return {
       drawer: true,
       fixed: true
     };
-  },
-  watch: {
-    drawer(x) {
-      console.log(x);
-    }
   },
   mounted() {
     this.resize();

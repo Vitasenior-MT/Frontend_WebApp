@@ -36,11 +36,11 @@ export default {
   watch: {
     user: function(val) {
       event_bus.$emit("waiting", true);
-      console.log("user id:", val.id);
+      //console.log("user id:", val.id);
       event_bus.$data.http
         .get("/user/" + val.id + "/log")
         .then(response => {
-          console.log(response.data.logs);
+          //console.log(response.data.logs);
           this.logs = response.data.logs;
           event_bus.$emit("waiting", false);
         })

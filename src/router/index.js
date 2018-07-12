@@ -34,6 +34,8 @@ import BOUtils from '@/components/backoffice/utils/utils'
 import BOBoardDashboard from '@/components/backoffice/board/BoardDetails'
 import BOPatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
+// Doctor
+
 Vue.use(Router)
 
 export default new Router({

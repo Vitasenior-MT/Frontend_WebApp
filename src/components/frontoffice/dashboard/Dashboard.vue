@@ -1,40 +1,27 @@
 <template>
-  <v-content>
+  <v-content v-if="this.$store.state.vitabox">
     <v-container class="pa-0" fluid grid-list-sm align-center>
-      <v-layout wrap style="padding-bottom:0px">
-        <v-flex class="text-md-center" xs12 style="padding:0px">
-          <v-card dark style="width: 100%; padding-top: 30px; padding-bottom: 60px;" flat>
-            <v-card-title primary-title>
-              <div>
-                <h1 class="main-title mb-0">
-                  Vitabox - 
-                  <span class="thin">
-                    {{ this.$store.state.vitabox.address}}
-                  </span>
-                </h1>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex>
-        <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left" style="padding-top:2px; padding-left:0px; padding-right:0px; padding-bottom:0px">
-          <v-card dark style="width:100%; height:56px;">
+      <v-layout class="pb-0" wrap>
+        <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">
+          <v-card dark style="width:100%;">
             <v-layout row>
-              <v-avatar style="color:#3faf7d;">
-                <v-icon>fa fa-compass</v-icon>
-              </v-avatar>
-              <h4 style="padding-top:12.5px;">
-                <span style="color:#3faf7d;">Location:</span>
-                <span style="padding-left:50px;">{{ this.$store.state.vitabox.address }}</span>
+              <v-icon class="primary_d--text pt-0 pl-4">fa fa-compass</v-icon>
+              <h4 class="pa-3">
+                <span class="primary_l--text">Location:</span>
+                <span class="pl-5">{{ this.$store.state.vitabox.address }}</span>
               </h4>
             </v-layout>
           </v-card>
         </v-flex>
-        <v-flex xs12 sm12 md12 lg4 sl3>
-          <v-layout class="text-md-center">
-            <v-card class="vitaboxDetailsSelector" dark style="height:56px; width:100%; padding-top:12px; padding-bottom:12px;" align-content-center align-center @click.native='goToVitaboxDetails($store.state.vitabox)'>
-              <span class="white--text" style="padding-right:50px;">
-                  <v-icon color="primary" style="width:50px;">fas fa-info-circle</v-icon> Press for more details
-              </span>
+        <v-flex xs12 sm12 md12 lg4 sl3 class="pa-0">
+          <v-layout>
+            <v-card class="vitaboxDetailsSelector" dark style="height:54px; width:100%;" @click.native='goToVitaboxDetails($store.state.vitabox)'>
+              <v-layout row>
+                <v-icon class="primary_d--text pt-3 pl-5">fa fa-info-circle</v-icon>
+                <h4 class="pt-3">
+                  <span class="pl-4">Press for more details</span>
+                </h4>
+              </v-layout>
             </v-card>
           </v-layout>
         </v-flex>

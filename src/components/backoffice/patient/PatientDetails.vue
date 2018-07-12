@@ -91,7 +91,6 @@ export default {
         event_bus.$data.http
           .get("/patient/" + this.patient.id + "/board")
           .then(response => {
-            console.log(response.data.boards);
             this.boards = response.data.boards;
             this.sensors = this.boards.length > 0 ? this.boards[0].Sensors : [];
             event_bus.$emit("waiting", false);
