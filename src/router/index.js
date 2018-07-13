@@ -10,13 +10,14 @@ import Signin from '@/components/auth/Login'
 import Signup from '@/components/auth/Register'
 import Forgot from '@/components/auth/Forgot'
 
+import AlertList from '@/components/frontoffice/alerts/AlertList'
+
 // Frontend
 import FODashboard from '@/components/frontoffice/dashboard/Dashboard'
 import FOVitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
 import FOVitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
 import FOBoardDetail from '@/components/frontoffice/board/BoardDetail'
 import FOPatientDetail from '@/components/frontoffice/patient/PatientDetail'
-import AlertList from '@/components/frontoffice/alerts/AlertList'
 import FOUserDetail from '@/components/frontoffice/user/UserDetail'
 
 // Backend
@@ -57,6 +58,13 @@ export default new Router({
       component: Home
     },
     {
+      path: '/alerts/list',
+      name: 'AlertList',
+      component: AlertList,
+    },
+    
+    //Frontoffice
+    {
       path: '/frontoffice/dashboard',
       name: 'Dashboard',
       component: FODashboard,
@@ -80,11 +88,6 @@ export default new Router({
       path: '/frontoffice/patient/detail',
       name: 'PatientDetail',
       component: FOPatientDetail,
-    },
-    {
-      path: '/alerts/list',
-      name: 'AlertList',
-      component: AlertList,
     },
     {
       path: '/frontoffice/user/detail',

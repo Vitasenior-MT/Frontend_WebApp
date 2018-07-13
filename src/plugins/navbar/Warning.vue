@@ -20,28 +20,27 @@ export default {
   data() {
     return {
       show: true,
-      socket: null
+      socket: socketio(
+        process.env.NODE_ENV === "production"
+          ? "https://vitasenior-worker.eu-gb.mybluemix.net"
+          : "http://192.168.161.79:8000/",
+        {
+          query: { token: this.$store.state.user.token }
+        }
+      )
     };
   },
   mounted() {
-    var socket = socketio(
-      process.env.NODE_ENV === "production"
-        ? "https://vitasenior-worker.eu-gb.mybluemix.net"
-        : "http://192.168.161.79:8000",
-      {
-        query: { token: this.$store.state.user.token }
-      }
-    );
-    socket.on("connect", function() {
-      console.log("connected: ", socket);
+    this.socket.on("connect", function() {
+      console.log("connected");
     });
-    socket.on("message", function(data) {
+    this.socket.on("message", function(data) {
       console.log("message: ", data);
     });
-    socket.on("disconnect", function() {
-      console.log("disconnected: ", socket);
+    this.socket.on("disconnect", function() {
+      console.log("disconnected");
     });
-    socket.on("unauthorized", function(error) {
+    this.socket.on("unauthorized", function(error) {
       if (
         error.data.type == "UnauthorizedError" ||
         error.data.code == "invalid_token"
@@ -49,6 +48,9 @@ export default {
         console.log("User's token has expired");
       }
     });
+  },
+  beforeDestroy() {
+    this.socket.close();
   }
 };
 </script>
