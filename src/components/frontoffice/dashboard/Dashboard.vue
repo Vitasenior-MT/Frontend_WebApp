@@ -3,7 +3,7 @@
     <v-container class="pa-0" fluid grid-list-sm align-center>
       <v-layout class="pb-0" wrap>
         <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">
-          <v-card dark style="width:100%;">
+          <v-card dark width="100%">
             <v-layout row>
               <v-icon class="primary_d--text pt-0 pl-4">fa fa-compass</v-icon>
               <h4 class="pa-3">
@@ -15,7 +15,7 @@
         </v-flex>
         <v-flex xs12 sm12 md12 lg4 sl3 class="pa-0">
           <v-layout>
-            <v-card class="vitaboxDetailsSelector" dark style="height:54px; width:100%;" @click.native='goToVitaboxDetails($store.state.vitabox)'>
+            <v-card class="vitaboxDetailsSelector" dark height="54px" width="100%" @click.native='goToVitaboxDetails($store.state.vitabox)'>
               <v-layout row>
                 <v-icon class="primary_d--text pt-3 pl-5">fa fa-info-circle</v-icon>
                 <h4 class="pt-3">

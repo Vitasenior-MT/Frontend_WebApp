@@ -44,6 +44,9 @@ export default {
       this.is_doctor = this.$store.state.user.is_doctor;
       if (this.is_admin) {
         this.$router.push("/backoffice/vitabox/list");
+      }
+      else if (this.is_doctor) {
+        this.$router.push("/doctoroffice/dashboard");
       } else {
         this.$router.push("/frontoffice/dashboard");
       }

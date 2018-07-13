@@ -20,6 +20,9 @@ import FOBoardDetail from '@/components/frontoffice/board/BoardDetail'
 import FOPatientDetail from '@/components/frontoffice/patient/PatientDetail'
 import FOUserDetail from '@/components/frontoffice/user/UserDetail'
 
+// Doctoroffice
+import DODashboard from '@/components/doctoroffice/dashboard/Dashboard'
+
 // Backend
 import BOVitaboxList from '@/components/backoffice/vitabox/VitaboxList'
 import BOVitaboxRegister from '@/components/backoffice/vitabox/VitaboxRegister'
@@ -36,8 +39,7 @@ import BOPatientDashboard from '@/components/backoffice/patient/PatientDetails'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/signin',
       name: 'Signin',
       component: Signin
@@ -62,36 +64,36 @@ export default new Router({
       name: 'AlertList',
       component: AlertList,
     },
-    
+
     //Frontoffice
     {
       path: '/frontoffice/dashboard',
-      name: 'Dashboard',
+      name: 'FODashboard',
       component: FODashboard,
     },
     {
       path: '/frontoffice/vitabox/detail',
-      name: 'VitaboxDetail',
+      name: 'FOVitaboxDetail',
       component: FOVitaboxDetail,
     },
     {
       path: '/frontoffice/vitabox/register',
-      name: 'VitaboxRegister',
+      name: 'FOVitaboxRegister',
       component: FOVitaboxRegister,
     },
     {
       path: '/frontoffice/board/detail',
-      name: 'BoardDetail',
+      name: 'FOBoardDetail',
       component: FOBoardDetail,
     },
     {
       path: '/frontoffice/patient/detail',
-      name: 'PatientDetail',
+      name: 'FOPatientDetail',
       component: FOPatientDetail,
     },
     {
       path: '/frontoffice/user/detail',
-      name: 'UserDetail',
+      name: 'FOUserDetail',
       component: FOUserDetail,
     },
     {
@@ -99,6 +101,14 @@ export default new Router({
       name: 'ChangePass',
       component: ChangePass,
     },
+
+    //Doctoroffice
+    {
+      path: '/doctoroffice/dashboard',
+      name: 'DODashboard',
+      component: DODashboard,
+    },
+    
 
     // backoffice
     {

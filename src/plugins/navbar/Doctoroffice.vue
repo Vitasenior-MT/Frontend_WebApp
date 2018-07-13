@@ -1,6 +1,22 @@
 <template>
   <div id="doctoroffice">
-    
+    <v-btn small color="primary" class="mt-0" block dark to="/doctoroffice/patient/register">Register Patient</v-btn>
+    <v-divider class="patientDivider"></v-divider>
+    <v-list class="office_menu py-0" three-line>
+      <router-link v-for="(item, index) in patients" :key="item.id" @click.native="selectedPatient(item)" :to='"/doctoroffice/dashboard"'>
+      <v-divider v-if="index !== 0" class="patientDivider" :inset="true"></v-divider>
+        <v-list-tile class="patientSelector">
+          <v-list-tile-avatar class="primary--text">
+            <v-icon>fa fa-user</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title class="primary--text">Patient</v-list-tile-title>
+            <v-list-tile-sub-title class="white--text" small>{{ item.name }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </router-link>
+    </v-list>
+    <v-divider class="patientDivider"></v-divider>
   </div>
 </template>
 
@@ -26,9 +42,9 @@ export default {
       event_bus.$data.http
         .get("/doctor")
         .then(response => {
-          this.patient = response.data.patients;
+          this.patients = response.data.patients;
           if (response.data.patients.length > 0) {
-            this.selectedVitabox(response.data.patients[0]);
+            this.selectedPatient(response.data.patients[0]);
           }
           event_bus.$emit("waiting", false);
         })
@@ -44,7 +60,7 @@ export default {
           event_bus.$emit("waiting", false);
         });
     },
-    selectedVitabox(patientData) {
+    selectedPatient(patientData) {
       this.$store.commit("setPatientData", patientData);
     }
   }
