@@ -7,13 +7,13 @@
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex xs12 md6>
-            <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" single-line append-icon="fas fa-angle-down"></v-select>
+            <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" single-line append-icon="fas fa-angle-down" return-object></v-select>
           </v-flex>
           <v-flex xs12 sm6 md2>
-            <v-text-field label="Minimum acceptable" v-model="measure.min"></v-text-field>
+            <v-text-field label="Minimum acceptable" v-model="measure.min" type="number"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6 md2>
-            <v-text-field :rules="[() => measure.min < measure.max || 'Maximum must be greater than Minimum']" label="Maximum acceptable" v-model="measure.max"></v-text-field>
+            <v-text-field :rules="[() => parseFloat(measure.min) < parseFloat(measure.max) || 'Maximum must be greater than Minimum']" label="Maximum acceptable" v-model="measure.max" type="number"></v-text-field>
           </v-flex>
           <v-flex xs12 md2>
             <v-btn dark color="ash" block @click.native="save">Save</v-btn>
@@ -36,27 +36,27 @@ export default {
     return {
       measure: {
         id: "",
-        measure: "",
         min: 0,
         max: 1,
-        tag: ""
+        tag: "",
+        measure: ""
       },
       items: [
-        { measure: "systolic", tag: "systolic" },
-        { measure: "diastolic", tag: "diastolic" },
-        { measure: "pulse", tag: "pulse" },
-        { measure: "pulse oximetry", tag: "spo2" },
-        { measure: "weight", tag: "weight" },
-        { measure: "body fat", tag: "bodyfat" },
-        { measure: "bone mass", tag: "bonemass" },
-        { measure: "muscle mass", tag: "musclemass" },
-        { measure: "visceral fat", tag: "visceralfat" },
-        { measure: "water", tag: "water" },
-        { measure: "calories", tag: "callories" },
-        { measure: "steps", tag: "steps" },
-        { measure: "meters", tag: "meters" },
-        { measure: "heart rate", tag: "heartrate" },
-        { measure: "body temperature", tag: "bodytemp" }
+        { measure: "pressão arterial sistólica", tag: "systolic" },
+        { measure: "pressão arterial diastólica", tag: "diastolic" },
+        { measure: "pulsação arterial", tag: "pulse" },
+        { measure: "oximetria do pulso", tag: "spo2" },
+        { measure: "peso", tag: "weight" },
+        { measure: "gordura corporal", tag: "bodyfat" },
+        { measure: "massa óssea", tag: "bonemass" },
+        { measure: "massa muscular", tag: "musclemass" },
+        { measure: "gordura visceral", tag: "visceralfat" },
+        { measure: "água", tag: "water" },
+        { measure: "calorias", tag: "callories" },
+        { measure: "passos", tag: "steps" },
+        { measure: "metros", tag: "meters" },
+        { measure: "frequência cardíaca", tag: "heartrate" },
+        { measure: "temperatura corporal", tag: "bodytemp" }
       ],
       selected_measure: null
     };
@@ -64,8 +64,8 @@ export default {
   methods: {
     save() {
       if (
-        this.measure.min < this.measure.max &&
-        this.selected_measure !== null
+        parseFloat(this.measure.min) < parseFloat(this.measure.max) &&
+        this.selected_measure
       ) {
         event_bus.$emit("waiting", true);
         this.measure.tag = this.selected_measure.tag;

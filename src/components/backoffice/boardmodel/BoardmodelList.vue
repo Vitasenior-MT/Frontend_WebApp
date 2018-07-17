@@ -9,7 +9,7 @@
         <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
       </v-card-title>
 
-      <v-data-table :headers="headers" :search="search" :items="models" class="elevation-1" sort-icon="fas fa-angle-down" :pagination.sync="pagination" hide-actions>
+      <v-data-table :headers="headers" :search="search" :items="models" class="elevation-1" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.type }}</td>
@@ -20,9 +20,6 @@
             </td>
           </template>
       </v-data-table>
-      <div class="text-xs-center pt-2">
-        <v-pagination v-model="pagination.page" :length="pages" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left"></v-pagination>
-      </div>
     </v-card>
 
     <v-dialog v-model="dialog_edit_board" max-width="500px">
@@ -76,23 +73,8 @@ export default {
       dialog_edit_board: false,
       dialog_remove_board: false,
       temp_model: null,
-      sensors: [],
-      pagination: {}
+      sensors: []
     };
-  },
-  computed: {
-    pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      ) {
-        return 0;
-      }
-
-      return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
-      );
-    }
   },
   created() {
     if (this.$store.state.user.token === null) {

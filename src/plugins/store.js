@@ -62,7 +62,12 @@ const mutations = {
     state.user.photo = null;
     state.user.is_admin = false;
     state.user.is_doctor = false;
-  }
+  },
+  setProfileData(state, profileData) {
+    state.patient.Profiles.forEach(x => {
+      if (x.id === profileData.id) x = profileData;
+    });
+  },
 }
 
 const actions = {
@@ -89,7 +94,10 @@ const actions = {
   }) => commit('setUserData'),
   cleanData: ({
     commit
-  }) => commit('cleanData')
+  }) => commit('cleanData'),
+  setProfileData: ({
+    commit
+  }) => commit('setProfileData')
 }
 
 

@@ -8,10 +8,10 @@
         <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
       </v-card-title>
         
-      <v-data-table :headers="headers" :search="search" :items="sensors" class="elevation-1" sort-icon="fas fa-angle-down" :pagination.sync="pagination" hide-actions>
+      <v-data-table :headers="headers" :search="search" :items="sensors" class="elevation-1" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]">
         <template slot="items" slot-scope="props">
           <td>{{ props.item.transducer }}</td>
-          <td>{{ props.item.measure }}</td>
+          <td>{{ props.item.to_read }}</td>
           <td>[{{ Math.round(props.item.min_acceptable) }};{{ Math.round(props.item.max_acceptable) }}]</td>
           <td>[{{ Math.round(props.item.min_possible) }};{{ Math.round(props.item.max_possible) }}]</td>
           <td class="right px-0">
@@ -20,9 +20,6 @@
           </td>
         </template>
       </v-data-table>
-      <div class="text-xs-center pt-2">
-        <v-pagination v-model="pagination.page" :length="pages" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left"></v-pagination>
-      </div>
     </v-card>
 
     <v-dialog v-model="dialog_edit_sensor" max-width="500px">
@@ -48,8 +45,8 @@ export default {
     return {
       search: "",
       headers: [
-        { text: "Name", align: "left", value: "transducer" },
-        { text: "Measure unit", align: "left", value: "measure" },
+        { text: "", align: "left", value: "transducer" },
+        { text: "Measure", align: "left", value: "measure" },
         { text: "Acceptable", align: "left", sortable: false },
         { text: "Possible", align: "left", sortable: false },
         { text: "Actions", align: "right", sortable: false }
@@ -57,23 +54,8 @@ export default {
       sensors: [],
       temp_sensor: null,
       dialog_remove_sensor: false,
-      dialog_edit_sensor: false,
-      pagination: {}
+      dialog_edit_sensor: false
     };
-  },
-  computed: {
-    pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      ) {
-        return 0;
-      }
-
-      return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
-      );
-    }
   },
   created() {
     if (this.$store.state.user.token === null) {
@@ -85,6 +67,7 @@ export default {
         .get("/sensormodel")
         .then(response => {
           this.sensors = response.data.sensors;
+          console.log(response.data.sensors);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
