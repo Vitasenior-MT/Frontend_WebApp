@@ -40,9 +40,7 @@ export default {
     vitaboxDashboard: VitaboxDashboard
   },
   data: () => {
-    return {
-      vitaboxUsers: []
-    };
+    return {};
   },
   methods: {
     goToVitaboxDetails(vitaboxData) {
@@ -55,9 +53,9 @@ export default {
 
 <style>
 .vitaboxDetailsSelector {
-   -moz-box-shadow:    inset 0 0 10px #000000;
-   -webkit-box-shadow: inset 0 0 10px #000000;
-   box-shadow:         inset 0 0 5px #000000;
+  -moz-box-shadow: inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow: inset 0 0 5px #000000;
 }
 
 .vitaboxDetailsSelector:hover {
@@ -68,5 +66,4 @@ export default {
 .userDivider {
   background-color: black !important;
 }
-
 </style>

@@ -23,7 +23,7 @@ export default {
       socket: socketio(
         process.env.NODE_ENV === "production"
           ? "https://vitasenior-worker.eu-gb.mybluemix.net"
-          : "http://192.168.161.79:8000/",
+          : "http://192.168.161.224:8000/",
         {
           query: { token: this.$store.state.user.token }
         }
