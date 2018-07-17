@@ -152,6 +152,11 @@ export default {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
+            this.lastrecord = this.records[this.records.length - 1].datetime;
+            this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
+              "pt-pt",
+              this.options
+            );
           })
           .catch(error => {
             if (error.response) {

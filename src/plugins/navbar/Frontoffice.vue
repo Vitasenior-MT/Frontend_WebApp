@@ -27,9 +27,7 @@ export default {
   name: "frontoffice",
   data: () => {
     return {
-      selected: -1,
-      vitaboxes: [],
-      vitabox: null
+      vitaboxes: []
     };
   },
   created() {
