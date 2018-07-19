@@ -1,21 +1,22 @@
 <template>
-   <v-expansion-panel id="define_profile" inset>
-    <v-expansion-panel-content hide-actions>
-      <div slot="header">
-        <v-btn color="primary" dark>Define Profile</v-btn>
-      </div>
+  <v-card id="define_profile">
+    <v-card-title>
+      <span class="headline primary_d--text">Define Profile</span>
+      <v-spacer></v-spacer>
+      <v-btn icon @click.native="close">
+        <v-icon color="error">fas fa-times</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-card-text class="pt-1">
       <v-container grid-list-md>
-        <v-layout wrap>
-          <v-flex xs12>
-            <v-select :rules="[() => selected !== null || 'Profile model is required']" :items="models" item-text="name" label="Profile" v-model="selected" single-line append-icon="fas fa-angle-down" return-object></v-select>
-          </v-flex>
-          <v-flex xs12 md2>
-            <v-btn dark color="ash" block @click.native="save">Save</v-btn>
-          </v-flex>
-        </v-layout>
+        <v-select :rules="[() => selected !== null || 'Profile model is required']" :items="models" item-text="name" label="Profile" v-model="selected" single-line append-icon="fas fa-angle-down" return-object></v-select>
       </v-container>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="ash" dark @click.native="save">Save</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -105,6 +106,9 @@ export default {
           type: "error"
         });
       }
+    },
+    close() {
+      this.$emit("close");
     }
   }
 };

@@ -18,10 +18,12 @@ export const event_bus = new Vue({
       headers: this.token ? {
         "Authorization": this.token,
         "Content-Type": "application/json",
-        "Accept-Version": "1.0.0"
+        "Accept-Version": "1.0.0",
+        "Accept-Language": "pt"
       } : {
           "Content-Type": "application/json",
-          "Accept-Version": "1.0.0"
+          "Accept-Version": "1.0.0",
+          "Accept-Language": "pt"
         }
     });
   },
@@ -32,10 +34,12 @@ export const event_bus = new Vue({
         headers: val !== null ? {
           "Authorization": val,
           "Content-Type": "application/json",
-          "Accept-Version": "1.0.0"
+          "Accept-Version": "1.0.0",
+          "Accept-Language": "pt"
         } : {
             "Content-Type": "application/json",
-            "Accept-Version": "1.0.0"
+            "Accept-Version": "1.0.0",
+            "Accept-Language": "pt"
           }
       });
     }

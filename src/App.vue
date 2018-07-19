@@ -2,7 +2,7 @@
   <v-app>
     <progress-bar></progress-bar>
 
-    <navbar :logged="logged" :isadmin="is_admin" :isdoctor="is_doctor"></navbar>
+    <navbar></navbar>
 
     <main>
       <transition name="fade">
@@ -26,49 +26,7 @@ import Progress from "./components/utils/Progress.vue";
 
 export default {
   name: "app",
-  data() {
-    return {
-      logged: false,
-      is_admin: false,
-      is_doctor: false,
-      interval: null
-    };
-  },
-  mounted() {
-    this.logged = this.$store.state.user.token ? true : false;
-    this.is_admin = this.$store.state.user.is_admin ? true : false;
-    this.is_doctor = this.$store.state.user.is_doctor ? true : false;
-    event_bus.$on("login", () => {
-      this.logged = true;
-      this.is_admin = this.$store.state.user.is_admin;
-      this.is_doctor = this.$store.state.user.is_doctor;
-      if (this.is_admin) {
-        this.$router.push("/backoffice/vitabox/list");
-      }
-      else if (this.is_doctor) {
-        this.$router.push("/doctoroffice/dashboard");
-      } else {
-        this.$router.push("/frontoffice/dashboard");
-      }
-      event_bus.$emit("waiting", false);
-    });
-    event_bus.$on("logout", () => {
-      this.logged = false;
-      this.$router.push("/");
-      this.$store.commit("cleanData");
-    });
-    // this.interval = window.setInterval(this.updateTransition, 5000);
-  },
-  // beforeDestroy() {
-  //   window.clearInterval(this.interval);
-  // },
-  // methods: {
-  //   updateTransition() {
-  //     let el = document.getElementById("navpanel");
-  //     if (el.style.backgroundColor == "rgb(66, 244, 161)") el.style.backgroundColor = "rgb(107, 131, 254)";
-  //     else el.style.backgroundColor = "rgb(66, 244, 161)";
-  //   }
-  // },
+  mounted() {},
   components: {
     foot: Footer,
     log: Log,

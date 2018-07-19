@@ -1,6 +1,8 @@
 <template>
   <div id="doctoroffice">
-    <v-btn small color="primary" class="mt-0" block dark to="/doctoroffice/patient/register">Register Patient</v-btn>
+    <div class="primary">
+      <v-autocomplete class="px-3 pt-2 mt-0 white--text" color="raven" v-model="model" :items="patients" :loading="isLoading" :search-input.sync="search" hide-no-data hide-selected item-text="name" placeholder="Start typing to Search" prepend-icon="fas fa-search" append-icon="fas fa-angle-down" return-object></v-autocomplete>
+    </div>
     <v-divider class="patientDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
       <router-link v-for="(item, index) in patients" :key="item.id" @click.native="selectedPatient(item)" :to='"/doctoroffice/dashboard"'>
@@ -27,7 +29,10 @@ export default {
   name: "doctoroffice",
   data: () => {
     return {
-      patients:[]
+      patients: [],
+      isLoading: false,
+      model: null,
+      search: null
     };
   },
   created() {

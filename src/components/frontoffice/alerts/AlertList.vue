@@ -13,7 +13,7 @@
       </v-flex>
       <v-flex v-else>
         <v-card dark>
-          <v-card-title primary class="title">There are no vitabox warnings!</v-card-title>
+          <v-card-title primary class="title">There are no warnings!</v-card-title>
           <v-card-text primary> ---- </v-card-text>
         </v-card>
       </v-flex>
@@ -44,7 +44,7 @@ export default {
       event_bus.$emit("waiting", true);
       this.vitaboxwarnings = [];
       event_bus.$data.http
-        .get("/vitabox/" + this.$store.state.vitabox.id + "/warning")
+        .get("/warning")
         .then(response => {
           this.vitaboxwarnings = response.data.warnings;
           event_bus.$emit("waiting", false);

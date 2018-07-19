@@ -36,7 +36,9 @@ export default {
   methods: {
     select(i) {
       if (this.selected !== -1) {
-        document.getElementsByClassName("office_options")[this.selected].className =
+        document.getElementsByClassName("office_options")[
+          this.selected
+        ].className =
           "office_options office_notchoosen ash--text";
       }
       document.getElementsByClassName("office_options")[i].className =
@@ -46,3 +48,12 @@ export default {
   }
 };
 </script>
+
+<style>
+.office_notchoosen:hover {
+  color: #daf1e7 !important;
+}
+.office_menu {
+  padding-top: 5%;
+}
+</style>

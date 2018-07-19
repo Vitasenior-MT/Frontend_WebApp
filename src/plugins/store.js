@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 Vue.use(Vuex)
 
 const state = {
+  vitaboxes: [],
   vitabox: null,
   board: null,
   sensor: null,
@@ -16,15 +17,19 @@ const state = {
     email: null,
     photo: null,
     is_admin: false,
-    is_doctor: false
+    is_doctor: false,
+    warnings: 0,
+    errors: 0
   }
 }
 
-const getters = {
-  vitabox: state => { return state.vitabox }
-}
-
 const mutations = {
+  setVitaboxesList(state, vitaboxesData) {
+    state.vitaboxes = vitaboxesData;
+  },
+  addVitaboxToList(state, vitaboxData) {
+    state.vitaboxes.push(vitaboxData);
+  },
   setVitaboxData(state, vitaboxData) {
     state.vitabox = vitaboxData;
   },
@@ -50,8 +55,11 @@ const mutations = {
     state.user.photo = userData.photo;
     state.user.is_admin = userData.is_admin;
     state.user.is_doctor = userData.is_doctor;
+    state.user.warnings = userData.warnings;
+    state.user.errors = userData.errors;
   },
   cleanData(state) {
+    state.vitaboxes = [];
     state.vitabox = null;
     state.board = null;
     state.sensor = null;
@@ -62,15 +70,27 @@ const mutations = {
     state.user.photo = null;
     state.user.is_admin = false;
     state.user.is_doctor = false;
+    state.user.warnings = 0;
+    state.user.errors = 0;
+    state.vitabox = null;
+    state.board = null;
+    state.sensor = null;
+    state.patient = null;
   },
   setProfileData(state, profileData) {
     state.patient.Profiles.forEach(x => {
       if (x.id === profileData.id) x = profileData;
     });
-  },
+  }
 }
 
 const actions = {
+  setVitaboxesList: ({
+    commit
+  }) => commit('setVitaboxesList'),
+  addVitaboxToList: ({
+    commit
+  }) => commit('addVitaboxToList'),
   setVitaboxData: ({
     commit
   }) => commit('setVitaboxData'),

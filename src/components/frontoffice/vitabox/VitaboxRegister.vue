@@ -77,12 +77,13 @@ export default {
           email: this.$store.state.user.email,
           password: this.password,
           sponsor: true,
-          active: false
+          active: false,
+          id: this.id
         };
         event_bus.$data.http
           .post("/vitabox/" + this.id + "/register", vitabox)
           .then(response => {
-            event_bus.$emit("new_vitabox", vitabox);
+            this.$store.commit("addVitaboxToList", vitabox);
             event_bus.$emit("toast", {
               message: "vitabox was successfully registered",
               type: "success"

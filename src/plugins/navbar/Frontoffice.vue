@@ -3,7 +3,7 @@
     <v-btn small color="primary" class="mt-0" block dark to="/frontoffice/vitabox/register">Register Vitabox</v-btn>
     <v-divider class="vitaboxDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
-      <router-link v-for="(item, index) in vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/frontoffice/dashboard"'>
+      <router-link v-for="(item, index) in this.$store.state.vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/frontoffice/dashboard"'>
       <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
         <v-list-tile class="vitaboxSelector">
           <v-list-tile-avatar class="primary--text">
@@ -25,24 +25,16 @@ import { event_bus } from "@/plugins/bus.js";
 
 export default {
   name: "frontoffice",
-  data: () => {
-    return {
-      vitaboxes: []
-    };
-  },
   created() {
     this.getVitaboxes();
-    event_bus.$on("new_vitabox", box => {
-      this.vitaboxes.push(box);
-    });
   },
   methods: {
     getVitaboxes() {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/vitabox")
+        .get("/vitabox/" + true)
         .then(response => {
-          this.vitaboxes = response.data.vitaboxes;
+          this.$store.commit("setVitaboxesList", response.data.vitaboxes);
           if (response.data.vitaboxes.length > 0) {
             this.selectedVitabox(response.data.vitaboxes[0]);
           }

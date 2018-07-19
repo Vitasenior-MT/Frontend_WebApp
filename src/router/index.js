@@ -11,6 +11,7 @@ import Signup from '@/components/auth/Register'
 import Forgot from '@/components/auth/Forgot'
 
 import AlertList from '@/components/frontoffice/alerts/AlertList'
+import ErrorList from '@/components/backoffice/errors/ErrorList'
 
 // Frontend
 import FODashboard from '@/components/frontoffice/dashboard/Dashboard'
@@ -60,9 +61,14 @@ export default new Router({
       component: Home
     },
     {
-      path: '/alerts/list',
+      path: '/alert/list',
       name: 'AlertList',
       component: AlertList,
+    },
+    {
+      path: '/error/list',
+      name: 'ErrorList',
+      component: ErrorList,
     },
 
     //Frontoffice

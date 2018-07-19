@@ -60,7 +60,9 @@ export default {
               email: response.data.email,
               photo: response.data.photo,
               is_admin: response.data.is_admin,
-              is_doctor: response.data.is_doctor
+              is_doctor: response.data.is_doctor,
+              warnings: response.data.warnings,
+              errors: response.data.errors
             });
             event_bus.$emit("login");
             event_bus.$emit("toast", {
