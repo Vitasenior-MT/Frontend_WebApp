@@ -19,9 +19,9 @@
       </v-flex>
       <v-flex sm12 md4 lg2 class="pa-0">
         <v-layout fill-height>
-          <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
-            <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
-            <br>
+          <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
+          <br>
+          <v-card flat class="patientDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
             <span class="white--text pl-5">
               <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
             </span>
@@ -63,10 +63,10 @@
     </v-layout>
     <v-layout v-else wrap>
       <v-flex sm12 md4 lg2 class="pa-0">
-        <v-layout fill-height>
-          <v-card class="patientDetailsSelector" flat @click.native='goToPatientProfile(selectedPatient)'>
-            <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
-            <br>
+        <v-layout column fill-height>
+          <v-avatar class="patientAvatar" size="150px"><img src="@/assets/test.jpg"></v-avatar>
+          <br>
+          <v-card flat class="patientDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
             <span class="white--text pl-5">
               <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
             </span>
@@ -308,6 +308,8 @@ export default {
   -webkit-box-shadow: inset 0 0 10px #000000;
   box-shadow: inset 0 0 5px #000000;
   width: 100%;
+  padding-bottom: 15px;
+  padding-top:15px;
 }
 
 .patientDetailsSelector:hover {
@@ -349,7 +351,5 @@ export default {
 
 .patientAvatar{
   margin-top:10px; 
-  margin-left:25%; 
-  margin-right:25%;
 }
 </style>

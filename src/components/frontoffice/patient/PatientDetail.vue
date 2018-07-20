@@ -78,7 +78,6 @@
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
-
     <add-board v-if="$store.state.vitabox.sponsor"></add-board>
     <div v-for="item in $store.state.patient.Boards" :key="item.id">{{item}}<br><br></div>
     <add-doctor v-if="$store.state.vitabox.sponsor"></add-doctor>
