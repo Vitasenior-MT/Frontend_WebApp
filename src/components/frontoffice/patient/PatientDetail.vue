@@ -1,99 +1,154 @@
 <template>
   <v-content style="height:100%">
-    <v-layout wrap>
-      <v-flex class="pt-2 text-md-center" xs12>
-        <v-card dark width="100%" class="pb-2" flat>
-          <v-card-title primary-title>
-            <div>
-              <h1 class="main-title mb-0 primary_l--text">
-                Patient - 
-                <span class="thin">
-                  {{ this.$store.state.patient.name}}
-                </span>
-              </h1>
-            </div>
-          </v-card-title>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 md4 >
-        <v-card dark flat height="100%" class="pb-1">
-          <div class="text-xs-center">
-            <v-avatar size="150px" class="mt-1 mb-1">
-              <img class="img-circle elevation-7 mb-1" src="@/assets/logo.png">
-            </v-avatar>
-          </div>
-          <v-list dark >
-            <v-list-tile >
-              <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center primary--text">ID</v-list-tile-sub-title>
-                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.id }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content >
-                <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
-                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.birthdate }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center primary--text">Gender</v-list-tile-sub-title>
-                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.gender }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
-                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.weight }} kg</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>
-                <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
-                <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.height }} m</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 md8>
-        <v-card dark flat height="70%">
-          <v-data-table
-            :headers="headers"
-            :items="this.$store.state.patient.Profiles"
-            hide-actions
-            class="elevation-1"
+    <v-layout row wrap>
+        <v-flex xs12 class="pa-0">
+          <v-layout class="text-md-center">
+            <v-card dark class="pb-3" width="100%" flat>
+              <v-card-title primary-title>
+                <h1 class="main-title pb-4 primary_l--text">Patient - <span class="thin"> {{ $store.state.patient.name}} </span></h1>
+              </v-card-title>
+              <v-card-text class="pt-3">
+                <h5 class="grey--text"> {{ $store.state.patient.id}} </h5>
+              </v-card-text>
+            </v-card>
+          </v-layout>
+        </v-flex>
+    </v-layout>
+    <v-layout row wrap class="pb-1">
+        <v-flex md12 lg2 class="pa-0">
+          <v-layout fill-height>
+            <v-card dark width="100%" height="100%" class="text-xs-center" flat>
+              <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
+              <br/>
+              <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
+              <v-icon v-if="$store.state.patient.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
+              <v-icon v-if="$store.state.patient.gender == 'undefined'" class="pink--text">fas fa-times-circle</v-icon>
+              <v-list dark >
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
+                    <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
+                    <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title class="text-xs-center primary--text">Age</v-list-tile-sub-title>
+                    <v-list-tile-title class="text-xs-center">{{ this.calculate_age($store.state.patient.birthdate) }}</v-list-tile-title>
+                  </v-list-tile-content>
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
+                    <v-list-tile-title class="text-xs-center">{{ $store.state.patient.birthdate }}</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-layout>
+        </v-flex>
+        <v-flex md12 lg10>
+        <v-card dark flat height="100%">
+          <v-tabs
+            centered
+            color="primary"
             dark
+            icons-and-text
+          >
+            <v-tabs-slider color="white"></v-tabs-slider>
+            <v-tab href="#tab-1">
+              Profiles
+              <v-icon>fas fa-clipboard</v-icon>
+            </v-tab>
+            <v-tab href="#tab-2">
+              Doctors
+              <v-icon>fas fa-user-md</v-icon>
+            </v-tab>
+            <v-tab href="#tab-3">
+              Boards
+              <v-icon>fas fa-microchip</v-icon>
+            </v-tab>
+            <v-tab-item
+              v-for="i in 3"
+              :id="'tab-' + i"
+              :key="i"
             >
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-left">{{ props.item.id }}</td>
-              <td class="text-xs-left">{{ props.item.measure }}</td>
-              <td class="text-xs-left">{{ props.item.min }}</td>
-              <td class="text-xs-left">{{ props.item.max }}</td>
-              <td class="justify-center layout px-0">
-              <v-btn icon class="mx-0" @click="editItem(props.item)">
-                  <v-icon color="teal">fas fa-edit</v-icon>
-              </v-btn>
-              </td>
-            </template>
-            <template slot="no-data">
-              <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                  Sorry, nothing to display here :(
-              </v-alert>
-            </template>
-          </v-data-table>    
+              <v-data-table
+                v-if="i == 1"
+                :headers="headersProfiles"
+                :items="$store.state.patient.Profiles"
+                hide-actions
+                class="elevation-1"
+                dark
+                >
+                <template slot="items" slot-scope="props">
+                  <td class="text-xs-left">{{ props.item.id }}</td>
+                  <td class="text-xs-left">{{ props.item.measure }}</td>
+                  <td class="text-xs-left">{{ props.item.min }}</td>
+                  <td class="text-xs-left">{{ props.item.max }}</td>
+                  <td class="justify-center layout px-0">
+                  </td>
+                </template>
+                <template slot="no-data">
+                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                      Sorry, nothing to display here 
+                  </v-alert>
+                </template>
+              </v-data-table>  
+              <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
+              <v-data-table
+                v-if="i == 2"
+                :headers="headersDoctors"
+                :items="$store.state.patient.Doctors"
+                hide-actions
+                class="elevation-1"
+                dark
+                >
+                <template slot="items" slot-scope="props">
+                  <td class="text-xs-left">{{ props.item.name }}</td>
+                  <td class="text-xs-left">{{ props.item.email }}</td>
+                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  <td class="justify-center layout px-0">
+                  </td>
+                </template>
+                <template slot="no-data">
+                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                      Sorry, nothing to display here 
+                  </v-alert>
+                </template>
+              </v-data-table>
+              <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>  
+              <v-data-table
+                v-if="i == 3"
+                :headers="headersBoards"
+                :items="$store.state.patient.Boards"
+                hide-actions
+                class="elevation-1"
+                dark
+                >
+                <template slot="items" slot-scope="props">
+                  <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
+                  <td class="text-xs-left">{{ props.item.description }}</td>
+                  <td class="text-xs-left">{{ props.item.mac_addr }}</td>
+                  <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
+                </template>
+                <template slot="no-data">
+                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                      Sorry, nothing to display here 
+                  </v-alert>
+                </template>
+              </v-data-table>  
+            </v-tab-item>
+          </v-tabs>   
         </v-card>
       </v-flex>
     </v-layout>
-    <v-flex class="pb-2 pt-1">
+    <v-flex class="pb-2">
       <v-btn dark class="ml-0" @click="$router.go(-1)">
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
-    <add-board v-if="$store.state.vitabox.sponsor"></add-board>
-    <div v-for="item in $store.state.patient.Boards" :key="item.id">{{item}}<br><br></div>
-    <add-doctor v-if="$store.state.vitabox.sponsor"></add-doctor>
-    <div v-for="item in $store.state.patient.Doctors" :key="item.id">{{item}}<br><br></div>
   </v-content>
 </template>
 
@@ -105,14 +160,26 @@ import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 export default {
   data() {
     return {
+      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
       measures: [],
       dialog: false,
-      headers: [
+      headersProfiles: [
         { text: "Profile", value: "profile", sortable: false, class: "headers" },
         { text: "Measure", value: "measure", sortable: false, class: "headers" },
         { text: "Min", value: "min", sortable: false, class: "headers" },
         { text: "Max", value: "max", sortable: false, class: "headers" },
         { text: "Actions", value: "actions", sortable: false, class: "headers" }
+      ],
+      headersDoctors: [
+        { text: "Doctor", value: "doctor", sortable: false, class: "headers" },
+        { text: "email", value: "email", sortable: false, class: "headers" },
+        { text: "Since", value: "since", sortable: false, class: "headers" }
+      ],
+      headersBoards: [
+        { text: "Board", value: "board", sortable: false, class: "headers" },
+        { text: "Description", value: "description", sortable: false, class: "headers" },
+        { text: "Mac", value: "mac", sortable: false, class: "headers" },
+        { text: "Last Update", value: "last_update", sortable: false, class: "headers" }
       ],
       editedIndex: -1,
       editedItem: {
@@ -136,6 +203,9 @@ export default {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     }
   },
+  created() {
+    this.getDoctors();
+  },
   watch: {
     dialog(val) {
       val || this.close();
@@ -145,6 +215,13 @@ export default {
     this.getMeasures();
   },
   methods: {
+    calculate_age(dob) {
+      dob = new Date(dob);
+      var diff_ms = Date.now() - dob.getTime();
+      var age_dt = new Date(diff_ms);
+
+      return Math.abs(age_dt.getUTCFullYear() - 1970);
+    },
     getMeasures() {
       this.measures = [];
       this.$store.state.patient.Boards.forEach(board => {
@@ -152,16 +229,6 @@ export default {
           this.measures.push({ text: sensor.Sensormodel.measure });
         });
       });
-    },
-    editItem(item) {
-      this.editedIndex = this.$store.state.patient.Profiles.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-    deleteItem(item) {
-      const index = this.$store.state.patient.Profiles.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.$store.state.patient.Profiles.splice(index, 1);
     },
     close() {
       this.dialog = false;
