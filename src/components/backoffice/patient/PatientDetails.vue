@@ -48,22 +48,11 @@
       </v-layout>
     </v-container>
 
-    <v-dialog v-model="dialog_remove_patient" max-width="500px">
-      <remove-patient-from-vitabox @close="()=>dialog_remove_patient=false" @remove="remove" :patient="patient" :box="box"></remove-patient-from-vitabox>
-    </v-dialog>
-    <v-dialog v-model="dialog_disable_patient" max-width="500px">
-      <disable-patient @close="()=>dialog_disable_patient=false" @disable="disable" :patient="patient" :box="box" :action="patient.active?'disable':'enable'"></disable-patient>
-    </v-dialog>
-
   </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import SensorPatient from "@/components/backoffice/sensor/SensorFromPatient.vue";
-import RemovePatient from "@/components/backoffice/patient/RemoveFromVitabox.vue";
-import DisablePatient from "@/components/backoffice/patient/PatientDisable.vue";
-import SetBoardToPatient from "@/components/backoffice/board/SetToPatient.vue";
 
 export default {
   name: "dashboard_patient",
@@ -118,26 +107,6 @@ export default {
     }
   },
   methods: {
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getDate() + " " + monthNames[d.getMonth()] + " " + d.getFullYear()
-      );
-    },
     getTime(date) {
       let miliseconds = new Date() - new Date(date);
       if (miliseconds < 1000) return "<1 sec";
@@ -179,12 +148,6 @@ export default {
         });
     }
   },
-  components: {
-    "sensor-graph": SensorPatient,
-    "remove-patient-from-vitabox": RemovePatient,
-    "disable-patient": DisablePatient,
-    "set-board-to-patient": SetBoardToPatient
-  }
 };
 </script>
 

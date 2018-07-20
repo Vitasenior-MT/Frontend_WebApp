@@ -1,5 +1,5 @@
 <template>
-  <div id="remove_board">
+  <div id="remove_patient">
     <v-btn flat icon small color="error" @click.native="()=>dialog_remove_board=true">
       <v-icon>fas fa-minus-circle</v-icon>
     </v-btn>
@@ -29,7 +29,7 @@
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "remove_board",
+  name: "remove_patient",
   props: {
     box: Object,
     board: Object
@@ -41,11 +41,10 @@ export default {
     };
   },
   methods: {
-    close() {
-      this.$emit("close");
-    },
     removeItem() {
       event_bus.$emit("waiting", true);
+      this.dialog_remove_board = false;
+
       event_bus.$data.http
         .delete("/vitabox/" + this.box.id + "/board", {
           data: {
@@ -58,7 +57,6 @@ export default {
             message: "board was successfully removed from vitabox",
             type: "success"
           });
-          this.dialog_remove_board = false;
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -73,7 +71,6 @@ export default {
               type: "error"
             });
           }
-          this.dialog_remove_board = false;
           event_bus.$emit("waiting", false);
         });
     }

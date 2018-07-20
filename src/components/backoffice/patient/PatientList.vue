@@ -38,7 +38,6 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import AddPatient from "@/components/backoffice/patient/AddToVitabox.vue";
 
 export default {
   name: "vitabox_users",
@@ -142,9 +141,6 @@ export default {
       this.patients.push(item);
       event_bus.$emit("waiting", false);
     }
-  },
-  components: {
-    "add-patient-to-box": AddPatient
   }
 };
 </script>

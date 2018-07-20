@@ -73,7 +73,10 @@
             <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
             <td class="text-xs-left">
               <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
-              <span v-else> no permission </span>
+              <span v-else>
+                <v-icon v-if="props.item.active">fas fa-play-circle</v-icon>
+                <v-icon v-else>fas fa-pause-circle</v-icon>
+              </span>
             </td>
             <td class="justify-left layout px-0">
               <v-btn color="primary_d" @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
@@ -88,11 +91,13 @@
         </v-data-table>
       </v-flex>
     </v-layout>
+
     <v-flex class="pb-2 pt-1">
       <v-btn dark class="ml-0" @click="$router.go(-1)">
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
+
     <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
     <add-patient v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addpatient="(patient)=>patients.push(patient)"></add-patient>
     

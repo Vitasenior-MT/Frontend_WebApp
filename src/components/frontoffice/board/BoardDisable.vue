@@ -35,9 +35,6 @@ export default {
     };
   },
   methods: {
-    close() {
-      this.$emit("close");
-    },
     switchActivity() {
       event_bus.$emit("waiting", true);
       this.dialog_disable_board = false;

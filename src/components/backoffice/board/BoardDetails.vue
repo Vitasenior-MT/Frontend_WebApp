@@ -72,12 +72,6 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="dialog_remove_board" max-width="500px">
-      <remove-board-from-vitabox @close="()=>dialog_remove_board=false" @remove="remove" :board="board" :box="box"></remove-board-from-vitabox>
-    </v-dialog>
-    <v-dialog v-model="dialog_disable_board" max-width="500px">
-      <disable-board @close="()=>dialog_disable_board=false" @disable="disable" :board="board" :box="box" :action="board.active?'disable':'enable'"></disable-board>
-    </v-dialog>
 
   </v-content>
 </template>
@@ -85,8 +79,6 @@
 <script>
 import { event_bus } from "@/plugins/bus.js";
 import SensorBoard from "@/components/backoffice/sensor/SensorFromBoard.vue";
-import RemoveBoard from "@/components/backoffice/board/RemoveFromVitabox.vue";
-import DisableBoard from "@/components/backoffice/board/BoardDisable.vue";
 
 export default {
   name: "dashboard_board",
@@ -190,8 +182,6 @@ export default {
   },
   components: {
     "sensor-graph": SensorBoard,
-    "remove-board-from-vitabox": RemoveBoard,
-    "disable-board": DisableBoard
   }
 };
 </script>

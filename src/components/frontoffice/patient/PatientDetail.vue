@@ -58,23 +58,11 @@
       </v-flex>
       <v-flex xs12 md8>
         <v-card dark flat height="70%">
-          <v-data-table
-            :headers="headers"
-            :items="this.$store.state.patient.Profiles"
-            hide-actions
-            class="elevation-1"
-            dark
-            >
+          <v-data-table :headers="headers" :items="this.$store.state.patient.Profiles" class="elevation-1" dark sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]">
             <template slot="items" slot-scope="props">
-              <td class="text-xs-left">{{ props.item.id }}</td>
               <td class="text-xs-left">{{ props.item.measure }}</td>
               <td class="text-xs-left">{{ props.item.min }}</td>
               <td class="text-xs-left">{{ props.item.max }}</td>
-              <td class="justify-center layout px-0">
-              <v-btn icon class="mx-0" @click="editItem(props.item)">
-                  <v-icon color="teal">fas fa-edit</v-icon>
-              </v-btn>
-              </td>
             </template>
             <template slot="no-data">
               <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
@@ -107,40 +95,17 @@ export default {
   data() {
     return {
       measures: [],
-      dialog: false,
       headers: [
-        { text: "Profile", value: "profile", sortable: false, class: "headers" },
-        { text: "Measure", value: "measure", sortable: false, class: "headers" },
+        {
+          text: "Profile",
+          value: "measure",
+          sortable: true,
+          class: "headers"
+        },
         { text: "Min", value: "min", sortable: false, class: "headers" },
-        { text: "Max", value: "max", sortable: false, class: "headers" },
-        { text: "Actions", value: "actions", sortable: false, class: "headers" }
-      ],
-      editedIndex: -1,
-      editedItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      },
-      defaultItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      }
+        { text: "Max", value: "max", sortable: false, class: "headers" }
+      ]
     };
-  },
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
-  },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
   },
   mounted() {
     this.getMeasures();
@@ -153,35 +118,6 @@ export default {
           this.measures.push({ text: sensor.Sensormodel.measure });
         });
       });
-    },
-    editItem(item) {
-      this.editedIndex = this.$store.state.patient.Profiles.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-    deleteItem(item) {
-      const index = this.$store.state.patient.Profiles.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.$store.state.patient.Profiles.splice(index, 1);
-    },
-    close() {
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(
-          this.$store.state.patient.Profiles[this.editedIndex],
-          this.editedItem
-        );
-      } else {
-        this.$store.state.patient.Profiles.push(this.editedItem);
-      }
-      this.close();
     }
   },
   components: {

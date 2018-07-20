@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel id="add_board_to_box" inset>
+  <v-expansion-panel id="add_board_to_box" inset dark class="mx-0">
     <v-expansion-panel-content hide-actions>
       <div slot="header">
         <v-btn color="primary"><v-icon>fas fa-plus-circle</v-icon></v-btn>

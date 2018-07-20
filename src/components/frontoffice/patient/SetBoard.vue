@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel id="add_board_to_patient" popout>
+  <v-expansion-panel id="add_board_to_patient" popout dark>
     <v-expansion-panel-content hide-actions>
 
       <div slot="header" id="add_board_to_patient_header">

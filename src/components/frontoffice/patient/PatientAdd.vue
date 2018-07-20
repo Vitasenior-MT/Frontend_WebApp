@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel id="add_patient_to_box" inset>
+  <v-expansion-panel id="add_patient_to_box" inset dark>
     <v-expansion-panel-content hide-actions>
       <div slot="header">
         <v-btn color="primary" dark><v-icon>fas fa-user-plus</v-icon></v-btn>
