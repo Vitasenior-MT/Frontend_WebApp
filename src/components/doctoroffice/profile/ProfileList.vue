@@ -1,14 +1,13 @@
 <template>
-  <div id="profile_list">
+  <content id="profile_list">
     <v-card dark height="100%">
       <v-card-title  class="pl-0">
         <v-btn color="primary" dark @click="()=>dialog_define_profile=true" class="mb-2">Define Profile</v-btn>
-
         <v-spacer></v-spacer>
         <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :search="search" :items="$store.state.patient.Profiles" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]" class="elevation-1" dark >
+        <v-data-table :headers="headers" :search="search" :items="$store.state.patient.Profiles" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[4]" class="elevation-1" dark >
           <template slot="items" slot-scope="props">
             <td class="text-xs-left">{{ props.item.measure }}</td>
             <td class="text-xs-left">{{ props.item.min }}</td>
@@ -32,7 +31,7 @@
     <v-dialog v-model="dialog_define_profile" max-width="500px">
       <define-profile @close="()=>dialog_define_profile=false"></define-profile>
     </v-dialog>
-  </div>
+  </content>
 </template>
 
 <script>

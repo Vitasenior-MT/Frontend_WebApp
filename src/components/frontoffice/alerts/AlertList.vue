@@ -1,23 +1,55 @@
 <template>
-  <v-content >
-    <v-layout wrap>
-      <v-flex v-if="this.vitaboxwarnings.length > 0">
-        <v-stepper vertical non-linear v-for="item in vitaboxwarnings" :key="item.id" >
-          <v-stepper-step step="1" editable >Name of step 1</v-stepper-step>
-          <v-stepper-content step="1">
-            <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-            <v-btn color="primary" @click.native="e13 = 2">Continue</v-btn>
-            <v-btn flat>Cancel</v-btn>
-          </v-stepper-content>
-        </v-stepper>
-      </v-flex>
-      <v-flex v-else>
-        <v-card dark>
-          <v-card-title primary class="title">There are no warnings!</v-card-title>
-          <v-card-text primary> ---- </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+  <v-content>
+    <v-tabs
+      centered
+      color="primary"
+      dark
+      icons-and-text
+    >
+      <v-tabs-slider color="white"></v-tabs-slider>
+      <v-tab href="#tab-1">
+        Warnings
+        <v-icon>fas fa-exclamation-triangle</v-icon>
+      </v-tab>
+      <v-tab-item id="tab-1">
+        <v-list dark three-line>
+          <v-layout class="warningSelector" v-for="item in warnings" :key="item" wrap>
+            <v-flex xs12 class="text-md-left pa-0">
+              <v-divider class="vitaboxDivider"></v-divider>
+            </v-flex>
+            <v-flex xs12 sm12 md6 lg6 sl6 class="text-md-left pa-0">
+              <v-card class="warningMessage" dark width="100%">
+                <v-layout row>
+                  <v-icon class="primary_d--text pt-0 pl-4">fa fa-exclamation-triangle</v-icon>
+                  <h4 class="pa-3">
+                    <span class="primary_l--text">Message:</span>
+                    <h5>
+                      <span>{{ item.message }}</span>
+                    </h5>
+                  </h4>
+                </v-layout>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 sm12 md6 lg6 sl6 class="text-md-left pa-0">
+              <v-card class="warningDate" dark width="100%" height="100%">
+                <v-layout row>
+                  <v-icon class="primary_d--text pt-0 pl-4">fa fa-calendar</v-icon>
+                  <h4 class="pa-3">
+                    <span class="primary_l--text">Date:</span>
+                    <h5>
+                      <span>{{  new Date(item.datetime).toLocaleDateString("pt-pt", options) }}</span>
+                    </h5>
+                  </h4>
+                </v-layout>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 class="text-md-left pa-0">
+              <v-divider class="vitaboxDivider"></v-divider>
+            </v-flex>
+          </v-layout>  
+        </v-list>
+      </v-tab-item>
+    </v-tabs>
     <v-flex style="padding-bottom:20px; padding-top:10px;">
       <v-btn dark style="margin-left:0px;" @click="$router.go(-1)">
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span style="padding-left:10px"> Go Back</span>
@@ -32,21 +64,40 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   data() {
     return {
-      e13: 2,
-      vitaboxwarnings: [],
+      options: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+      },
+      warnings: [],
+      page: 1,
+      currentPage: 0,
+      itemsPerPage: 10,
+      resultCount: 0
     };
   },
-  created(){
-    this.getVitaboxWarnings();
+  computed: {
+    totalPages: function() {
+      console.log(
+        Math.ceil(this.resultCount / this.itemsPerPage) + "totalPages"
+      );
+      return Math.ceil(this.resultCount / this.itemsPerPage);
+    }
+  },
+  created() {
+    this.getWarnings();
   },
   methods: {
-    getVitaboxWarnings() {
+    getWarnings() {
       event_bus.$emit("waiting", true);
-      this.vitaboxwarnings = [];
+      this.warnings = [];
       event_bus.$data.http
         .get("/warning")
         .then(response => {
-          this.vitaboxwarnings = response.data.warnings;
+          this.warnings = response.data.warnings;
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -64,3 +115,19 @@ export default {
   }
 };
 </script>
+
+<style>
+.warningSelector {
+  padding-bottom: 0px;
+}
+
+.warningSelector:hover .warningMessage {
+  cursor: pointer;
+  background-color: #5b5b5b !important;
+}
+
+.warningSelector:hover .warningDate {
+  cursor: pointer;
+  background-color: #5b5b5b !important;
+}
+</style>
