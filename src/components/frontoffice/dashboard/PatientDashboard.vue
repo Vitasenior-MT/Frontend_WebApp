@@ -7,7 +7,7 @@
             <v-card-title primary-title>
               <div>
                 <h1 class="main-title mb-0 primary_l--text">
-                  Patient - 
+                  Patient 
                   <span class="thin">
                     {{ this.selectedPatient.name}}
                   </span>
@@ -17,14 +17,19 @@
           </v-card>
         </v-layout>
       </v-flex>
-      <v-flex sm12 md4 lg2 class="pa-0">
-        <v-layout fill-height>
-          <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
+       <v-flex sm12 md4 lg2 class="patientProfile">
+        <v-layout column fill-height>
+          <v-avatar class="patientAvatar" size="100%"><img src="@/assets/logo.png"></v-avatar>
           <br>
-          <v-card flat class="patientDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
-            <span class="white--text pl-5">
-              <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
-            </span>
+          <v-card flat class="patientDetailsSelector text-xs-center" @click.native='goToPatientProfile(selectedPatient)'>
+            <v-layout wrap>
+              <v-flex lg3 class="text-xs-right">
+                <v-icon class="primary_d--text">fa fa-info-circle</v-icon>
+              </v-flex>
+              <v-flex lg9 class="text-xs-center">
+                <span >Press for more details</span>
+              </v-flex>
+            </v-layout>
           </v-card>
         </v-layout>
       </v-flex>
@@ -62,14 +67,35 @@
       </v-flex>
     </v-layout>
     <v-layout v-else wrap>
-      <v-flex sm12 md4 lg2 class="pa-0">
+       <v-flex xs12 class="pa-0">
+        <v-layout class="text-md-center">
+          <v-card class="pb-5 pt-2" width="100%" flat>
+            <v-card-title primary-title>
+              <div>
+                <h1 class="main-title  primary_l--text">
+                  Patient 
+                  <span class="thin">
+                    {{ this.selectedPatient.name}}
+                  </span>
+                </h1>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-layout>
+      </v-flex>
+      <v-flex sm12 md4 lg2 class="patientProfile">
         <v-layout column fill-height>
-          <v-avatar class="patientAvatar" size="150px"><img src="@/assets/test.jpg"></v-avatar>
+          <v-avatar class="patientAvatar" size="100%"><img src="@/assets/logo.png"></v-avatar>
           <br>
-          <v-card flat class="patientDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
-            <span class="white--text pl-5">
-              <v-icon color="primary_d">fas fa-info-circle</v-icon> Press for more details
-            </span>
+          <v-card flat class="patientDetailsSelector text-xs-center" @click.native='goToPatientProfile(selectedPatient)'>
+            <v-layout wrap>
+              <v-flex lg3 class="text-xs-right">
+                <v-icon class="primary_d--text">fa fa-info-circle</v-icon>
+              </v-flex>
+              <v-flex lg9 class="text-xs-center">
+                <span >Press for more details</span>
+              </v-flex>
+            </v-layout>
           </v-card>
         </v-layout>
       </v-flex>
@@ -349,7 +375,11 @@ export default {
   position:relative;
 }
 
+.patientProfile{
+  padding: 0px;
+}
+
 .patientAvatar{
-  margin-top:10px; 
+  padding: 5px;
 }
 </style>

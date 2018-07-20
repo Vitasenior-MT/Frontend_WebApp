@@ -2,28 +2,29 @@
   <v-content v-if="this.$store.state.vitabox">
     <v-container class="pa-0" fluid grid-list-sm align-center>
       <v-layout class="pb-0" wrap>
-        <v-flex xs12 sm12 md12 lg8 sl9 class="text-md-left pa-0">
-          <v-card dark width="100%">
-            <v-layout row>
-              <v-icon class="primary_d--text pt-0 pl-4">fa fa-compass</v-icon>
-              <h4 class="pa-3">
-                <span class="primary_l--text">Location:</span>
-                <span class="pl-5">{{ this.$store.state.vitabox.address }}</span>
-              </h4>
-            </v-layout>
+        <v-flex xs12 sm12 md12 lg8 sl9 class="pa-0">
+          <v-card dark height="100%" width="100%">
+          <v-layout wrap fill-height >
+            <v-flex lg1 class="text-xs-center pt-3 pb-3">
+              <v-icon class="primary_d--text">fa fa-compass</v-icon>
+            </v-flex>
+            <v-flex lg11 class="pt-3 pb-3">
+              <span >{{ this.$store.state.vitabox.address }}</span>
+            </v-flex>
+          </v-layout>
           </v-card>
         </v-flex>
         <v-flex xs12 sm12 md12 lg4 sl3 class="pa-0">
-          <v-layout>
-            <v-card class="vitaboxDetailsSelector" dark height="54px" width="100%" @click.native='goToVitaboxDetails($store.state.vitabox)'>
-              <v-layout row>
-                <v-icon class="primary_d--text pt-3 pl-5">fa fa-info-circle</v-icon>
-                <h4 class="pt-3">
-                  <span class="pl-4">Press for more details</span>
-                </h4>
-              </v-layout>
-            </v-card>
-          </v-layout>
+          <v-card class="vitaboxDetailsSelector text-xs-center" dark height="100%" width="100%" @click.native='goToVitaboxDetails($store.state.vitabox)'>
+            <v-layout wrap>
+              <v-flex lg4 class="text-xs-right pt-3 pb-3">
+                <v-icon class="primary_d--text">fa fa-info-circle</v-icon>
+              </v-flex>
+              <v-flex lg8 class="text-xs-center pt-3 pb-3">
+                <span >Press for more details</span>
+              </v-flex>
+            </v-layout>
+          </v-card>
         </v-flex>
       </v-layout>  
       <vitaboxDashboard :vitabox="$store.state.vitabox"></vitaboxDashboard>

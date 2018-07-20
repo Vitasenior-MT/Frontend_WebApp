@@ -227,6 +227,12 @@ export default {
       if (a.datetime > b.datetime) return 1;
       return 0;
     },
+    goToBoardDetails(boardData, sensorData, patientData) {
+      this.$store.commit("setBoardData", boardData);
+      this.$store.commit("setSensorData", sensorData);
+      this.$store.commit("setPatientData", patientData);
+      this.$router.push("/doctoroffice/board/detail");
+    },
     getMeasures() {
       this.measures = [];
       this.$store.state.patient.Boards.forEach(board => {

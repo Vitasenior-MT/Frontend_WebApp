@@ -23,6 +23,7 @@ import FOUserDetail from '@/components/frontoffice/user/UserDetail'
 
 // Doctoroffice
 import DODashboard from '@/components/doctoroffice/dashboard/Dashboard'
+import DOBoardDetail from '@/components/doctoroffice/board/BoardDetail'
 
 // Backend
 import BOVitaboxList from '@/components/backoffice/vitabox/VitaboxList'
@@ -114,7 +115,11 @@ export default new Router({
       name: 'DODashboard',
       component: DODashboard,
     },
-    
+    {
+      path: '/doctoroffice/board/detail',
+      name: 'DOBoardDetail',
+      component: DOBoardDetail,
+    },
 
     // backoffice
     {

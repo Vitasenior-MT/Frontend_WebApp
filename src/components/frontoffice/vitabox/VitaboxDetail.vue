@@ -35,60 +35,115 @@
           </v-list-tile>
         </v-list>
       </v-flex>
-      <v-flex xs12 class="pb-1">
-        <v-menu offset-y transition="slide-y-transition" style="width:100%;">
-          <v-card class="vitaboxUserMenuSelector" slot="activator" dark width="100%">
-            <v-card-title class="title">
-              <v-icon color="primary_d" class="pr-2">fas fa-user-tag</v-icon>
-              Users from this vitabox:
-              <v-spacer></v-spacer>
-              <v-icon>fas fa-angle-down</v-icon>
-            </v-card-title>
-          </v-card>
-          <v-list>
-            <v-template dark v-for="item in vitaboxUsers" :key="item.id" @click="gotoUserProfile(item)">
-              <v-divider v-if="item == vitaboxUsers[0]" class="userDivider"></v-divider>
-              <v-divider v-else class="userDivider" :inset="true"></v-divider>
-              <v-list-tile avatar class="vitaboxUserSelector">
-                <v-list-tile-avatar color="white"><img src="@/assets/logo.png"></v-list-tile-avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                  <v-list-tile-sub-title>Name</v-list-tile-sub-title>
-                </v-list-tile-content> 
-              </v-list-tile>
-              <v-divider v-if="item == vitaboxUsers[vitaboxUsers.length-1]" class="userDivider"></v-divider>
-            </v-template>
-          </v-list>
-        </v-menu>
-      </v-flex>
       <v-flex xs12 class="pa-0">
         <div id="google-map-box"></div>
       </v-flex>
       <v-flex xs12 class="pt-1">
-        <v-data-table :headers="headers" :items="boards" hide-actions class="elevation-1" dark >
-          <template slot="items" slot-scope="props">
-            <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
-            <td class="text-xs-left">{{ props.item.description }}</td>
-            <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-            <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
-            <td class="text-xs-left">
-              <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
-              <span v-else>
-                <v-icon v-if="props.item.active">fas fa-play-circle</v-icon>
-                <v-icon v-else>fas fa-pause-circle</v-icon>
-              </span>
-            </td>
-            <td class="justify-left layout px-0">
-              <v-btn color="primary_d" @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
-              <remove-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item" @remove="()=>boards.splice(boards.indexOf(props.item), 1)"></remove-board>
-            </td>
-          </template>
-          <template slot="no-data">
-            <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-              Sorry, nothing to display here :(
-            </v-alert>
-          </template>
-        </v-data-table>
+
+          <v-card dark flat height="100%">
+            <v-tabs
+              centered
+              color="primary"
+              dark
+              icons-and-text
+            >
+              <v-tabs-slider color="white"></v-tabs-slider>
+              <v-tab href="#tab-1">
+                Users
+                <v-icon>fas fa-user</v-icon>
+              </v-tab>
+              <v-tab href="#tab-2">
+                Patients
+                <v-icon>fas fa-heartbeat</v-icon>
+              </v-tab>
+              <v-tab href="#tab-3">
+                Boards
+                <v-icon>fas fa-microchip</v-icon>
+              </v-tab>
+              <v-tab-item
+                v-for="i in 3"
+                :id="'tab-' + i"
+                :key="i"
+              >
+                <v-data-table
+                  v-if="i == 1"
+                  :headers="headersUsers"
+                  :items="vitaboxUsers"
+                  hide-actions
+                  class="elevation-1"
+                  dark
+                  >
+                  <template slot="items" slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left">{{ props.item.email }}</td>
+                    <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  </template>
+                  <template slot="no-data">
+                    <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                        Sorry, nothing to display here 
+                    </v-alert>
+                  </template>
+                </v-data-table>  
+                <add-patient v-if="$store.state.vitabox.sponsor & i == 2" :box="$store.state.vitabox" @addpatient="(patient)=>patients.push(patient)"></add-patient>
+                <v-data-table
+                  v-if="i == 2"
+                  :headers="headersPatients"
+                  :items="patients"
+                  hide-actions
+                  class="elevation-1"
+                  dark
+                  >
+                  <template slot="items" slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.name }}</td>
+                    <td class="text-xs-left">
+                      <v-icon v-if="props.item.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
+                      <v-icon v-if="props.item.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
+                      <v-icon v-if="props.item.gender == 'undefined'" class="pink--text">fas fa-times-circle</v-icon>
+                    </td>
+                    <td class="text-xs-left">{{ calculate_age(props.item.birthdate) }}</td>
+                    <td class="text-xs-left">{{ props.item.birthdate }}</td>
+                    <td class="text-xs-left">{{ props.item.weight }} kg</td>
+                    <td class="text-xs-left">{{ props.item.height }} m</td>
+                    <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  </template>
+                  <template slot="no-data">
+                    <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                        Sorry, nothing to display here 
+                    </v-alert>
+                  </template>
+                </v-data-table>
+                <add-board v-if="$store.state.vitabox.sponsor && i == 3" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
+                <v-data-table
+                  v-if="i == 3"
+                  :headers="headersBoards"
+                  :items="$store.state.patient.Boards"
+                  hide-actions
+                  class="elevation-1"
+                  dark
+                  >
+                   <template slot="items" slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
+                    <td class="text-xs-left">{{ props.item.description }}</td>
+                    <td class="text-xs-left">{{ props.item.mac_addr }}</td>
+                    <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
+                    <td class="text-xs-left">
+                      <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
+                      <span v-else> no permission </span>
+                    </td>
+                    <td class="justify-left layout px-0">
+                      <v-btn color="primary_d" @click='goToBoardDetails(props.item)'><v-icon>fas fa-info-circle</v-icon></v-btn>
+                      <remove-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item" @remove="()=>boards.splice(boards.indexOf(props.item), 1)"></remove-board>
+                    </td>
+                  </template>
+                  <template slot="no-data">
+                    <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
+                      Sorry, nothing to display here :(
+                    </v-alert>
+                  </template>
+                </v-data-table>  
+              </v-tab-item>
+            </v-tabs>   
+          </v-card>
       </v-flex>
     </v-layout>
 
@@ -97,10 +152,6 @@
         <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
       </v-btn>
     </v-flex>
-
-    <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
-    <add-patient v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addpatient="(patient)=>patients.push(patient)"></add-patient>
-    
   </v-content>
 </template>
 
@@ -121,7 +172,7 @@ export default {
   data() {
     return {
       options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
-      headers: [
+      headersBoards: [
         { text: "Board", value: "name", sortable: false, class: "headers" },
         {
           text: "Description",
@@ -144,7 +195,22 @@ export default {
         { text: "State", sortable: false, class: "headers" },
         { text: "Actions", sortable: false, class: "headers" }
       ],
+      headersPatients: [
+        { text: "Name", value: "name", sortable: false, class: "headers" },
+        { text: "Gender", value: "gender", sortable: false, class: "headers" },
+        { text: "Age", value: "age", sortable: false, class: "headers" },
+        { text: "Birthdate", value: "birthdate", sortable: false, class: "headers" },
+        { text: "Weight", value: "Weight", sortable: false, class: "headers" },
+        { text: "Height", value: "Height", sortable: false, class: "headers" },
+        { text: "Since", value: "since", sortable: false, class: "headers" }
+      ],
+      headersUsers: [
+        { text: "Name", value: "name", sortable: false, class: "headers" },
+        { text: "Email", value: "email", sortable: false, class: "headers" },
+        { text: "Since", value: "since", sortable: false, class: "headers" }
+      ],
       boards: [],
+      vitaboxUsers: [],
       patients: [],
       map: null,
       marker: null
@@ -153,6 +219,7 @@ export default {
   created() {
     this.getBoards();
     this.getUsers();
+    this.getPatients();
   },
   mounted() {
     let myLatLng = new google.maps.LatLng(
@@ -170,12 +237,41 @@ export default {
     });
   },
   methods: {
+     calculate_age(dob) {
+      dob = new Date(dob);
+      var diff_ms = Date.now() - dob.getTime();
+      var age_dt = new Date(diff_ms);
+
+      return Math.abs(age_dt.getUTCFullYear() - 1970);
+    },
     getUsers() {
+      this.vitaboxUsers = [];
       event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox/" + this.$store.state.vitabox.id + "/user")
         .then(response => {
           this.vitaboxUsers = response.data.users;
+          event_bus.$emit("waiting", false);
+        })
+        .catch(error => {
+          if (error.response) {
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+          } else {
+            event_bus.$emit("toast", { message: error.message, type: "error" });
+          }
+          event_bus.$emit("waiting", false);
+        });
+    },
+    getPatients() {
+      this.patients = [];
+      event_bus.$emit("waiting", true);
+      event_bus.$data.http
+        .get("/vitabox/" + this.$store.state.vitabox.id + "/patient")
+        .then(response => {
+          this.patients = response.data.patients;
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

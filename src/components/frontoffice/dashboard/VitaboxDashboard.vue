@@ -11,7 +11,7 @@
         </v-card>
       </v-flex>
       <v-flex class="pt-2" xs12>
-        <v-card class="pb-3" dark flat>
+        <v-card class="pb-3 pt-2" dark flat>
           <v-flex xs12>
             <v-layout class="text-md-center" style="height:100%">
               <v-card class="pt-5" style="width: 100%;" flat>
