@@ -12,11 +12,20 @@
       <v-card-text>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-flex xs12 sm6>
-              <v-text-field :rules="[() => sensor.transducer.length > 3 || 'Transducer name is required']" label="Transducer name" v-model="sensor.transducer"></v-text-field>
+            <v-flex xs12>
+              <v-text-field :rules="[() => sensor.measure.length > 1 || 'Measure is required']" label="Measure (application presentation)" v-model="sensor.measure"></v-text-field>
             </v-flex>
-            <v-flex xs12 sm6>
-              <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" return-object single-line append-icon="fas fa-angle-down"></v-select>
+            <v-flex xs12>
+              <v-text-field :rules="[() => sensor.to_read.length > 5 || 'Measure text is required']" label="Measure (text-to-speech)" v-model="sensor.to_read"></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm8>
+              <v-text-field :rules="[() => sensor.tag.length > 3 || 'Measure tag is required']" label="Tag (system tag to measure)" v-model="sensor.tag"></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm4>
+              <v-text-field label="Measure Unit" v-model="sensor.unit"></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field :rules="[() => sensor.transducer.length > 3 || 'Transducer name is required']" label="Transducer name" v-model="sensor.transducer"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
               <v-text-field label="Minimum acceptable" v-model="sensor.min_acceptable"></v-text-field>
@@ -60,122 +69,6 @@ export default {
         unit: "",
         to_read: ""
       },
-      items: [
-        {
-          measure: "temperatura",
-          to_read: "temperatura",
-          tag: "temp",
-          unit: "ºC"
-        },
-        {
-          measure: "humidade",
-          to_read: "humidade",
-          tag: "humi",
-          unit: "%"
-        },
-        {
-          measure: "CO2",
-          to_read: "dióxido de carbono",
-          tag: "dioxi",
-          unit: "ppm"
-        },
-        {
-          measure: "Mono. Carbono",
-          to_read: "monóxido de carbono",
-          tag: "mono",
-          unit: "ppm"
-        },
-        {
-          measure: "p.a. sistólica",
-          to_read: "pressão arterial sistólica",
-          tag: "systolic",
-          unit: "mmHg"
-        },
-        {
-          measure: "p.a. diastólica",
-          to_read: "pressão arterial diastólica",
-          tag: "diastolic",
-          unit: "mmHg"
-        },
-        {
-          measure: "pulsação",
-          to_read: "pulsação arterial",
-          tag: "pulse",
-          unit: "bpm"
-        },
-        {
-          measure: "oximetria",
-          to_read: "oximetria do pulso",
-          tag: "spo2",
-          unit: "%"
-        },
-        {
-          measure: "peso",
-          to_read: "peso",
-          tag: "weight",
-          unit: "Kg"
-        },
-        {
-          measure: "gordura corp.",
-          to_read: "gordura corporal",
-          tag: "bodyfat",
-          unit: "%"
-        },
-        {
-          measure: "massa óssea",
-          to_read: "massa óssea",
-          tag: "bonemass",
-          unit: "%"
-        },
-        {
-          measure: "massa muscular",
-          to_read: "massa muscular",
-          tag: "musclemass",
-          unit: "%"
-        },
-        {
-          measure: "gordura visceral",
-          to_read: "gordura visceral",
-          tag: "visceralfat",
-          unit: "%"
-        },
-        {
-          measure: "água",
-          to_read: "água",
-          tag: "water",
-          unit: "%"
-        },
-        {
-          measure: "calorias",
-          to_read: "calorias",
-          tag: "callories",
-          unit: "%"
-        },
-        {
-          measure: "passos",
-          to_read: "passos",
-          tag: "steps",
-          unit: ""
-        },
-        {
-          measure: "metros",
-          to_read: "metros",
-          tag: "meters",
-          unit: "m"
-        },
-        {
-          measure: "freq. cardíaca",
-          to_read: "frequência cardíaca",
-          tag: "heartrate",
-          unit: "bpm"
-        },
-        {
-          measure: "temperatura corp.",
-          to_read: "temperatura corporal",
-          tag: "bodytemp",
-          unit: "ºC"
-        }
-      ],
       selected_measure: null,
       dialog_create_sensor: false
     };
@@ -186,13 +79,11 @@ export default {
         this.sensor.min_acceptable < this.sensor.max_acceptable &&
         this.sensor.min_possible < this.sensor.max_possible &&
         this.sensor.transducer !== "" &&
-        this.selected_measure !== null
+        this.sensor.measure !== "" &&
+        this.sensor.to_read !== "" &&
+        this.sensor.tag !== ""
       ) {
         event_bus.$emit("waiting", true);
-        this.sensor.tag = this.selected_measure.tag;
-        this.sensor.measure = this.selected_measure.measure;
-        this.sensor.unit = this.selected_measure.unit;
-        this.sensor.to_read = this.selected_measure.to_read;
         event_bus.$data.http
           .post("/sensormodel", this.sensor)
           .then(response => {

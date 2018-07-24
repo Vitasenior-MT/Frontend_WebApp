@@ -50,12 +50,7 @@
         </v-flex>
         <v-flex md12 lg10>
         <v-card dark flat height="100%">
-          <v-tabs
-            centered
-            color="primary"
-            dark
-            icons-and-text
-          >
+          <v-tabs centered color="primary" dark icons-and-text>
             <v-tabs-slider color="white"></v-tabs-slider>
             <v-tab href="#tab-1">
               Profiles
@@ -69,19 +64,8 @@
               Boards
               <v-icon>fas fa-microchip</v-icon>
             </v-tab>
-            <v-tab-item
-              v-for="i in 3"
-              :id="'tab-' + i"
-              :key="i"
-            >
-              <v-data-table
-                v-if="i == 1"
-                :headers="headersProfiles"
-                :items="$store.state.patient.Profiles"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+            <v-tab-item v-for="i in 3" :id="'tab-' + i" :key="i">
+              <v-data-table v-if="i == 1" :headers="headersProfiles" :items="$store.state.patient.Profiles" hide-actions class="elevation-1" dark>
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.id }}</td>
                   <td class="text-xs-left">{{ props.item.measure }}</td>
@@ -97,14 +81,7 @@
                 </template>
               </v-data-table>  
               <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
-              <v-data-table
-                v-if="i == 2"
-                :headers="headersDoctors"
-                :items="$store.state.patient.Doctors"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+              <v-data-table v-if="i == 2" :headers="headersDoctors" :items="$store.state.patient.Doctors" hide-actions class="elevation-1" dark>
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.name }}</td>
                   <td class="text-xs-left">{{ props.item.email }}</td>
@@ -119,14 +96,7 @@
                 </template>
               </v-data-table>
               <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>  
-              <v-data-table
-                v-if="i == 3"
-                :headers="headersBoards"
-                :items="$store.state.patient.Boards"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+              <v-data-table v-if="i == 3" :headers="headersBoards" :items="$store.state.patient.Boards" hide-actions class="elevation-1" dark>
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
                   <td class="text-xs-left">{{ props.item.description }}</td>
@@ -202,9 +172,6 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     }
-  },
-  created() {
-    this.getDoctors();
   },
   watch: {
     dialog(val) {

@@ -1,17 +1,17 @@
 <template>
-  <div id="remove_board">
-    <v-btn flat icon small color="error" @click.native="()=>dialog_remove_board=true">
+  <div id="remove_patient">
+    <v-btn flat icon small color="error" @click.native="()=>dialog_remove_patient=true">
       <v-icon>fas fa-minus-circle</v-icon>
     </v-btn>
-    <v-dialog v-model="dialog_remove_board" max-width="500px">
+    <v-dialog v-model="dialog_remove_patient" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline error--text">Remove board from vitabox</span>
+          <span class="headline error--text">Remove patient from vitabox</span>
           <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_remove_board=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+          <v-btn icon @click.native="()=>dialog_remove_patient=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
         </v-card-title>
-        <v-card-text  v-if="board">
-          Removing the board will cause the <b>loss of record history</b>.
+        <v-card-text  v-if="patient">
+          Removing the patient will cause the <b>loss of record history</b>.
           <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
         </v-card-text>
         <v-card-actions>
@@ -29,32 +29,32 @@
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "remove_board",
+  name: "remove_patient",
   props: {
     box: Object,
-    board: Object
+    patient: Object
   },
   data: () => {
     return {
-      dialog_remove_board: false,
+      dialog_remove_patient: false,
       checked: false
     };
   },
   methods: {
     removeItem() {
       event_bus.$emit("waiting", true);
-      this.dialog_remove_board = false;
+      this.dialog_remove_patient = false;
 
       event_bus.$data.http
-        .delete("/vitabox/" + this.box.id + "/board", {
+        .delete("/vitabox/" + this.box.id + "/patient", {
           data: {
-            board_id: this.board.id
+            patient_id: this.patient.id
           }
         })
         .then(response => {
-          this.$emit("remove", this.board);
+          this.$emit("remove", this.patient);
           event_bus.$emit("toast", {
-            message: "board was successfully removed from vitabox",
+            message: "patient was successfully removed from vitabox",
             type: "success"
           });
           event_bus.$emit("waiting", false);

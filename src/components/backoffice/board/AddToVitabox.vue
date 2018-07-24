@@ -25,9 +25,6 @@ import { event_bus } from "@/plugins/bus.js";
 
 export default {
   name: "add_board_to_box",
-  props: {
-    box: Object
-  },
   data: () => {
     return {
       board: {
@@ -76,7 +73,7 @@ export default {
         }
         console.log(this.mac_addr);
         event_bus.$data.http
-          .post("/vitabox/" + this.box.id + "/board", this.board)
+          .post("/vitabox/" + this.$store.status.vitabox.id + "/board", this.board)
           .then(response => {
             this.$emit("update", response.data.board);
             event_bus.$emit(

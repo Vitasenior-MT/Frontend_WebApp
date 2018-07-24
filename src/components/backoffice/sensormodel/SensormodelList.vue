@@ -10,8 +10,10 @@
         
       <v-data-table :headers="headers" :search="search" :items="sensors" class="elevation-1" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]">
         <template slot="items" slot-scope="props">
-          <td>{{ props.item.transducer }}</td>
+          <td>{{ props.item.measure }}</td>
           <td>{{ props.item.to_read }}</td>
+          <td>{{ props.item.tag }}</td>
+          <td>{{ props.item.transducer }}</td>
           <td>[{{ Math.round(props.item.min_acceptable) }};{{ Math.round(props.item.max_acceptable) }}]</td>
           <td>[{{ Math.round(props.item.min_possible) }};{{ Math.round(props.item.max_possible) }}]</td>
           <td class="right px-0">
@@ -45,8 +47,10 @@ export default {
     return {
       search: "",
       headers: [
-        { text: "", align: "left", value: "transducer" },
         { text: "Measure", align: "left", value: "measure" },
+        { text: "Full Name", align: "left", value: "to_read" },
+        { text: "Tag", align: "left", value: "tag" },
+        { text: "Transducer", align: "left", value: "transducer" },
         { text: "Acceptable", align: "left", sortable: false },
         { text: "Possible", align: "left", sortable: false },
         { text: "Actions", align: "right", sortable: false }
@@ -67,7 +71,6 @@ export default {
         .get("/sensormodel")
         .then(response => {
           this.sensors = response.data.sensors;
-          console.log(response.data.sensors);
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

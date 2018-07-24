@@ -11,7 +11,17 @@
     </v-card-title>
     <v-card-text>
       <v-container grid-list-md>
-        <v-select :rules="[() => model.tag.length > 1 || 'Board equipment is required']" :items="equipments" item-text="name" label="Board equipment" v-model="model" single-line append-icon="fas fa-angle-down" return-object></v-select>
+        <v-layout wrap>
+          <v-flex xs12>
+            <v-text-field :rules="[() => model.name.length > 3 || 'Name is required']" label="Name" v-model="model.name"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field :rules="[() => ['wearable', 'non-wearable', 'environmental'].includes(model.type) || 'Type must be environmental, wearable or non-wearable']" label="Type (wearable, non-wearable, environmental)" v-model="model.type"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field :rules="[() => model.tag.length > 3 || 'Tag is required']" label="Tag (system tag to board)" v-model="model.tag"></v-text-field>
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -35,38 +45,6 @@ export default {
         type: "",
         tag: ""
       },
-      equipments: [
-        {
-          name: "Zolertia Re-Mote",
-          tag: "zolertiaremote",
-          type: "environmental"
-        },
-        {
-          name: "Pressão Arterial",
-          tag: "bloodpressure",
-          type: "non-wearable"
-        },
-        {
-          name: "Temperatura",
-          tag: "bodytemperature",
-          type: "non-wearable"
-        },
-        {
-          name: "Pulsometro",
-          tag: "bodypulse",
-          type: "non-wearable"
-        },
-        {
-          name: "Balança",
-          tag: "bodyscale",
-          type: "non-wearable"
-        },
-        {
-          name: "Bracelete",
-          tag: "bandfitness",
-          type: "wearable"
-        }
-      ],
       dialog_create_model: false
     };
   },

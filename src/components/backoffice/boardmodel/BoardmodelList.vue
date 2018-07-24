@@ -13,8 +13,11 @@
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.type }}</td>
-            <td class="right px-0">
-              <v-btn icon class="mx-4" @click.native="getSensors(props.item)"><v-icon>fas fa-microchip</v-icon></v-btn>
+            <td>{{ props.item.tag }}</td>
+            <td class="text-xs-right">
+              <v-btn icon @click.native="getSensors(props.item)"><v-icon>fas fa-microchip</v-icon></v-btn>
+            </td>
+            <td class="text-xs-right">
               <v-btn icon class="mx-0" @click.native="editItem(props.item)"><v-icon color="secondary">fas fa-edit</v-icon></v-btn>
               <v-btn icon class="mx-0" @click.native="deleteIntention(props.item)"><v-icon color="error">fas fa-minus-circle</v-icon></v-btn>
             </td>
@@ -62,9 +65,19 @@ export default {
           value: "type"
         },
         {
+          text: "Tag",
+          align: "left",
+          value: "tag",
+          sortable: false
+        },
+        {
+          text: "Transducers",
+          align: "right",
+          sortable: false
+        },
+        {
           text: "Actions",
           align: "right",
-          value: "id",
           sortable: false
         }
       ],

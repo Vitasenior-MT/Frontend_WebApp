@@ -100,6 +100,7 @@ export default {
         this.is_admin = false;
         this.is_doctor = false;
         this.as_user = true;
+        this.$store.commit("setVitaboxData" , null);
         this.$router.push("/frontoffice/dashboard");
       }
       event_bus.$emit("switch_dashboard", this.as_user);

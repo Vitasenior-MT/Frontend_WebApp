@@ -1,110 +1,84 @@
 <template>
-  <v-content id="dashboard_patient" v-if="patient">
-
+  <v-card-text class="pt-0">
     <v-container grid-list-md>
-      <v-layout row wrap>
-        <v-flex xs12 md4>
+      <v-layout row wrap style="height: 255px;">
+        <v-flex xs12 md6>
+          <h3 class="pl-3">Details</h3>
+          <v-list class="py-0">
+            <v-list-tile><v-list-tile-content>
+                <v-list-tile-sub-title class="primary_l--text caption">id</v-list-tile-sub-title>
+                <v-list-tile-title>{{patient.id}}</v-list-tile-title>
+            </v-list-tile-content></v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="primary_l--text caption">activity status</v-list-tile-sub-title>
+                <v-list-tile-title v-if="patient.active">enabled</v-list-tile-title>
+                <v-list-tile-title v-else>disabled</v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <disable-patient :box="$store.state.vitabox" :patient="patient"></disable-patient>
+              </v-list-tile-action>
+            </v-list-tile>
+             <v-divider></v-divider>
+             <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-title class="font-weight-bold">Boards</v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <set-board-to-patient :patient="patient" @added="boardAdded"></set-board-to-patient>
+              </v-list-tile-action>
+            </v-list-tile>
+          </v-list>
 
-          <v-card>
-            <v-card-title class="pb-0">
-              <label class="ash--text mr-2">id</label>
-              <label>{{patient.id}}</label>
-              <p class="headline">{{patient.name}}</p>
-            </v-card-title>
-            <v-card-text class="pt-0">
-              <label class="primary_d--text">age</label>
-              <label>{{patient.age}} years</label><br>
-              
-              <div id="dashboard_patient_div">
-                <label class="primary_d--text">vitabox</label>
-                <v-btn id="dashboard_patient_icon" flat icon small color="error" @click.native="()=>dialog_remove_patient=true"><v-icon>fas fa-minus-circle</v-icon></v-btn>
-                <p>{{box.address}}</p>
-              </div>
-
-              <div id="dashboard_patient_div" class="mb-3">
-                <label class="primary_d--text">activity status</label>
-                <v-btn id="dashboard_patient_icon" class="mt-0" flat icon small @click.native="()=>dialog_disable_patient=true">
-                  <v-icon v-if="patient.active">fas fa-pause-circle</v-icon>
-                  <v-icon v-else>fas fa-play-circle</v-icon>
-                </v-btn>
-              </div>
-              
-              <v-divider></v-divider>
-              <set-board-to-patient :patient="patient" :box="box" @added="(item)=>boardAdded(item)"></set-board-to-patient>
-              <v-expansion-panel>
-                <v-expansion-panel-content v-for="board in boards" :key="board.id" expand-icon="fas fa-angle-down">
-                  <div slot="header">{{board.Boardmodel.name}}</div>
-                  <sensor-graph :sensors="board.Sensors" :patient="patient.id"></sensor-graph>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-card-text>
-          </v-card>
+          <br />
+          <v-bottom-nav :active.sync="bottomNav" :value="true" shift v-if="this.patient.Boards.length>0">
+            <v-btn flat v-for="board in this.patient.Boards" :key="board.id" @click.native="selectBoard(board)">
+              <span>{{board.Boardmodel.name}}</span>
+              <v-avatar size="26"><img :src="require('@/assets/'+board.Boardmodel.tag+'_icon.png')"></v-avatar>
+            </v-btn>
+          </v-bottom-nav>
+          <div v-else class="warning--text">This patient has no boards</div>
         </v-flex>
 
-        <v-flex xs12 md8>
-          
+        <v-flex xs12 md6 v-if="board">
+          <h3 class="pl-3">Sensors</h3>
+          <v-list two-line class="py-0">
+            <v-list-tile v-for="sensor in board.Sensors" :key="sensor.id" avatar ripple @click="()=>{}">
+              <v-list-tile-content>
+                <v-list-tile-title>{{sensor.Sensormodel.transducer}} - {{sensor.Sensormodel.measure}}</v-list-tile-title>
+                <v-list-tile-sub-title>{{sensor.id}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-list-tile-action-text>{{getTime(sensor.last_commit)}}</v-list-tile-action-text>
+                <v-icon v-if="verifyDate(sensor.last_commit)" color="grey lighten-1">fas fa-exclamation-triangle</v-icon>
+                <v-icon v-else color="yellow darken-2">fas fa-exclamation-triangle</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+          </v-list>
         </v-flex>
-
       </v-layout>
     </v-container>
-
-  </v-content>
+  </v-card-text>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
+import PatientDisable from "@/components/backoffice/patient/PatientDisable.vue";
+import SetBoardToPatient from "@/components/backoffice/board/SetToPatient.vue";
 
 export default {
   name: "dashboard_patient",
   props: {
-    patient: Object,
-    box: Object
+    patient: Object
   },
   data: () => {
     return {
-      boards: [],
-      sensors: [],
-      dialog_remove_patient: false,
-      dialog_disable_patient: false,
-      selected_board: null,
-      selected_sensor: null
+      board: null,
+      bottomNav: 0
     };
   },
   mounted() {
-    if (this.$store.state.user.token === null) {
-      this.$router.push("/");
-      event_bus.$emit("toast", { message: "Unauthorized", type: "error" });
-    } else {
-      if (this.patient) {
-        event_bus.$emit("waiting", true);
-        event_bus.$data.http
-          .get("/patient/" + this.patient.id + "/board")
-          .then(response => {
-            this.boards = response.data.boards;
-            this.sensors = this.boards.length > 0 ? this.boards[0].Sensors : [];
-            event_bus.$emit("waiting", false);
-          })
-          .catch(error => {
-            if (error.response) {
-              event_bus.$emit("toast", {
-                message: error.response.data,
-                type: "error"
-              });
-            } else {
-              event_bus.$emit("toast", {
-                message: error.message,
-                type: "error"
-              });
-            }
-            event_bus.$emit("waiting", false);
-          });
-      } else {
-        event_bus.$emit("toast", {
-          message: "Patient undefined",
-          type: "error"
-        });
-      }
-    }
+    this.board = this.patient.Boards.length > 0 ? this.patient.Boards[0] : null;
   },
   methods: {
     getTime(date) {
@@ -118,36 +92,29 @@ export default {
         return Math.floor(miliseconds / 3600000) + " hours";
       } else return ">24 hours";
     },
-    remove() {
-      this.dialog_remove_patient = false;
-      this.$router.push("/vitabox/list ");
-      event_bus.$emit("waiting", false);
+    selectBoard(board) {
+      this.board = board;
     },
-    disable() {
-      this.dialog_disable_patient = false;
-      this.patient.active = !this.patient.active;
-      event_bus.$emit("waiting", false);
+    // getAge(date) {
+    //   let today = new Date();
+    //   let birthdate = new Date(date);
+    //   return today.getMonth() < birthdate.getMonth() ||
+    //     (today.getMonth() === birthdate.getMonth() &&
+    //       today.getDate() < birthdate.getDate())
+    //     ? today.getFullYear() - birthdate.getFullYear() - 1
+    //     : today.getFullYear() - birthdate.getFullYear();
+    // }
+    boardAdded(board) {
+      this.patient.Boards.push(board);
     },
-    boardAdded(id) {
-      event_bus.$data.http
-        .get("/board/" + id)
-        .then(response => {
-          this.boards.push(response.data.board);
-          event_bus.$emit("waiting", false);
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", { message: error.message, type: "error" });
-          }
-          event_bus.$emit("waiting", false);
-        });
+    verifyDate(date) {
+      return new Date() - new Date(date) < 86400000;
     }
   },
+  components: {
+    "disable-patient": PatientDisable,
+    "set-board-to-patient": SetBoardToPatient
+  }
 };
 </script>
 
@@ -160,4 +127,13 @@ export default {
   position: absolute;
   right: 0;
 }
+
+/* #add_board_to_patient_header {
+  position: relative;
+  display: inline;
+}
+#add_board_to_patient_icon {
+  position: absolute;
+  right: 0;
+} */
 </style>

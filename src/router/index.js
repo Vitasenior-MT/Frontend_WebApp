@@ -33,8 +33,6 @@ import BOBoardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
 import BOSensormodel from '@/components/backoffice/sensormodel/SensormodelList'
 import BOProfilemodel from '@/components/backoffice/profilemodel/ProfileList'
 import BOUtils from '@/components/backoffice/utils/utils'
-import BOBoardDashboard from '@/components/backoffice/board/BoardDetails'
-import BOPatientDashboard from '@/components/backoffice/patient/PatientDetails'
 
 // Doctor
 
@@ -156,18 +154,6 @@ export default new Router({
       path: '/backoffice/utils',
       name: 'BOUtils',
       component: BOUtils
-    },
-    {
-      path: '/backoffice/dashboard/board',
-      name: 'BOBoardDashboard',
-      component: BOBoardDashboard,
-      props: true
-    },
-    {
-      path: '/backoffice/dashboard/patient',
-      name: 'BOPatientDashboard',
-      component: BOPatientDashboard,
-      props: true
     },
     // not found handler
     {
