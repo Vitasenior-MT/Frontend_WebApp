@@ -10,7 +10,7 @@
     </v-card-title>
     
     <v-card-actions class="py-0">
-      <add-board-to-box @update="(board)=>setBoard(board)"></add-board-to-box>
+      <add-board-to-box @update="setBoard"></add-board-to-box>
     </v-card-actions>
     
     <v-card-text class="px-5" id="boards_list">

@@ -36,41 +36,48 @@ export default {
   },
   methods: {
     switchActivity() {
-      event_bus.$emit("waiting", true);
       this.dialog_disable_patient = false;
-
-      event_bus.$data.http
-        .put(
-          "/vitabox/" +
-            this.box.id +
-            "/patient/" +
-            (this.patient.active ? "disable" : "enable"),
-          {
-            patient_id: this.patient.id
-          }
-        )
-        .then(response => {
-          this.patient.active = !this.patient.active;
-          event_bus.$emit("toast", {
-            message: "patient status was successfully changed",
-            type: "success"
+      if (this.patient.weight && this.patient.height) {
+        event_bus.$emit("waiting", true);
+        event_bus.$data.http
+          .put(
+            "/vitabox/" +
+              this.box.id +
+              "/patient/" +
+              (this.patient.active ? "disable" : "enable"),
+            {
+              patient_id: this.patient.id
+            }
+          )
+          .then(response => {
+            this.patient.active = !this.patient.active;
+            event_bus.$emit("toast", {
+              message: "patient status was successfully changed",
+              type: "success"
+            });
+            event_bus.$emit("waiting", false);
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
+            } else {
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
+            }
+            event_bus.$emit("waiting", false);
           });
-          event_bus.$emit("waiting", false);
-        })
-        .catch(error => {
-          if (error.response) {
-            event_bus.$emit("toast", {
-              message: error.response.data,
-              type: "error"
-            });
-          } else {
-            event_bus.$emit("toast", {
-              message: error.message,
-              type: "error"
-            });
-          }
-          event_bus.$emit("waiting", false);
+      } else {
+        event_bus.$emit("toast", {
+          message:
+            "patient can't be activated while doctor doesn't define weight and height",
+          type: "error"
         });
+      }
     }
   }
 };

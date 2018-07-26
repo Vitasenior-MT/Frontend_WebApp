@@ -35,10 +35,12 @@ export default {
   },
   methods: {
     getProfileModels() {
+      event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/profilemodel")
         .then(response => {
           this.models = response.data.profiles;
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -52,6 +54,7 @@ export default {
               type: "error"
             });
           }
+          event_bus.$emit("waiting", false);
         });
     },
     save() {

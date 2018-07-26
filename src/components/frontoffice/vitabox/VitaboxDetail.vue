@@ -46,7 +46,7 @@
               
               <v-tab href="#tab-patients">
                 <span>Patients</span>
-                <v-icon>fas fa-heartbeat</v-icon>
+                <v-icon>fas fa-hand-holding-heart</v-icon>
               </v-tab>
               <v-tab href="#tab-boards">
                 <span>Boards</span>
@@ -54,7 +54,7 @@
               </v-tab>
               <v-tab href="#tab-users">
                 <span>Users</span>
-                <v-icon>fas fa-user</v-icon>
+                <v-icon>fas fa-users</v-icon>
               </v-tab>
 
               <v-tab-item id="tab-patients"><patient-list></patient-list></v-tab-item>

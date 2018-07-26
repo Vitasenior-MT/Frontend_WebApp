@@ -71,9 +71,8 @@ export default {
             ":" +
             this.board.mac_addr.substring(10);
         }
-        console.log(this.mac_addr);
         event_bus.$data.http
-          .post("/vitabox/" + this.$store.status.vitabox.id + "/board", this.board)
+          .post("/vitabox/" + this.$store.state.vitabox.id + "/board", this.board)
           .then(response => {
             this.$emit("update", response.data.board);
             event_bus.$emit(

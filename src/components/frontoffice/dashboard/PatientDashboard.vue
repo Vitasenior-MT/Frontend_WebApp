@@ -36,7 +36,7 @@
       <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
           <v-card class="bioGraphCard" light flat>
             <v-layout row>
-              <v-avatar class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.png')"></v-avatar>
+              <v-avatar tile class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
               <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
 
               <v-spacer></v-spacer>
@@ -109,7 +109,7 @@
     <v-layout wrap justify-center class="pt-1">
       <v-flex xs12 sm12 md4 lg2 v-for="item in boardSensors" :key="item.id">
           <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="showGraph(item)">
-            <v-avatar class="bioAvatar" style="padding-left:10px;"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.png')"></v-avatar>
+            <v-avatar tile class="bioAvatar" style="padding-left:10px;"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
             <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}</span>
             <br>
             <span class="pl-5 primary--text">{{ item.sensor.Sensormodel.measure }}</span>

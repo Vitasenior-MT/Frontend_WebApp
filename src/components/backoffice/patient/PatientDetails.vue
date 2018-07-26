@@ -1,5 +1,5 @@
 <template>
-  <v-card-text class="pt-0">
+  <v-card-text id="patient_details" class="pt-0">
     <v-container grid-list-md>
       <v-layout row wrap style="height: 255px;">
         <v-flex xs12 md6>
@@ -34,7 +34,7 @@
           <v-bottom-nav :active.sync="bottomNav" :value="true" shift v-if="this.patient.Boards.length>0">
             <v-btn flat v-for="board in this.patient.Boards" :key="board.id" @click.native="selectBoard(board)">
               <span>{{board.Boardmodel.name}}</span>
-              <v-avatar size="26"><img :src="require('@/assets/'+board.Boardmodel.tag+'_icon.png')"></v-avatar>
+              <v-avatar tile size="26"><img :src="require('@/assets/'+board.Boardmodel.tag+'_icon.svg')"></v-avatar>
             </v-btn>
           </v-bottom-nav>
           <div v-else class="warning--text">This patient has no boards</div>
@@ -67,7 +67,7 @@ import PatientDisable from "@/components/backoffice/patient/PatientDisable.vue";
 import SetBoardToPatient from "@/components/backoffice/board/SetToPatient.vue";
 
 export default {
-  name: "dashboard_patient",
+  name: "patient_details",
   props: {
     patient: Object
   },
@@ -95,15 +95,6 @@ export default {
     selectBoard(board) {
       this.board = board;
     },
-    // getAge(date) {
-    //   let today = new Date();
-    //   let birthdate = new Date(date);
-    //   return today.getMonth() < birthdate.getMonth() ||
-    //     (today.getMonth() === birthdate.getMonth() &&
-    //       today.getDate() < birthdate.getDate())
-    //     ? today.getFullYear() - birthdate.getFullYear() - 1
-    //     : today.getFullYear() - birthdate.getFullYear();
-    // }
     boardAdded(board) {
       this.patient.Boards.push(board);
     },

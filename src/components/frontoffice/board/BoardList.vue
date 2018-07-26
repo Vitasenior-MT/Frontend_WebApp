@@ -2,9 +2,8 @@
   <div>
    <add-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @addboard="(board)=>boards.push(board)"></add-board>
     <v-data-table :headers="headersBoards" :items="boards" hide-actions class="elevation-1" dark sort-icon="fas fa-sort-down">
-        <template slot="items" slot-scope="props">
+      <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.item.Boardmodel.name }}<label v-if="props.item.description"> - </label>{{ props.item.description}}</td>
-        <td class="text-xs-left">{{ props.item.mac_addr }}</td>
         <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
         <td class="text-xs-left">
           <disable-board v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" :board="props.item"></disable-board>
@@ -39,7 +38,6 @@ export default {
     return {
       headersBoards: [
         { text: "Board", value: "Boardmodel.name", sortable: true },
-        { text: "MAC", sortable: false },
         { text: "Last Update", sortable: false },
         { text: "State", sortable: false },
         { text: "Actions", sortable: false }

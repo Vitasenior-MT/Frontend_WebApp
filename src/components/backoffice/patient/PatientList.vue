@@ -1,5 +1,5 @@
 <template>
-  <v-card tile id="vitabox_users">
+  <v-card tile id="vitabox_patients">
     
     <v-card-title>
       <span class="headline">Patients</span>
@@ -30,7 +30,7 @@ import { event_bus } from "@/plugins/bus.js";
 import PatientDetails from "@/components/backoffice/patient/PatientDetails.vue";
 
 export default {
-  name: "vitabox_users",
+  name: "vitabox_patients",
   props: {
     vitabox: Object
   },
