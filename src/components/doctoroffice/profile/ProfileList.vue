@@ -46,7 +46,7 @@ export default {
       selected_profile: null,
       headers: [
         {
-          text: "Profile",
+          text: "Measure",
           value: "measure",
           sortable: true,
           class: "headers"

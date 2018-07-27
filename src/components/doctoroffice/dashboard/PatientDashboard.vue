@@ -12,13 +12,13 @@
         <v-spacer></v-spacer>
         <v-tooltip bottom >
           <v-btn slot="activator" color="primary_d" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor)'>
-            <v-icon>fas fa-info-circle</v-icon>
+            <v-icon color="white">fas fa-info-circle</v-icon>
           </v-btn>
           <span>Sensor Details</span>
         </v-tooltip>
       </v-layout>
       <v-alert v-if="norecords" :value="true" color="error" icon="fas fa-exclamation-triangle"> No records </v-alert>
-      <div v-else>
+      <div v-else class="sensorGraphCanvas">
         <v-layout>
           <canvas id="selectedSensorGraph" height="250px"></canvas>
         </v-layout>
@@ -193,46 +193,6 @@ export default {
       );
       event_bus.$emit("waiting", false);
     },
-    // designGraph() {
-    //   this.chart.data.labels = this.records.map(x => {
-    //     return this.formatDate(x.datetime);
-    //   });
-    //   this.chart.data.datasets = [
-    //     {
-    //       label: this.selectedSensorGraph.sensor.Sensormodel.measure,
-    //       data: this.records.map(x => {
-    //         return x.value;
-    //       }),
-    //       backgroundColor: "rgba(71, 183,132,.5)",
-    //       borderColor: "#47b784",
-    //       borderWidth: 3
-    //     },
-    //     {
-    //       label: "minimum acceptable",
-    //       data: Array.from(
-    //         { length: this.records.length },
-    //         i => this.selectedSensorGraph.sensor.Sensormodel.min_acceptable
-    //       ),
-    //       borderWidth: 3,
-    //       fill: false,
-    //       borderColor: "rgba(58, 100, 252, 1)",
-    //       pointRadius: 0
-    //     },
-    //     {
-    //       label: "maximum acceptable",
-    //       data: Array.from(
-    //         { length: this.records.length },
-    //         i => this.selectedSensorGraph.sensor.Sensormodel.max_acceptable
-    //       ),
-    //       borderWidth: 3,
-    //       fill: false,
-    //       borderColor: "rgba(255, 83, 35, 1)",
-    //       pointRadius: 0
-    //     }
-    //   ];
-    //   this.chart.update();
-    //   event_bus.$emit("waiting", false);
-    // },
     formatDate(date) {
       let monthNames = [
         "Jan",
@@ -282,6 +242,9 @@ export default {
   position: relative;
 }
 #graphHeader {
+  background-color: white;
+}
+.sensorGraphCanvas{
   background-color: white;
 }
 </style>

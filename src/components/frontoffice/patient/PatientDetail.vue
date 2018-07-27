@@ -52,59 +52,21 @@
         <v-card dark flat height="100%">
           <v-tabs centered color="primary" dark icons-and-text>
             <v-tabs-slider color="white"></v-tabs-slider>
-            <v-tab href="#tab-1">
+            <v-tab href="#tab-profiles">
               Profiles
               <v-icon>fas fa-clipboard</v-icon>
             </v-tab>
-            <v-tab href="#tab-2">
+            <v-tab href="#tab-doctors">
               Doctors
               <v-icon>fas fa-user-md</v-icon>
             </v-tab>
-            <v-tab href="#tab-3">
+            <v-tab href="#tab-boards">
               Boards
               <v-icon>fas fa-microchip</v-icon>
             </v-tab>
-            <v-tab-item v-for="i in 3" :id="'tab-' + i" :key="i">
-              <v-data-table v-if="i == 1" :headers="headersProfiles" :items="$store.state.patient.Profiles" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
-                <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.measure }}</td>
-                  <td class="text-xs-left">{{ props.item.min }}</td>
-                  <td class="text-xs-left">{{ props.item.max }}</td>
-                </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
-                </template>
-              </v-data-table>  
-              <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
-              <v-data-table v-if="i == 2" :headers="headersDoctors" :items="$store.state.patient.Doctors" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
-                <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.name }}</td>
-                  <td class="text-xs-left">{{ props.item.email }}</td>
-                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                  <td class="justify-center layout px-0">
-                  </td>
-                </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
-                </template>
-              </v-data-table>
-              <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>  
-              <v-data-table v-if="i == 3" :headers="headersBoards" :items="$store.state.patient.Boards" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
-                <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.Boardmodel.name }}<label v-if="props.item.description"> - </label>{{ props.item.description}}</td>
-                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
-                </template>
-              </v-data-table>  
-            </v-tab-item>
+            <v-tab-item id="tab-profiles"><profile-list></profile-list></v-tab-item>
+            <v-tab-item id="tab-doctors"><doctor-list></doctor-list></v-tab-item>
+            <v-tab-item id="tab-boards"><board-list></board-list></v-tab-item>
           </v-tabs>
         </v-card>
       </v-flex>
@@ -119,89 +81,29 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
-import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
+import ProfileList from "@/components/frontoffice/profile/ProfileList.vue";
+import DoctorList from "@/components/frontoffice/patient/DoctorList.vue";
+import BoardList from "@/components/frontoffice/patient/PatientBoardList.vue";
 
 export default {
+  components: {
+    "profile-list": ProfileList,
+    "doctor-list": DoctorList,
+    "board-list": BoardList
+  },
   data() {
     return {
-      options: {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric"
-      },
-      measures: [],
-      dialog: false,
-      headersProfiles: [
-        { text: "Measure", value: "measure", sortable: true },
-        { text: "Min", sortable: false },
-        { text: "Max", sortable: false }
-      ],
-      headersDoctors: [
-        { text: "Doctor", value: "name", sortable: true },
-        { text: "Email", sortable: false },
-        { text: "Since", sortable: false }
-      ],
-      headersBoards: [
-        { text: "Board", value: "Boardmodel.name", sortable: true },
-        { text: "Since", sortable: false }
-      ],
-      editedIndex: -1,
-      editedItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      },
-      defaultItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      }
+
     };
-  },
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
-  },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
-  },
-  mounted() {
-    this.getMeasures();
   },
   methods: {
     calculate_age(dob) {
       dob = new Date(dob);
       var diff_ms = Date.now() - dob.getTime();
       var age_dt = new Date(diff_ms);
-
       return Math.abs(age_dt.getUTCFullYear() - 1970);
-    },
-    getMeasures() {
-      this.measures = [];
-      if (this.$store.state.patient.Boards) {
-        this.$store.state.patient.Boards.forEach(board => {
-          board.Sensors.forEach(sensor => {
-            this.measures.push({ text: sensor.Sensormodel.measure });
-          });
-        });
-      }
     }
   },
-  components: {
-    "add-board": SetBoard,
-    "add-doctor": SetDoctor
-  }
 };
 </script>
 
