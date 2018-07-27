@@ -6,7 +6,7 @@
         <v-flex lg2 md3>
           <v-btn color="primary" dark to="/backoffice/vitabox/register">Register Vitabox</v-btn>
         </v-flex>
-        <v-flex lg10 md9>
+        <v-flex lg9 md8 offset-md1>
             <v-autocomplete :items="vitaboxes" item-text="address" return-object :search-input.sync="search" v-model="select" prepend-icon="fas fa-search" append-icon="fas fa-angle-down" label="Search" cache-items></v-autocomplete>
         </v-flex>
       </v-layout>
@@ -18,29 +18,29 @@
         <v-flex xs12 sm9 md8>
           <table>
             <tr>
-              <th class="text-xs-right"><label class="subheading primary_d--text mx-2">id</label></th>
+              <th class="text-xs-right"><label class="subheading grey--text text--lighten-3 mx-2">id</label></th>
               <th><h3>{{select.id}}</h3></th>
             </tr>
               <tr>
-              <th class="text-xs-right"><label class="subheading primary_d--text mx-2">registered</label></th>
+              <th class="text-xs-right"><label class="subheading grey--text text--lighten-3 mx-2">registered</label></th>
               <th>
                 <h3 v-if="select.registered"><v-icon>fas fa-check</v-icon></h3>
                 <h3 v-else><v-icon>fas fa-times</v-icon></h3>
               </th>
             </tr>
             <tr>
-              <th class="text-xs-right"><label class="subheading primary_d--text mx-2">active</label></th>
+              <th class="text-xs-right"><label class="subheading grey--text text--lighten-3 mx-2">active</label></th>
               <th>
                 <h3 v-if="select.active"><v-icon>fas fa-check</v-icon></h3>
                 <h3 v-else><v-icon>fas fa-times</v-icon></h3>
               </th>
             </tr>
             <tr>
-              <th class="text-xs-right"><label class="subheading primary_d--text mx-2">since</label></th>
+              <th class="text-xs-right"><label class="subheading grey--text text--lighten-3 mx-2">since</label></th>
               <th><h3>{{select.created_at}}</h3></th>
             </tr>
             <tr>
-              <th class="text-xs-right"><label class="subheading primary_d--text mx-2">last alteration</label></th>
+              <th class="text-xs-right"><label class="subheading grey--text text--lighten-3 mx-2">last alteration</label></th>
               <th><h3>{{select.updated_at}}</h3></th>
             </tr>
           </table>
@@ -50,19 +50,19 @@
             <v-flex xs4 sm12>
               <v-bottom-sheet v-model="settings_sheet" inset lazy>
                 <v-btn slot="activator" color="pink" dark><v-icon>fas fa-cogs</v-icon></v-btn>
-                <vitabox-settings :settings="select.settings" @close="settings_sheet=false"></vitabox-settings>
+                <vitabox-settings @close="settings_sheet=false"></vitabox-settings>
               </v-bottom-sheet>
             </v-flex>
             <v-flex xs4 sm12>
               <v-bottom-sheet v-model="patients_sheet" inset lazy>
                 <v-btn slot="activator" color="purple" dark><v-icon>fas fa-users</v-icon></v-btn>
-                <vitabox-patients :item="select" @close="patients_sheet=false"></vitabox-patients>
+                <vitabox-patients :vitabox="select" @close="patients_sheet=false"></vitabox-patients>
               </v-bottom-sheet>
             </v-flex>
             <v-flex xs4 sm12>
               <v-bottom-sheet v-model="boards_sheet" inset lazy>
                 <v-btn slot="activator" color="indigo" dark><v-icon>fas fa-broadcast-tower</v-icon></v-btn>
-                <vitabox-boards :item="select" @close="boards_sheet=false"></vitabox-boards>
+                <vitabox-boards :vitabox="select" @close="boards_sheet=false"></vitabox-boards>
               </v-bottom-sheet>
             </v-flex>
           </v-layout>
@@ -112,6 +112,7 @@ export default {
         .get("/vitabox")
         .then(response => {
           this.vitaboxes = response.data.vitaboxes;
+          this.$store.commit("setVitaboxData", response.data.vitaboxes[0]);
           this.select = response.data.vitaboxes[0];
           event_bus.$emit("waiting", false);
         })
@@ -133,6 +134,7 @@ export default {
   },
   watch: {
     select(val) {
+      this.$store.commit("setVitaboxData", val);
       if (val.latitude && val.longitude) {
         let myLatLng = new google.maps.LatLng(val.latitude, val.longitude);
         this.map = new google.maps.Map(

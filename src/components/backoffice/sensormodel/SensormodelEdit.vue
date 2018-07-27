@@ -11,6 +11,18 @@
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex xs12>
+            <v-text-field :rules="[() => item.measure.length > 1 || 'Measure is required']" label="Measure (application presentation)" v-model="item.measure"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field :rules="[() => item.to_read.length > 5 || 'Measure text is required']" label="Measure (text-to-speech)" v-model="item.to_read"></v-text-field>
+          </v-flex>
+          <v-flex xs12 sm8>
+            <v-text-field :rules="[() => item.tag.length > 3 || 'Measure tag is required']" label="Tag (system tag to measure)" v-model="item.tag"></v-text-field>
+          </v-flex>
+          <v-flex xs12 sm4>
+            <v-text-field label="Measure Unit" v-model="item.unit"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
             <v-text-field :rules="[() => item.transducer.length > 3 || 'Transducer name is required']" label="Transducer name" v-model="item.transducer"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>
@@ -52,7 +64,9 @@ export default {
         this.item.min_acceptable < this.item.max_acceptable &&
         this.item.min_possible < this.item.max_possible &&
         this.item.transducer !== "" &&
-        this.selected_measure !== null
+        this.item.measure !== "" &&
+        this.item.to_read !== "" &&
+        this.item.tag !== ""
       ) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http

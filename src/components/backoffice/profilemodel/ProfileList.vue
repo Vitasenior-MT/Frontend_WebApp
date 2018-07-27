@@ -38,9 +38,9 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import CreateProfile from "@/components/backoffice/profile/ProfileCreate.vue";
-import DeleteProfile from "@/components/backoffice/profile/ProfileDelete.vue";
-import ProfileMeasures from "@/components/backoffice/profile//ProfileMeasures.vue";
+import CreateProfile from "@/components/backoffice/profilemodel/ProfileCreate.vue";
+import DeleteProfile from "@/components/backoffice/profilemodel/ProfileDelete.vue";
+import ProfileMeasures from "@/components/backoffice/profilemodel/ProfileMeasures.vue";
 import ProfileEdit from "./ProfileEdit.vue";
 
 export default {

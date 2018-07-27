@@ -1,5 +1,5 @@
 <template>
-  <v-card tile id="vitabox_users">
+  <v-card tile id="vitabox_patients">
     
     <v-card-title>
       <span class="headline">Patients</span>
@@ -9,26 +9,15 @@
       </v-btn>
     </v-card-title>
 
-    <v-card-actions class="py-0">
-      <add-patient-to-box :box="item" @update="(patient)=>setPatient(patient)"></add-patient-to-box>
-    </v-card-actions>
-
     <v-card-text class="px-5">
-      <v-divider light></v-divider>
-
-      <v-list v-if="patients.length>0">
-        <router-link v-for="patient in patients" :key="patient.id" :to="{name: 'BOPatientDashboard', params: { patient:patient, box:item } }">
-          <v-list-tile two-line @click="()=>{}">
-            <v-list-tile-content>
-              <v-list-tile-title class="raven--text">{{patient.name}}</v-list-tile-title>
-              <v-list-tile-sub-title>age: {{patient.age}}</v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-icon v-if="patient.active" color="secondary">fas fa-heartbeat</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
-        </router-link>
-      </v-list>
+      <v-expansion-panel focusable v-if="patients.length>0" popout>
+        <v-expansion-panel-content v-for="patient in patients" :key="patient.id" expand-icon="fas fa-caret-down">
+          <div slot="header" class="raven--text subheading mb-0">{{patient.name}}</div>
+          <v-card>
+            <patient-details :patient="patient" @remove="()=>patients.splice(patients.indexOf(patient), 1)"></patient-details>
+          </v-card>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
 
       <div v-else class="subheading text-xs-center warning--text">This vitabox has no patients</div>
     </v-card-text>
@@ -38,84 +27,36 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import AddPatient from "@/components/backoffice/patient/AddToVitabox.vue";
+import PatientDetails from "@/components/backoffice/patient/PatientDetails.vue";
 
 export default {
-  name: "vitabox_users",
+  name: "vitabox_patients",
   props: {
-    item: Object
+    vitabox: Object
   },
   data: () => {
     return {
-      patients: [],
-      dialog_remove_patient: false,
-      temp_patient: null
+      patients: []
     };
   },
   created() {
-    event_bus.$emit("waiting", true);
-    event_bus.$data.http
-      .get("/vitabox/" + this.item.id + "/patient")
-      .then(response => {
-        let today = new Date();
-        response.data.patients.map(x => {
-          let birthdate = new Date(x.birthdate);
-          this.patients.push({
-            birthdate: birthdate,
-            age:
-              today.getMonth() < birthdate.getMonth() ||
-              (today.getMonth() === birthdate.getMonth() &&
-                today.getDate() < birthdate.getDate())
-                ? today.getFullYear() - birthdate.getFullYear() - 1
-                : today.getFullYear() - birthdate.getFullYear(),
-            name: x.name,
-            id: x.id,
-            gender: x.gender,
-            since: x.since,
-            active: x.active
-          });
-        });
-        event_bus.$emit("waiting", false);
-      })
-      .catch(error => {
-        if (error.response) {
-          event_bus.$emit("toast", {
-            message: error.response.data,
-            type: "error"
-          });
-        } else {
-          event_bus.$emit("toast", {
-            message: error.message,
-            type: "error"
-          });
-        }
-        event_bus.$emit("waiting", false);
-      });
+    this.getPatients(this.vitabox.id);
   },
   watch: {
-    item(val) {
+    vitabox(val) {
+      this.getPatients(val.id);
+    }
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+    },
+    getPatients(vitabox_id) {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
-        .get("/vitabox/" + val.id + "/patient")
+        .get("/vitabox/" + vitabox_id + "/patient")
         .then(response => {
-          this.patients = [];
-          let today = new Date();
-          response.data.patients.map(x => {
-            let birthdate = new Date(x.birthdate);
-            this.patients.push({
-              birthdate: birthdate,
-              age:
-                today.getMonth() < birthdate.getMonth() ||
-                (today.getMonth() === birthdate.getMonth() &&
-                  today.getDate() < birthdate.getDate())
-                  ? today.getFullYear() - birthdate.getFullYear() - 1
-                  : today.getFullYear() - birthdate.getFullYear(),
-              name: x.name,
-              id: x.id,
-              gender: x.gender,
-              since: x.since
-            });
-          });
+          this.patients = response.data.patients;
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -134,17 +75,8 @@ export default {
         });
     }
   },
-  methods: {
-    close() {
-      this.$emit("close");
-    },
-    setPatient(item) {
-      this.patients.push(item);
-      event_bus.$emit("waiting", false);
-    }
-  },
   components: {
-    "add-patient-to-box": AddPatient
+    "patient-details": PatientDetails
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div id="remove_board">
+  <div id="remove_patient">
     <v-btn flat icon small color="error" @click.native="()=>dialog_remove_board=true">
       <v-icon>fas fa-minus-circle</v-icon>
     </v-btn>
@@ -29,7 +29,7 @@
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "remove_board",
+  name: "remove_patient",
   props: {
     box: Object,
     board: Object

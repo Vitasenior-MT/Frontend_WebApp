@@ -7,9 +7,9 @@
             <v-card-title id="register_title"><p class="title mb-0">Register</p></v-card-title>
             <v-card-text id="register_box">
               <v-form>
-                <v-text-field id="username" v-model="username" prepend-icon="fas fa-user" name="username" label="Username" type="text" required></v-text-field>
-                <v-text-field id="email" v-model="email" prepend-icon="fas fa-envelope" name="email" label="Email" type="text" required></v-text-field>
-                <v-text-field id="password" v-model="password" prepend-icon="fas fa-lock" name="password" label="Password" type="password" required></v-text-field>
+                <v-text-field id="username" v-model="username" prepend-icon="fas fa-user" label="Name" type="text" required></v-text-field>
+                <v-text-field id="email" v-model="email" prepend-icon="fas fa-envelope" label="Email" type="text" required></v-text-field>
+                <v-text-field id="password" v-model="password" prepend-icon="fas fa-lock" label="Password" type="password" required></v-text-field>
               </v-form>
             </v-card-text>
             <v-card-actions>

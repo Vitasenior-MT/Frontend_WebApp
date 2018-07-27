@@ -11,8 +11,8 @@
     <v-card-text>
       <v-divider light></v-divider>
       
-      <template v-if="settings!==null">
-        <code>{{settings}}</code>
+      <template v-if="this.$store.state.vitabox.settings!==null">
+        <code>{{this.$store.state.vitabox.settings}}</code>
         <v-divider light></v-divider>
       </template>
       <div v-else class="subheading text-xs-center warning--text">This vitabox has no settings</div>
@@ -24,9 +24,6 @@
 <script>
 export default {
   name: "vitabox_settings",
-  props: {
-    settings: Object
-  },
   methods: {
     close() {
       this.$emit("close");

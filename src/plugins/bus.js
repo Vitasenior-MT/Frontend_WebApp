@@ -11,6 +11,7 @@ export const event_bus = new Vue({
     url: "https://vitasenior-test.eu-gb.mybluemix.net"
     // url: "http://192.168.161.53:8080"
 
+
   },
   created() {
     this.http = axios.create({

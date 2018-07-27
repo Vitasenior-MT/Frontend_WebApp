@@ -1,35 +1,27 @@
 <template>
-  <v-expansion-panel id="add_patient_to_box" inset>
+  <v-expansion-panel id="add_patient_to_box" inset dark>
     <v-expansion-panel-content hide-actions>
       <div slot="header">
-        <v-btn color="primary" dark><v-icon>fas fa-user-plus</v-icon></v-btn>
+        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
       </div>
 
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-flex xs12 md8>
+            <v-flex xs12 lg6>
               <v-text-field :rules="[() => patient.name.length > 3 || 'Patient name is required']" label="Name" v-model="patient.name"></v-text-field>
             </v-flex>
-            <v-flex xs12 md4>
+            <v-flex xs12 md6 lg3>
               <v-select :rules="[() => patient.gender.length > 1 || 'Patient gender is required']" :items="items" label="Gender" v-model="patient.gender" single-line append-icon="fas fa-angle-down"></v-select>
             </v-flex>
-            <v-flex xs6 md3>
-              <v-text-field :rules="[() => patient.height > 0.5 && patient.height < 3 || 'Invalid patient height value']" label="Height" v-model="patient.height" type="number" step="0.01" suffix="m"></v-text-field>
-            </v-flex>
-            <v-flex xs6 md3>
-              <v-text-field :rules="[() => patient.weight > 20 && patient.weight < 120 || 'Invalid patient weight value']" label="Weight" v-model="patient.weight" type="number" step="0.01" suffix="kg"></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
+            <v-flex xs12 md6 lg3>
               <v-menu ref="menu" lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-right="40" min-width="290px" :return-value.sync="patient.birthdate">
                 <v-text-field slot="activator" :rules="[() => patient.birthdate !== null || 'Patient birthdate is required']" label="Birthdate" v-model="patient.birthdate" append-icon="fas fa-calendar-alt" readonly></v-text-field>
                 <v-date-picker ref="picker" v-model="patient.birthdate" @change="$refs.menu.save(patient.birthdate)" min="1910-01-01" :max="new Date().toISOString().substr(0, 10)" no-title next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left"></v-date-picker>
               </v-menu>
             </v-flex>
             <v-flex sx12>
-              <div class="text-xs-right mt-3">
-                <v-btn dark color="ash" block @click.native="save">Save</v-btn>
-              </div>
+              <v-btn dark color="ash" block @click.native="save">Save</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -55,7 +47,9 @@ export default {
         gender: "",
         height: null,
         weight: null,
-        id: null
+        id: null,
+        since: null,
+        active: false
       },
       items: ["male", "female", "undefined"],
       menu: false
@@ -78,7 +72,7 @@ export default {
           .post("/vitabox/" + this.box.id + "/patient", this.patient)
           .then(response => {
             this.patient.id = response.data.id;
-            // console.log(this.patient);
+            this.patient.since = new Date();
             this.$emit("addpatient", this.patient);
             event_bus.$emit("toast", {
               message: "patient was successfully added to vitabox",

@@ -29,11 +29,6 @@ export default {
       )
     };
   },
-  watch: {
-    value(v) {
-      this.show = v > 0;
-    }
-  },
   mounted() {
     this.value =
       this.$store.state.user.warnings + this.$store.state.user.errors;
@@ -44,8 +39,10 @@ export default {
   },
   methods: {
     showWarnings() {
-      if(this.$store.state.user.is_admin) this.$router.push("/error/list");
+      if (this.$store.state.user.is_admin) this.$router.push("/error/list");
       else this.$router.push("/alert/list");
+      this.value = 0;
+      this.show = false;
     },
     listenSocket() {
       this.socket.on("connect", function() {
@@ -53,7 +50,10 @@ export default {
       });
       this.socket.on("message", function(data) {
         console.log("message: ", data);
-        if (data === "warning" || data === "error") this.value++;
+        if (data == "warning" || data == "error") {
+          this.show = true;
+          this.value++;
+        }
       });
       this.socket.on("disconnect", function() {
         console.log("disconnected");

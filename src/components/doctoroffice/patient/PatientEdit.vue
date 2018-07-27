@@ -1,0 +1,90 @@
+<template>
+  <div id="edit_model">
+    <v-btn icon @click.native="()=>dialog_edit_patient=true"><v-icon color="teal">fas fa-edit</v-icon></v-btn>
+    <v-dialog v-model="dialog_edit_patient" width="500">
+      <v-card>
+        <v-card-title>
+          <span class="headline primary_d--text">Edit Patient Data</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click.native="()=>dialog_edit_patient=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+        </v-card-title>
+        <v-card-text v-if="patient">
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field :rules="[() => parseFloat(patient.weight) > 30 && parseFloat(patient.weight) < 130 || 'invalid weight']" label="Weight" type="number" v-model="patient.weight"></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field :rules="[() =>  parseFloat(patient.height) > 1 && parseFloat(patient.height) < 2.2 || 'invalid height']" label="Height" type="number" v-model="patient.height"></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark color="ash" @click.native="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script>
+import { event_bus } from "@/plugins/bus.js";
+
+export default {
+  name: "edit_model",
+  props: {
+    patient: Object
+  },
+  data: () => {
+    return {
+      dialog_edit_patient: false
+    };
+  },
+  mounted() {
+    this.patient = this.$store.state.patient;
+  },
+  methods: {
+    save() {
+      if (this.patient.height && this.patient.weight) {
+        event_bus.$emit("waiting", true);
+        event_bus.$data.http
+          .put("/patient/" + this.patient.id + "/biometric", {
+            height: this.patient.height,
+            weight: this.patient.weight
+          })
+          .then(response => {
+            this.$store.commit("setPatientData", this.patient);
+            event_bus.$emit("update_patient", this.patient);
+            event_bus.$emit("toast", {
+              message: "patient profile was successfully updated",
+              type: "success"
+            });
+            this.dialog_edit_patient = false;
+            event_bus.$emit("waiting", false);
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
+            } else {
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
+            }
+            event_bus.$emit("waiting", false);
+          });
+      } else {
+        event_bus.$emit("toast", {
+          message: "fields should not be empty",
+          type: "error"
+        });
+      }
+    }
+  }
+};
+</script>

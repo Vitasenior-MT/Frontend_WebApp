@@ -1,10 +1,9 @@
 <template>
-  <v-expansion-panel id="add_board_to_patient" popout>
+  <v-expansion-panel id="add_board_to_patient" popout dark>
     <v-expansion-panel-content hide-actions>
 
-      <div slot="header" id="add_board_to_patient_header">
-        <label class="title">Boards</label>
-        <v-btn color="primary" id="add_board_to_patient_icon" class="mt-0" small icon><v-icon>fas fa-plus-circle</v-icon></v-btn>
+      <div slot="header">
+        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
       </div>
 
       <v-form>
@@ -93,14 +92,3 @@ export default {
   }
 };
 </script>
-
-<style>
-#add_board_to_patient_header {
-  position: relative;
-  display: inline;
-}
-#add_board_to_patient_icon {
-  position: absolute;
-  right: 0;
-}
-</style>

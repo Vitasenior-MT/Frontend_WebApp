@@ -1,17 +1,25 @@
 <template>
-  <v-expansion-panel id="add_board_to_box" inset>
+  <v-expansion-panel id="add_board_to_box" inset dark class="mx-0">
     <v-expansion-panel-content hide-actions>
       <div slot="header">
-        <v-btn color="primary"><v-icon>fas fa-plus-circle</v-icon></v-btn>
+        <v-btn color="primary"><v-icon>fas fa-plus</v-icon></v-btn>
       </div>
 
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-flex sm6 md3><v-text-field :mask="'nn:nn:nn:nn:nn:nn:nn:nn'" :rules="[() => board.mac_addr.length > 1 || 'Board Mac address is required']" label="MAC address" v-model="board.mac_addr" type="text"></v-text-field></v-flex>
-            <v-flex sm6 md3><v-text-field :rules="[() => board.password.length > 1 || 'Board password is required']" label="Password" v-model="board.password"  type="password" append-icon="fas fa-lock"></v-text-field></v-flex>
-            <v-flex sm8 md4><v-text-field label="(optional) description" v-model="board.description"></v-text-field></v-flex>
-            <v-flex sm4 md2><v-btn block class=" mt-3" dark color="ash" @click.native="save">Save</v-btn></v-flex>
+            <v-flex sm6 md4>
+              <v-text-field :mask="'nn:nn:nn:nn:nn:nn:nn:nn'" :rules="[() => board.mac_addr.length > 1 || 'Board Mac address is required']" label="MAC address" v-model="board.mac_addr" type="text"></v-text-field>
+            </v-flex>
+            <v-flex sm6 md4>
+              <v-text-field :rules="[() => board.password.length > 1 || 'Board password is required']" label="Password" v-model="board.password"  type="password" append-icon="fas fa-lock"></v-text-field>
+            </v-flex>
+            <v-flex xs12 md4>
+              <v-text-field label="(optional) description" v-model="board.description"></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-btn block dark color="ash" @click.native="save">Save</v-btn>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-form>

@@ -59,7 +59,7 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import SensorDetail from "../sensor/SensorDetail.vue";
+import SensorDetail from "@/components/doctoroffice/sensor/SensorDetail.vue";
 
 export default {
   data() {

@@ -6,7 +6,7 @@
         <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
       </v-card-title>
 
-      <v-data-table :headers="headers" :search="search" :items="users" class="elevation-1" sort-icon="fas fa-angle-down" :pagination.sync="pagination" hide-actions>
+      <v-data-table :headers="headers" :search="search" :items="users" class="elevation-1" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[10]">
         <template slot="items" slot-scope="props">
           <td>{{ props.item.name }}</td>
           <td>{{ props.item.id }}</td>
@@ -16,9 +16,6 @@
           </td>
         </template>
       </v-data-table>
-      <div class="text-xs-center pt-2">
-        <v-pagination v-model="pagination.page" :length="pages" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left"></v-pagination>
-      </div>
     </v-card>
 
     <v-bottom-sheet v-model="dialog_get_logs" inset>
@@ -62,7 +59,6 @@ export default {
       users: [],
       dialog_get_logs: false,
       temp_user: null,
-      pagination: {}
     };
   },
   computed: {

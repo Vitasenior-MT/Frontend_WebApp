@@ -15,7 +15,7 @@
         </v-flex>
     </v-layout>
     <v-layout row wrap class="pb-1">
-        <v-flex md12 lg2 class="pa-0">
+        <v-flex md12 lg4 class="pa-0">
           <v-layout fill-height>
             <v-card dark width="100%" height="100%" class="text-xs-center" flat>
               <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
@@ -48,14 +48,9 @@
             </v-card>
           </v-layout>
         </v-flex>
-        <v-flex md12 lg10>
+        <v-flex md12 lg8>
         <v-card dark flat height="100%">
-          <v-tabs
-            centered
-            color="primary"
-            dark
-            icons-and-text
-          >
+          <v-tabs centered color="primary" dark icons-and-text>
             <v-tabs-slider color="white"></v-tabs-slider>
             <v-tab href="#tab-1">
               Profiles
@@ -69,42 +64,21 @@
               Boards
               <v-icon>fas fa-microchip</v-icon>
             </v-tab>
-            <v-tab-item
-              v-for="i in 3"
-              :id="'tab-' + i"
-              :key="i"
-            >
-              <v-data-table
-                v-if="i == 1"
-                :headers="headersProfiles"
-                :items="$store.state.patient.Profiles"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+            <v-tab-item v-for="i in 3" :id="'tab-' + i" :key="i">
+              <v-data-table v-if="i == 1" :headers="headersProfiles" :items="$store.state.patient.Profiles" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
                 <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.id }}</td>
                   <td class="text-xs-left">{{ props.item.measure }}</td>
                   <td class="text-xs-left">{{ props.item.min }}</td>
                   <td class="text-xs-left">{{ props.item.max }}</td>
-                  <td class="justify-center layout px-0">
-                  </td>
                 </template>
                 <template slot="no-data">
                   <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      Sorry, nothing to display here 
+                      No data to display here 
                   </v-alert>
                 </template>
               </v-data-table>  
               <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
-              <v-data-table
-                v-if="i == 2"
-                :headers="headersDoctors"
-                :items="$store.state.patient.Doctors"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+              <v-data-table v-if="i == 2" :headers="headersDoctors" :items="$store.state.patient.Doctors" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.name }}</td>
                   <td class="text-xs-left">{{ props.item.email }}</td>
@@ -114,33 +88,24 @@
                 </template>
                 <template slot="no-data">
                   <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      Sorry, nothing to display here 
+                      No data to display here 
                   </v-alert>
                 </template>
               </v-data-table>
               <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>  
-              <v-data-table
-                v-if="i == 3"
-                :headers="headersBoards"
-                :items="$store.state.patient.Boards"
-                hide-actions
-                class="elevation-1"
-                dark
-                >
+              <v-data-table v-if="i == 3" :headers="headersBoards" :items="$store.state.patient.Boards" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
                 <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
-                  <td class="text-xs-left">{{ props.item.description }}</td>
-                  <td class="text-xs-left">{{ props.item.mac_addr }}</td>
-                  <td class="text-xs-left">{{ new Date(props.item.updated_at).toLocaleDateString("pt-pt", options) }}</td>
+                  <td class="text-xs-left">{{ props.item.Boardmodel.name }}<label v-if="props.item.description"> - </label>{{ props.item.description}}</td>
+                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
                 </template>
                 <template slot="no-data">
                   <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      Sorry, nothing to display here 
+                      No data to display here 
                   </v-alert>
                 </template>
               </v-data-table>  
             </v-tab-item>
-          </v-tabs>   
+          </v-tabs>
         </v-card>
       </v-flex>
     </v-layout>
@@ -160,26 +125,29 @@ import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 export default {
   data() {
     return {
-      options: { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' },
+      options: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric"
+      },
       measures: [],
       dialog: false,
       headersProfiles: [
-        { text: "Profile", value: "profile", sortable: false, class: "headers" },
-        { text: "Measure", value: "measure", sortable: false, class: "headers" },
-        { text: "Min", value: "min", sortable: false, class: "headers" },
-        { text: "Max", value: "max", sortable: false, class: "headers" },
-        { text: "Actions", value: "actions", sortable: false, class: "headers" }
+        { text: "Measure", value: "measure", sortable: true },
+        { text: "Min", sortable: false },
+        { text: "Max", sortable: false }
       ],
       headersDoctors: [
-        { text: "Doctor", value: "doctor", sortable: false, class: "headers" },
-        { text: "email", value: "email", sortable: false, class: "headers" },
-        { text: "Since", value: "since", sortable: false, class: "headers" }
+        { text: "Doctor", value: "name", sortable: true },
+        { text: "Email", sortable: false },
+        { text: "Since", sortable: false }
       ],
       headersBoards: [
-        { text: "Board", value: "board", sortable: false, class: "headers" },
-        { text: "Description", value: "description", sortable: false, class: "headers" },
-        { text: "Mac", value: "mac", sortable: false, class: "headers" },
-        { text: "Last Update", value: "last_update", sortable: false, class: "headers" }
+        { text: "Board", value: "Boardmodel.name", sortable: true },
+        { text: "Since", sortable: false }
       ],
       editedIndex: -1,
       editedItem: {
@@ -203,9 +171,6 @@ export default {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     }
   },
-  created() {
-    this.getDoctors();
-  },
   watch: {
     dialog(val) {
       val || this.close();
@@ -224,30 +189,13 @@ export default {
     },
     getMeasures() {
       this.measures = [];
-      this.$store.state.patient.Boards.forEach(board => {
-        board.Sensors.forEach(sensor => {
-          this.measures.push({ text: sensor.Sensormodel.measure });
+      if (this.$store.state.patient.Boards) {
+        this.$store.state.patient.Boards.forEach(board => {
+          board.Sensors.forEach(sensor => {
+            this.measures.push({ text: sensor.Sensormodel.measure });
+          });
         });
-      });
-    },
-    close() {
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(
-          this.$store.state.patient.Profiles[this.editedIndex],
-          this.editedItem
-        );
-      } else {
-        this.$store.state.patient.Profiles.push(this.editedItem);
       }
-      this.close();
     }
   },
   components: {
