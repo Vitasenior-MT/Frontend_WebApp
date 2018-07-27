@@ -1,5 +1,5 @@
 <template>
-    <v-container class="pt-1 pl-1 pr-1" dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor">
+    <v-container class="pa-1" dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor">
       <v-flex class="pa-1" v-if="getAverageValue() <= sensors[0].sensor.Sensormodel.min_acceptable || getAverageValue() >= sensors[0].sensor.Sensormodel.max_acceptable">
         <v-layout row >
           <v-flex xs4 sm3 md3 class="pa-0">  

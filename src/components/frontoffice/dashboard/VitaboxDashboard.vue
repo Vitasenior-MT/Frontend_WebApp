@@ -1,24 +1,15 @@
 <template>
-  <v-container class="pl-0 pr-0" style="max-width:100%;">
-    <v-layout wrap row>
-      <v-flex xs12>
-        <v-card class="pt-2" dark flat v-if="patients.length > 0">
-          <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
-            <v-carousel-item v-for="item in patients" :key="item.id" transition="fade" reverse-transition="fade">
-              <patientDashboard :selectedPatient="selectedPatient(item)"></patientDashboard>
-            </v-carousel-item>
-          </v-carousel>
-        </v-card>
+  <v-container class="pa-0" style="max-width:100%;">
+    <v-layout wrap row class="pt-2">
+      <v-flex xs12 v-if="patients.length > 0">
+        <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
+          <v-carousel-item v-for="item in patients" :key="item.id">
+            <patientDashboard :selectedPatient="item"></patientDashboard>
+          </v-carousel-item>
+        </v-carousel>
       </v-flex>
       <v-flex class="pt-2" xs12>
-        <v-card class="pb-3 pt-2" dark flat>
-          <v-flex xs12>
-            <v-layout class="text-md-center" style="height:100%">
-              <v-card class="pt-5" style="width: 100%;" flat>
-                <h2 class="main-title primary_l--text">Envorinmental Sensors</h2>
-              </v-card>
-            </v-layout>
-          </v-flex>
+        <v-card class="py-2" dark flat>
           <v-layout wrap>
             <v-flex v-if="tempSensors.every(checkNulls) > 0">
               <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
@@ -83,9 +74,6 @@ export default {
         .get("/vitabox/" + vitabox_id + "/patient")
         .then(response => {
           this.patients = response.data.patients;
-          if (this.patients.length > 0) {
-            this.patientBoards = this.patients[0].Boards;
-          }
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -157,10 +145,6 @@ export default {
     },
     checkNulls(sensors) {
       return sensors.sensor != null;
-    },
-    selectedPatient(patientData) {
-      this.patientBoards = patientData.Boards;
-      return patientData;
     }
   }
 };

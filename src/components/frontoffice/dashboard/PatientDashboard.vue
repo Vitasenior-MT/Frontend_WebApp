@@ -1,44 +1,32 @@
 <template>
-  <v-container class="gridPatient">
-    <v-layout v-if="boardSensors.length > 0" row wrap >
-      <v-flex xs12 class="pa-0">
-        <v-layout class="text-md-center">
-          <v-card class="pb-3" width="100%" flat>
-            <v-card-title primary-title>
-              <div>
-                <h1 class="main-title mb-0 primary_l--text">
-                  Patient 
-                  <span class="thin">
-                    {{ this.selectedPatient.name}}
-                  </span>
-                </h1>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-layout>
-      </v-flex>
-       <v-flex sm12 md4 lg2 class="patientProfile">
-        <v-layout column fill-height>
-          <v-avatar class="patientAvatar" size="100%"><img src="@/assets/logo.png"></v-avatar>
-          <br>
-          <v-card flat class="patientDetailsSelector text-xs-center" @click.native='goToPatientProfile(selectedPatient)'>
-            <v-layout wrap>
-              <v-flex lg3 class="text-xs-right">
-                <v-icon class="primary_d--text">fa fa-info-circle</v-icon>
+  <div class="pb-2">
+    <v-card color="transparent" flat>
+      <v-layout class="pb-0" wrap>
+          <v-card dark height="100%" width="100%" class="vitaboxDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
+            <v-layout wrap fill-height >
+              <v-flex md2 class="text-xs-center pt-3 pb-3">
+                <v-avatar tile size="70"><img src="@/assets/logo.png"></v-avatar>
               </v-flex>
-              <v-flex lg9 class="text-xs-center">
-                <span >Press for more details</span>
+              <v-flex md9 class="pt-3 pb-3">
+                <p class="display-1 primary_l--text mb-2">{{ this.selectedPatient.name}}</p>
+                <p class="asg--text mb-1">{{ this.selectedPatient.id}}</p>
               </v-flex>
+                <v-flex xs1>
+                  <v-tooltip bottom >
+                    <v-icon slot="activator" class="primary_d--text pt-2">fa fa-info-circle</v-icon>
+                    <span>Patient Details</span>
+                  </v-tooltip>
+                </v-flex>
             </v-layout>
           </v-card>
-        </v-layout>
-      </v-flex>
-      <v-flex v-if="selectedSensorGraph != null" class="hidden-sm-and-down" md8 lg10>
-          <v-card class="bioGraphCard" light flat>
-            <v-layout row>
-              <v-avatar tile class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-              <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
+      </v-layout>
 
+      <v-layout wrap fill-height v-if="selectedSensorGraph != null" class="graphContainer">
+        <v-flex xs12>
+          <v-card>
+            <v-layout row>
+                <v-avatar tile class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
+              <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
               <v-spacer></v-spacer>
                 <v-icon small>fas fa-calendar-alt</v-icon>
                 <span class="pa-3"> Última actualização:  {{ this.lastrecord }} </span>
@@ -50,6 +38,10 @@
                 <span>Sensor Details</span>
               </v-tooltip>
             </v-layout>
+          </v-card>
+        </v-flex>
+        <v-flex class="hidden-sm-and-down" lg7>
+          <v-card class="bioGraphCard" light flat>
             <div v-if="records" id="bioGraph">
               <canvas :id="this.selectedSensorGraph.sensor.id"></canvas>
             </div>
@@ -64,70 +56,33 @@
               </v-flex>
             </v-layout>
           </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout v-else wrap>
-       <v-flex xs12 class="pa-0">
-        <v-layout class="text-md-center">
-          <v-card class="pb-5 pt-2" width="100%" flat>
-            <v-card-title primary-title>
-              <div>
-                <h1 class="main-title  primary_l--text">
-                  Patient 
-                  <span class="thin">
-                    {{ this.selectedPatient.name}}
-                  </span>
-                </h1>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-layout>
-      </v-flex>
-      <v-flex sm12 md4 lg2 class="patientProfile">
-        <v-layout column fill-height>
-          <v-avatar class="patientAvatar" size="100%"><img src="@/assets/logo.png"></v-avatar>
-          <br>
-          <v-card flat class="patientDetailsSelector text-xs-center" @click.native='goToPatientProfile(selectedPatient)'>
-            <v-layout wrap>
-              <v-flex lg3 class="text-xs-right">
-                <v-icon class="primary_d--text">fa fa-info-circle</v-icon>
-              </v-flex>
-              <v-flex lg9 class="text-xs-center">
-                <span >Press for more details</span>
-              </v-flex>
-            </v-layout>
-          </v-card>
-        </v-layout>
-      </v-flex>
-      <v-flex sm12 md8 lg10>
+        </v-flex>
+        <v-flex lg5>
+          <v-layout wrap>
+            <v-flex xs6 sm4 md3 lg6 xl4 class="pa-0" v-for="item in boardSensors" :key="item.id">
+              <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
+                <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+                  <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
+                    <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+                    <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+      <v-layout v-else class="mx-5">
         <v-card light height="100%" class="text-md-center">
           <v-card-title primary class="pt-5 title">This patient does not have biometric data associated</v-card-title>
           <v-card-text primary>Sorry</v-card-text>
         </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout wrap justify-center class="pt-1">
-      <v-flex xs12 sm12 md4 lg3 v-for="item in boardSensors" :key="item.id">
-        <v-list light class="py-0">
-          <v-list-tile class="px-0 py-2 patientBoardSelector" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
-            <v-list-tile-avatar>
-              <v-avatar tile><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
-              <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-          <!-- <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="showGraph(item)">
-            <v-avatar tile class="py-5 px-3"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-            <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</span>
-            <br>
-            <span class="pl-5 primary--text">{{ item.sensor.Sensormodel.measure }}</span>
-          </v-card> -->
-      </v-flex>
-    </v-layout> 
-  </v-container>
+      </v-layout>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -206,8 +161,11 @@ export default {
           this.records = response.data.records.sort(this.compare);
           this.page += page;
           this.designGraph();
-          this.lastrecord = this.records[this.records.length-1].datetime;
-          this.lastrecord = new Date(this.lastrecord).toLocaleDateString("pt-pt", this.options);
+          this.lastrecord = this.records[this.records.length - 1].datetime;
+          this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
+            "pt-pt",
+            this.options
+          );
         })
         .catch(error => {
           if (error.response) {
@@ -326,54 +284,40 @@ export default {
     goToPatientProfile(patientData) {
       this.$store.commit("setPatientData", patientData);
       this.$router.push("/frontoffice/patient/detail");
-    },  
-    verifyValue(sensor){
-      // this.selectedPatient.Profiles.filter(x=>x.tag===sensor)
-      // console.log(sensor);
-      // console.log(this.selectedPatient);
-      return sensor.Sensormodel.tag;
+    },
+    verifyValue(sensor) {
+      let profile = this.selectedPatient.Profiles.filter(
+        x => x.tag === sensor.Sensormodel.tag
+      )[0];
+      if (
+        sensor.last_values &&
+        profile.max > sensor.last_values[sensor.last_values.length - 1] &&
+        profile.min < sensor.last_values[sensor.last_values.length - 1]
+      )
+        return "success";
+      else return "error";
     }
   }
 };
 </script>
 
 <style>
-.gridPatient {
-  padding-left: 45px;
-  padding-top: 0px;
-  padding-bottom: 20px;
-  padding-right: 40px;
-  max-width: 100%; 
-}
-
 .patientDetailsSelector {
-  -moz-box-shadow: inset 0 0 10px #000000;
-  -webkit-box-shadow: inset 0 0 10px #000000;
-  box-shadow: inset 0 0 5px #000000;
+  position: absolute;
   width: 100%;
-  padding-bottom: 15px;
-  padding-top:15px;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
-.patientDetailsSelector:hover {
-  cursor: pointer;
-  background-color: #5b5b5b !important;
-}
-
-.patientBoardSelector {
-  -moz-box-shadow: inset 0 0 10px #000000;
-  -webkit-box-shadow: inset 0 0 10px #000000;
-  box-shadow: inset 0 0 5px #000000;
-}
-
-.patientBoardSelector:hover {
-  cursor: pointer;
-  background-color: #5b5b5b !important;
+.graphContainer {
+  padding: 0 35px;
 }
 
 .bioAvatar {
   padding-top: 10%;
-  padding-left:10px;
+  padding-left: 10px;
 }
 
 .bioLogo {
@@ -381,22 +325,18 @@ export default {
   width: 40px;
 }
 
-.bioGraphCard{
-  padding-top:0px; 
-  padding-left:0px; 
-  padding-bottom:0px
+.bioGraphCard {
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-bottom: 0px;
 }
 
-#bioGraph{
-  height:250px; 
-  position:relative;
+#bioGraph {
+  height: 250px;
+  position: relative;
 }
 
-.patientProfile{
-  padding: 0px;
-}
-
-.patientAvatar{
-  padding: 5px;
+.bioGraphAvatarCard {
+  min-width: 40px;
 }
 </style>

@@ -34,13 +34,18 @@
         </v-layout>
       </div>
       <v-layout wrap justify-center class="pt-1 ml-1 mb-1">
-        <v-flex xs12 sm12 md4 lg2 v-for="item in boardSensors" :key="item.id">
-          <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="getValues(0,item)">
-            <v-avatar tile class="bioAvatar" style="padding-left:10px;"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-            <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</span>
-            <br>
-            <span class="pl-5 primary--text">{{ item.sensor.Sensormodel.measure }}</span>
-          </v-card>
+        <v-flex xs12 sm12 md4 lg3 v-for="item in boardSensors" :key="item.id">
+          <v-list light class="py-0">
+            <v-list-tile class="px-0 py-2 patientBoardSelector" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+              <v-list-tile-avatar>
+                <v-avatar tile><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+                <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-flex>
       </v-layout>
     </v-card>
@@ -272,6 +277,18 @@ export default {
       this.$store.commit("setBoardData", boardData);
       this.$store.commit("setSensorData", sensorData);
       this.$router.push("/doctoroffice/board/detail");
+    },
+    verifyValue(sensor) {
+      let profile = this.patient.Profiles.filter(
+        x => x.tag === sensor.Sensormodel.tag
+      )[0];
+      if (
+        sensor.last_values &&
+        profile.max > sensor.last_values[sensor.last_values.length - 1] &&
+        profile.min < sensor.last_values[sensor.last_values.length - 1]
+      )
+        return "success";
+      else return "error";
     }
   }
 };
