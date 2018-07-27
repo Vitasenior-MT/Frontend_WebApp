@@ -22,7 +22,7 @@
         <v-layout>
           <canvas id="selectedSensorGraph" height="250px"></canvas>
         </v-layout>
-        <v-layout row wrap>
+        <v-layout id="graphArrows" row wrap>
           <v-flex class="py-0">
             <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1, null)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
             <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
@@ -37,7 +37,7 @@
         <v-flex xs12 sm12 md4 lg2 v-for="item in boardSensors" :key="item.id">
           <v-card class="patientBoardSelector" light flat style="height:100%; padding-bottom:10px;" @click.native="getValues(0,item)">
             <v-avatar tile class="bioAvatar" style="padding-left:10px;"><img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-            <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1] : 'none' }}</span>
+            <span class="title" style="color:#3faf7d; padding-left:10px;">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</span>
             <br>
             <span class="pl-5 primary--text">{{ item.sensor.Sensormodel.measure }}</span>
           </v-card>
@@ -278,10 +278,13 @@ export default {
 </script>
 
 <style>
-#recordsChart {
-  position: relative;
-}
 #graphHeader {
+  background-color: white;
+}
+#selectedSensorGraph {
+  background-color: white;
+}
+#graphArrows {
   background-color: white;
 }
 </style>
