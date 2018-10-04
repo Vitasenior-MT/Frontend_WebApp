@@ -96,5 +96,6 @@ export default {
 <style>
 #boards_list{
   overflow-y: scroll;
+  height: 520px;
 }
 </style>

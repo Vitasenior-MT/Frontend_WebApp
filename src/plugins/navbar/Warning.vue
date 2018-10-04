@@ -20,8 +20,8 @@ export default {
       value: 0,
       socket: socketio(
         process.env.NODE_ENV === "production"
-          ? "https://vitasenior-worker.eu-gb.mybluemix.net"
-          : "http://192.168.161.224:8000/",
+          ? "https://vitasenior-ws.eu-gb.mybluemix.net"
+          : "http://192.168.161.109:8008/",
         {
           query: { token: this.$store.state.user.token },
           reconnection: true
@@ -45,20 +45,23 @@ export default {
       this.show = false;
     },
     listenSocket() {
-      this.socket.on("connect", function() {
+      this.socket.on("connect", () => {
         console.log("connected");
       });
-      this.socket.on("message", function(data) {
-        console.log("message: ", data);
-        if (data == "warning" || data == "error") {
+      this.socket.on("message", data => {
+        if (
+          data.content == "warning_env" ||
+          data.content == "warning_bio" ||
+          data.content == "error"
+        ) {
           this.show = true;
-          this.value++;
+          this.value = this.value + 1;
         }
       });
-      this.socket.on("disconnect", function() {
+      this.socket.on("disconnect", () => {
         console.log("disconnected");
       });
-      this.socket.on("unauthorized", function(error) {
+      this.socket.on("unauthorized", error => {
         if (
           error.data.type == "UnauthorizedError" ||
           error.data.code == "invalid_token"

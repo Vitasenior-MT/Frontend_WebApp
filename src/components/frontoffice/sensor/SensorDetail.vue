@@ -24,7 +24,7 @@
               <img v-if="selectedSensor.Sensormodel.measure == 'temperatura'" src="@/assets/temp_icon.svg">
               <img v-if="selectedSensor.Sensormodel.measure == 'humidade'" src="@/assets/humi_icon.svg">
               <img v-if="selectedSensor.Sensormodel.measure == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
-              <img v-if="selectedSensor.Sensormodel.measure == 'CO2'" src="@/assets/dioxi_icon.svg">
+              <img v-if="selectedSensor.Sensormodel.measure == 'CO2'" src="@/assets/diox_icon.svg">
             </v-avatar>
             <span class="pl-2 pt-3 title primary--text">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
             <v-spacer></v-spacer>
@@ -150,6 +150,7 @@ export default {
           )
           .then(response => {
             this.records = response.data.records.sort(this.compare);
+            console.log(this.records);
             this.page += page;
             this.designGraph();
             this.lastrecord = this.records[this.records.length - 1].datetime;

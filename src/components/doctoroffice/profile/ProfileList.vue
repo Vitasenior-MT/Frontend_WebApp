@@ -1,6 +1,6 @@
 <template>
   <content id="profile_list">
-    <v-card dark flat height="100%">
+    <v-card dark flat height="391">
       <v-card-title  class="pl-0">
         <v-btn color="primary" dark @click="()=>dialog_define_profile=true" class="mb-2">Define Profile</v-btn>
         <v-spacer></v-spacer>

@@ -1,19 +1,11 @@
 <template>
   <v-content>
-    <v-tabs
-      centered
-      color="primary"
-      dark
-      icons-and-text
-    >
+    <v-tabs centered color="primary" dark icons-and-text>
       <v-tabs-slider color="white"></v-tabs-slider>
-      <v-tab href="#tab-1">
-        Warnings
-        <v-icon>fas fa-exclamation-triangle</v-icon>
-      </v-tab>
+      <v-tab href="#tab-1">Warnings <v-icon>fas fa-exclamation-triangle</v-icon></v-tab>
       <v-tab-item id="tab-1">
         <v-list dark three-line>
-          <v-layout class="warningSelector" v-for="item in warnings" :key="item" wrap>
+          <v-layout class="warningSelector" v-for="(item, index) in warnings" :key="index" wrap>
             <v-flex xs12 class="text-md-left pa-0">
               <v-divider class="vitaboxDivider"></v-divider>
             </v-flex>

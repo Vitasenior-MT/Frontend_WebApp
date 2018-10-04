@@ -9,7 +9,7 @@
       </v-btn>
     </v-card-title>
 
-    <v-card-text class="px-5">
+    <v-card-text class="px-5" id="patients_list">
       <v-expansion-panel focusable v-if="patients.length>0" popout>
         <v-expansion-panel-content v-for="patient in patients" :key="patient.id" expand-icon="fas fa-caret-down">
           <div slot="header" class="raven--text subheading mb-0">{{patient.name}}</div>
@@ -81,3 +81,9 @@ export default {
 };
 </script>
 
+<style>
+#patients_list{
+  overflow-y: scroll;
+  height: 520px;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="edit_model">
+  <div id="edit_model" class="pl-2">
     <v-btn icon @click.native="()=>dialog_edit_patient=true"><v-icon color="teal">fas fa-edit</v-icon></v-btn>
     <v-dialog v-model="dialog_edit_patient" width="500">
       <v-card>

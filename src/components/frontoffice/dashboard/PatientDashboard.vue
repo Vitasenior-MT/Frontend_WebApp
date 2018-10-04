@@ -1,6 +1,5 @@
 <template>
-  <div class="pb-2">
-    <v-card color="transparent" flat>
+    <v-card color="transparent" class="pb-1" flat>
       <v-layout class="pb-0" wrap>
           <v-card dark height="100%" width="100%" class="vitaboxDetailsSelector" @click.native='goToPatientProfile(selectedPatient)'>
             <v-layout wrap fill-height >
@@ -21,11 +20,11 @@
           </v-card>
       </v-layout>
 
-      <v-layout wrap fill-height v-if="selectedSensorGraph != null" class="graphContainer">
-        <v-flex xs12>
+      <v-layout wrap v-if="selectedSensorGraph != null" class="graphContainer" dark>
+        <v-flex xs12 class="pb-2 pt-1">
           <v-card>
             <v-layout row>
-                <v-avatar tile class="pa-2"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
+              <v-avatar tile class="pl-3"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
               <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
               <v-spacer></v-spacer>
                 <v-icon small>fas fa-calendar-alt</v-icon>
@@ -40,7 +39,7 @@
             </v-layout>
           </v-card>
         </v-flex>
-        <v-flex class="hidden-sm-and-down" lg7>
+        <v-flex class="hidden-sm-and-down pr-1 pb-1 pt-0" md9>
           <v-card class="bioGraphCard" light flat>
             <div v-if="records" id="bioGraph">
               <canvas :id="this.selectedSensorGraph.sensor.id"></canvas>
@@ -57,9 +56,9 @@
             </v-layout>
           </v-card>
         </v-flex>
-        <v-flex lg5>
+        <v-flex md3 class="hidden-sm-and-down">
           <v-layout wrap>
-            <v-flex xs6 sm4 md3 lg6 xl4 class="pa-0" v-for="item in boardSensors" :key="item.id">
+            <v-flex xs6 sm4 md12 class="pa-0" v-for="item in boardSensors.slice(0, 5)" :key="item.id">
               <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
                 <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
                   <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
@@ -74,6 +73,32 @@
             </v-flex>
           </v-layout>
         </v-flex>
+        <v-flex xs6 sm4 md3 class="pb-1 pl-0 pr-0 hidden-sm-and-down" v-for="item in boardSensors.slice(5)" :key="item.id">
+          <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
+            <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+              <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
+                <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+                <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-flex>
+        <v-flex xs6 sm4 md3 class="pb-2 pl-0 pr-0 hidden-md-and-up" v-for="item in boardSensors" :key="item.id">
+          <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
+            <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+              <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
+                <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+                <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-flex>
       </v-layout>
       <v-layout v-else class="mx-5">
         <v-card light height="100%" class="text-md-center">
@@ -82,7 +107,6 @@
         </v-card>
       </v-layout>
     </v-card>
-  </div>
 </template>
 
 <script>
@@ -326,9 +350,8 @@ export default {
 }
 
 .bioGraphCard {
-  padding-top: 0px;
-  padding-left: 0px;
-  padding-bottom: 0px;
+  padding: 0px;
+  height: 100%;
 }
 
 #bioGraph {

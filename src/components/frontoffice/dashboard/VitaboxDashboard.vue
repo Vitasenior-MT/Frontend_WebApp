@@ -1,32 +1,26 @@
 <template>
   <v-container class="pa-0" style="max-width:100%;">
-    <v-layout wrap row class="pt-2">
-      <v-flex xs12 v-if="patients.length > 0">
-        <v-carousel class="patientCarousel" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
-          <v-carousel-item v-for="item in patients" :key="item.id">
-            <patientDashboard :selectedPatient="item"></patientDashboard>
-          </v-carousel-item>
-        </v-carousel>
-      </v-flex>
-      <v-flex class="pt-2" xs12>
-        <v-card class="py-2" dark flat>
-          <v-layout wrap>
-            <v-flex v-if="tempSensors.every(checkNulls) > 0">
-              <envBoardDashboard :sensors="tempSensors" :type="'temperatura (ºC)'"></envBoardDashboard>
-            </v-flex>
-            <v-flex v-if="humiSensors.every(checkNulls) > 0">
-              <envBoardDashboard :sensors="humiSensors" :type="'humidade (%)'"></envBoardDashboard>
-            </v-flex>
-            <v-flex v-if="monoSensors.every(checkNulls) > 0">
-              <envBoardDashboard :sensors="monoSensors" :type="'monox. carbono (ppm)'"></envBoardDashboard>
-            </v-flex>
-            <v-flex v-if="dioxiSensors.every(checkNulls) > 0">
-              <envBoardDashboard :sensors="dioxiSensors" :type="'dioxi. carbono (ppm)'"></envBoardDashboard>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
+    <v-carousel v-if="patients.length > 0" class="patientCarousel mt-2" lazy :cycle="false" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" hide-delimiters>
+      <v-carousel-item v-for="item in patients" :key="item.id">
+        <patientDashboard :selectedPatient="item"></patientDashboard>
+      </v-carousel-item>
+    </v-carousel>
+    <v-card class="py-2 mt-2" dark flat>
+      <v-layout wrap>
+        <v-flex xs3 v-if="tempSensors.every(checkNulls) > 0">
+          <envBoardDashboard :sensors="tempSensors" :type="'temp'"></envBoardDashboard>
+        </v-flex>
+        <v-flex xs3 v-if="humiSensors.every(checkNulls) > 0">
+          <envBoardDashboard :sensors="humiSensors" :type="'humi'"></envBoardDashboard>
+        </v-flex>
+        <v-flex xs3 v-if="monoSensors.every(checkNulls) > 0">
+          <envBoardDashboard :sensors="monoSensors" :type="'mono'"></envBoardDashboard>
+        </v-flex>
+        <v-flex xs3 v-if="dioxiSensors.every(checkNulls) > 0">
+          <envBoardDashboard :sensors="dioxiSensors" :type="'diox'"></envBoardDashboard>
+        </v-flex>
+      </v-layout>
+    </v-card>
   </v-container>
 </template>
 
@@ -125,7 +119,7 @@ export default {
             return {
               board: board,
               sensor: board.Sensors.filter(
-                sensor => sensor.Sensormodel.tag === "dioxi"
+                sensor => sensor.Sensormodel.tag === "diox"
               )[0]
             };
           });
@@ -152,7 +146,7 @@ export default {
 
 <style lang="stylus">
 .patientCarousel {
-  height: 100%;
+  height: 100% !important;
 }
 
 #carousel-view .fade {

@@ -81,6 +81,11 @@ const mutations = {
     state.patient.Profiles.forEach(x => {
       if (x.id === profileData.id) x = profileData;
     });
+  },
+  setPatientBoardData(state, boardData) {
+    state.patient.Boards.forEach(x => {
+      if (x.id === boardData.id) x = boardData;
+    });
   }
 }
 
