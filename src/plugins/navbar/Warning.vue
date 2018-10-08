@@ -49,6 +49,7 @@ export default {
         console.log("connected");
       });
       this.socket.on("message", data => {
+        console.log("received:", data.content, data.msg);
         if (
           data.content == "warning_env" ||
           data.content == "warning_bio" ||

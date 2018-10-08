@@ -97,6 +97,7 @@
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.Boardmodel.name }}<label v-if="props.item.description"> - </label>{{ props.item.description}}</td>
                   <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  <td class="text-xs-left">{{ props.item.frequency ? props.item.frequency : "none" }}</td>
                 </template>
                 <template slot="no-data">
                   <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
@@ -147,7 +148,8 @@ export default {
       ],
       headersBoards: [
         { text: "Board", value: "Boardmodel.name", sortable: true },
-        { text: "Since", sortable: false }
+        { text: "Since", sortable: false },
+        { text: "Schedule", sortable: false }
       ],
       editedIndex: -1,
       editedItem: {
@@ -178,6 +180,7 @@ export default {
   },
   mounted() {
     this.getMeasures();
+    console.log(this.$store.state.patient);
   },
   methods: {
     calculate_age(dob) {
