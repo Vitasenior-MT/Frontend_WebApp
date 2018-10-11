@@ -143,7 +143,6 @@ export default {
     selectedPatient(val) {
       this.getPatientBoards();
       if (this.selectedSensorGraph != null) {
-        this.designGraph();
         this.getValues(0);
       }
     }
@@ -169,7 +168,6 @@ export default {
       this.selectedSensorGraph = sensor;
       this.records = [];
       this.getValues(0);
-      this.designGraph();
     },
     getValues(page) {
       event_bus.$data.http

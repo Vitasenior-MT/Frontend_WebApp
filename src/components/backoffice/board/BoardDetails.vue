@@ -9,10 +9,15 @@
                 <v-list-tile-sub-title class="primary_l--text caption">id</v-list-tile-sub-title>
                 <v-list-tile-title>{{board.id}}</v-list-tile-title>
             </v-list-tile-content></v-list-tile>
-            <v-list-tile><v-list-tile-content>
+            <v-list-tile>
+              <v-list-tile-content>
                 <v-list-tile-sub-title class="primary_l--text caption">mac address</v-list-tile-sub-title>
                 <v-list-tile-title>{{board.mac_addr}}</v-list-tile-title>
-            </v-list-tile-content></v-list-tile>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                  <exchange-board :board="board" @exchange="(new_mac)=>{board.mac_addr=new_mac}"></exchange-board>
+                </v-list-tile-action>
+              </v-list-tile>
             <v-list-tile><v-list-tile-content>
                 <v-list-tile-sub-title class="primary_l--text caption">type</v-list-tile-sub-title>
                 <v-list-tile-title>{{board.Boardmodel.type}}</v-list-tile-title>
@@ -75,6 +80,7 @@
 import { event_bus } from "@/plugins/bus.js";
 import BoardDisable from "@/components/backoffice/board/BoardDisable.vue";
 import BoardRemove from "@/components/backoffice/board/BoardRemove.vue";
+import BoardExchange from "@/components/backoffice/board/BoardExchange.vue";
 
 export default {
   name: "dashboard_board",
@@ -126,13 +132,14 @@ export default {
     verifyDate(date) {
       return new Date() - new Date(date) < 86400000;
     },
-    remove(board){
+    remove(board) {
       this.$emit("remove");
     }
   },
   components: {
     "disable-board": BoardDisable,
-    "remove-board": BoardRemove
+    "remove-board": BoardRemove,
+    "exchange-board": BoardExchange
   }
 };
 </script>

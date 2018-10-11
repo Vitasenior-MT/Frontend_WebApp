@@ -86,6 +86,9 @@ const mutations = {
     state.patient.Boards.forEach(x => {
       if (x.id === boardData.id) x = boardData;
     });
+  },
+  removeBoardPatient(state, board) {
+    state.patient.Boards.splice(state.patient.Boards.indexOf(board), 1)
   }
 }
 
@@ -122,7 +125,10 @@ const actions = {
   }) => commit('cleanData'),
   setProfileData: ({
     commit
-  }) => commit('setProfileData')
+  }) => commit('setProfileData'),
+  removeBoardPatientData: ({
+    commit
+  }) => commit('removeBoardPatient')
 }
 
 

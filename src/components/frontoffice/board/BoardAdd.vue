@@ -50,22 +50,38 @@ export default {
     save() {
       if (this.board.mac_addr !== "" && this.board.password !== "") {
         event_bus.$emit("waiting", true);
-        this.board.mac_addr =
-          this.board.mac_addr.substring(0, 2) +
-          ":" +
-          this.board.mac_addr.substring(2, 4) +
-          ":" +
-          this.board.mac_addr.substring(4, 6) +
-          ":" +
-          this.board.mac_addr.substring(6, 8) +
-          ":" +
-          this.board.mac_addr.substring(8, 10) +
-          ":" +
-          this.board.mac_addr.substring(10, 12) +
-          ":" +
-          this.board.mac_addr.substring(12, 14) +
-          ":" +
-          this.board.mac_addr.substring(14);
+        if (this.board.mac_addr.length === 16) {
+          this.board.mac_addr =
+            this.board.mac_addr.substring(0, 2) +
+            ":" +
+            this.board.mac_addr.substring(2, 4) +
+            ":" +
+            this.board.mac_addr.substring(4, 6) +
+            ":" +
+            this.board.mac_addr.substring(6, 8) +
+            ":" +
+            this.board.mac_addr.substring(8, 10) +
+            ":" +
+            this.board.mac_addr.substring(10, 12) +
+            ":" +
+            this.board.mac_addr.substring(12, 14) +
+            ":" +
+            this.board.mac_addr.substring(14);
+        }
+        if (this.board.mac_addr.length === 12) {
+          this.board.mac_addr =
+            this.board.mac_addr.substring(0, 2) +
+            ":" +
+            this.board.mac_addr.substring(2, 4) +
+            ":" +
+            this.board.mac_addr.substring(4, 6) +
+            ":" +
+            this.board.mac_addr.substring(6, 8) +
+            ":" +
+            this.board.mac_addr.substring(8, 10) +
+            ":" +
+            this.board.mac_addr.substring(10);
+        }
         event_bus.$data.http
           .post("/vitabox/" + this.box.id + "/board", this.board)
           .then(response => {

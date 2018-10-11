@@ -1,14 +1,15 @@
 <template>
-  <div id="remove_board">
+  <div id="remove_board_from_patient">
     <v-btn flat icon small color="error" @click.native="()=>dialog_remove_board=true">
       <v-icon>fas fa-minus-circle</v-icon>
     </v-btn>
     <v-dialog v-model="dialog_remove_board" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline error--text">Remove board from vitabox</span>
-          <v-spacer></v-spacer>
+           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_remove_board=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+          <br />
+          <span class="headline error--text">Remove {{board.Boardmodel.name}} from {{this.$store.state.patient.name}}</span>
         </v-card-title>
         <v-card-text  v-if="board">
           Removing the board will cause the <b>loss of record history</b>.
@@ -29,9 +30,8 @@
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "remove_board",
+  name: "remove_board_from_patient",
   props: {
-    box: Object,
     board: Object
   },
   data: () => {
@@ -46,15 +46,16 @@ export default {
       this.dialog_remove_board = false;
 
       event_bus.$data.http
-        .delete("/vitabox/" + this.box.id + "/board", {
+        .delete("/board/" + this.board.id + "/patient", {
           data: {
-            board_id: this.board.id
+            patient_id: this.$store.state.patient.id
           }
         })
         .then(response => {
-          this.$emit("remove", this.board);
+          this.$store.commit("removeBoardPatient", this.board);
+
           event_bus.$emit("toast", {
-            message: "board was successfully removed from vitabox",
+            message: "board was successfully removed from patient",
             type: "success"
           });
           event_bus.$emit("waiting", false);

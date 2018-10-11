@@ -16,8 +16,8 @@
           <v-divider :key="index" light></v-divider>
           <v-list-tile :key="sensor.id"  @click="()=>{}">
             <v-list-tile-content>
-              <v-list-tile-title>{{sensor.transducer}}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ sensor.measure }}</v-list-tile-sub-title>
+              <v-list-tile-title>{{ sensor.measure }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{sensor.transducer}}</v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-btn icon ripple @click="removeIntention(sensor)">

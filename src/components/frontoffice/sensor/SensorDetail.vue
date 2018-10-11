@@ -103,9 +103,7 @@ export default {
     this.getValues(0);
   },
   watch: {
-    datetime2(val) {},
     selectedSensor(val) {
-      this.designGraph();
       this.getValues(0);
     }
   },
@@ -150,7 +148,6 @@ export default {
           )
           .then(response => {
             this.records = response.data.records.sort(this.compare);
-            console.log(this.records);
             this.page += page;
             this.designGraph();
             this.lastrecord = this.records[this.records.length - 1].datetime;
