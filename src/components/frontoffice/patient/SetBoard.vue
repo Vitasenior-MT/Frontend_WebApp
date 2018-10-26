@@ -36,7 +36,7 @@ export default {
       .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
       .then(response => {
         this.boards = response.data.boards.filter(
-          board => board.Boardmodel.type !== "environmental"
+          board => board.Boardmodel.type === "non-wearable"
         );
         event_bus.$emit("waiting", false);
       })

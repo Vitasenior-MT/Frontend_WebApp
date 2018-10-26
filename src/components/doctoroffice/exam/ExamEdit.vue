@@ -11,7 +11,7 @@
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex>
-            <v-text-field :rules="[() => (parseInt(frequency)>0 && parseInt(frequency)<360) || 'invalid time interva between exams']" label="Frequency" v-model="item.frequency" type="number" suffix="hours"></v-text-field>
+            <v-text-field :rules="[() => (parseInt(item.frequency)>0 && parseInt(item.frequency)<360) || 'invalid time interva between exams']" label="Frequency" v-model="item.frequency" type="number" suffix="hours"></v-text-field>
           </v-flex>
         </v-layout>
       </v-container>

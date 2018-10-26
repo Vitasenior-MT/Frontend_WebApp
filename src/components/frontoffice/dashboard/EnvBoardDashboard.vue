@@ -18,26 +18,6 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <!-- <v-flex class="pa-1" v-else>
-        <v-layout row>
-          <v-flex xs4 sm3 md3 class="pa-0"> 
-            <v-card class="pr-0 green darken-4" height="100%">
-              <v-avatar class="envIcon">
-                <img v-if="type == 'temp'" src="@/assets/temp_icon.svg">
-                <img v-if="type == 'humi'" src="@/assets/humi_icon.svg">
-                <img v-if="type == 'mono'" src="@/assets/mono_icon.svg">
-                <img v-if="type == 'diox'" src="@/assets/dioxi_icon.svg">
-              </v-avatar>
-            </v-card>
-          </v-flex>
-          <v-flex xs8 sm9 md9 style="padding:0px">  
-            <v-card class="green darken-1" style="padding-left:0p">
-              <v-card-text headline class="text-md-center">{{ getAverageValue() }}</v-card-text>
-              <v-card-text primary>{{ type }}</v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-flex> -->
       <v-layout row wrap>
         <v-flex v-for="item in sensors" :key="item.id" class="pa-1" >
           <div v-if="item.sensor">
@@ -83,7 +63,7 @@ export default {
           }
         });
         if (count === 0) this.avg = -1;
-        else this.avg = sum / count;
+        else this.avg = Math.round(sum/count);
         this.metric =
           this.sensors[0].sensor.Sensormodel.measure +
           " (" +
