@@ -19,9 +19,10 @@ export default {
       show: false,
       value: 0,
       socket: socketio(
-        process.env.NODE_ENV === "production"
-          ? "https://vitasenior-ws.eu-gb.mybluemix.net"
-          : "http://192.168.161.13:8008/",
+        // process.env.NODE_ENV === "production"
+        //   ? "https://vitasenior-ws.eu-gb.mybluemix.net"
+        //   : "http://192.168.161.13:8008/",
+        "https://vitasenior-ws.eu-gb.mybluemix.net",
         {
           query: { token: this.$store.state.user.token },
           reconnection: true

@@ -17,13 +17,12 @@ import ErrorList from '@/components/backoffice/errors/ErrorList'
 import FODashboard from '@/components/frontoffice/dashboard/Dashboard'
 import FOVitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
 import FOVitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
-import FOBoardDetail from '@/components/frontoffice/board/BoardDetail'
+import FOSensorDetail from '@/components/frontoffice/sensor/SensorDetail'
 import FOPatientDetail from '@/components/frontoffice/patient/PatientDetail'
 import FOUserDetail from '@/components/frontoffice/user/UserDetail'
 
 // Doctoroffice
 import DODashboard from '@/components/doctoroffice/dashboard/Dashboard'
-import DOBoardDetail from '@/components/doctoroffice/board/BoardDetail'
 import DOPatientRequest from '@/components/doctoroffice/patient/PatientRequest'
 
 // Backend
@@ -34,8 +33,6 @@ import BOBoardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
 import BOSensormodel from '@/components/backoffice/sensormodel/SensormodelList'
 import BOProfilemodel from '@/components/backoffice/profilemodel/ProfileList'
 import BOUtils from '@/components/backoffice/utils/utils'
-
-// Doctor
 
 Vue.use(Router)
 
@@ -88,9 +85,10 @@ export default new Router({
     component: FOVitaboxRegister,
   },
   {
-    path: '/frontoffice/board/detail',
-    name: 'FOBoardDetail',
-    component: FOBoardDetail,
+    path: '/frontoffice/sensor/detail',
+    name: 'FOSensorDetail',
+    component: FOSensorDetail,
+    props: true
   },
   {
     path: '/frontoffice/patient/detail',
@@ -113,11 +111,6 @@ export default new Router({
     path: '/doctoroffice/dashboard',
     name: 'DODashboard',
     component: DODashboard,
-  },
-  {
-    path: '/doctoroffice/board/detail',
-    name: 'DOBoardDetail',
-    component: DOBoardDetail,
   },
   {
     path: '/doctoroffice/requests',

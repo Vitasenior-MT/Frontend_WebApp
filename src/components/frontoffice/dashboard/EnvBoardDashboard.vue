@@ -1,34 +1,29 @@
 <template>
     <v-container class="pa-1" dark grid-list text-xs-center v-if="sensors.length > 0 && sensors[0].sensor">
-      <v-flex class="pa-1">
-        <v-layout row :class="(avg <= sensors[0].sensor.Sensormodel.min_acceptable || avg >= sensors[0].sensor.Sensormodel.max_acceptable) ? 'red darken-4':'green darken-4'">
-          <v-flex xs4 sm3 md3 class="pa-0" style="position:relative">
-            <img v-if="type == 'temp'" src="@/assets/temp_icon.svg" class="envIcon">
-            <img v-if="type == 'humi'" src="@/assets/humi_icon.svg" class="envIcon">
-            <img v-if="type == 'mono'" src="@/assets/mono_icon.svg" class="envIcon">
-            <img v-if="type == 'diox'" src="@/assets/diox_icon.svg" class="envIcon">
-          </v-flex>
-          <v-flex xs8 sm9 md9 class="pa-0">  
-            <v-card-title primary-title :class="(avg <= sensors[0].sensor.Sensormodel.min_acceptable || avg >= sensors[0].sensor.Sensormodel.max_acceptable) ? 'red darken-1':'green darken-1'">
-              <div>
-                <div class="headline">{{ avg >-1 ? avg : 'none' }}</div>
-                <div>{{ metric }}</div>
-              </div>
-            </v-card-title>
-          </v-flex>
-        </v-layout>
+      <v-flex>
+        <v-card class="pa-1" :class="(avg <= sensors[0].sensor.Sensormodel.min_acceptable || avg >= sensors[0].sensor.Sensormodel.max_acceptable) ? 'red':'green'">
+          <v-card-title class="px-0 py-2">
+            <v-layout row wrap>
+              <v-flex xs12 md3 class="pa-0 iconBox">
+                <img :src="require('@/assets/'+type+'_icon.svg')" class="envIcon">
+              </v-flex>
+              <v-flex xs12 md9 class="pa-0">
+                    <div class="headline">{{ avg >-1 ? avg : 'none' }}</div>
+                    <div>{{ metric }}</div>
+              </v-flex>
+            </v-layout>
+          </v-card-title>
+        </v-card>
       </v-flex>
       <v-layout row wrap>
         <v-flex v-for="item in sensors" :key="item.id" class="pa-1" >
           <div v-if="item.sensor">
-            <v-card class="vitaboxBoardSelector red darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-if="!item.sensor.last_values || item.sensor.last_values[item.sensor.last_values.length-1] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable">
-              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
-              <v-card-text primary>{{ item.board.description }}</v-card-text>
+            <v-card @click.native="goToBoardDetails(item.sensor, item.board)" class="darken-3 vitaboxBoardSelector" :class="(!item.sensor.last_values || item.sensor.last_values[item.sensor.last_values.length-1] <= item.sensor.Sensormodel.min_acceptable || item.sensor.last_values[0] >= item.sensor.Sensormodel.max_acceptable)?'red':'green'">
+              <v-card-text primary class="px-1">
+                <p class="mb-1 title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</p>
+                {{ item.board.description }}
+                </v-card-text>
             </v-card>
-            <v-card class="vitaboxBoardSelector green darken-1" @click.native="goToBoardDetails(item.board, item.sensor)" v-else>
-              <v-card-title primary class="title">{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</v-card-title>
-              <v-card-text primary>{{ item.board.description }}</v-card-text>
-            </v-card> 
           </div> 
         </v-flex> 
       </v-layout> 
@@ -63,7 +58,7 @@ export default {
           }
         });
         if (count === 0) this.avg = -1;
-        else this.avg = Math.round(sum/count);
+        else this.avg = Math.round(sum / count);
         this.metric =
           this.sensors[0].sensor.Sensormodel.measure +
           " (" +
@@ -73,10 +68,11 @@ export default {
     }
   },
   methods: {
-    goToBoardDetails(boardData, sensorData) {
-      this.$store.commit("setBoardData", boardData);
-      this.$store.commit("setSensorData", sensorData);
-      this.$router.push("/frontoffice/board/detail");
+    goToBoardDetails(sensor, board) {
+      this.$router.push({
+        name: "FOSensorDetail",
+        params: { sensor: sensor, board: board }
+      });
     }
   }
 };
@@ -90,6 +86,11 @@ export default {
   top: 50%;
   bottom: 50%;
   transform: translate(-50%, -50%);
+}
+.iconBox{
+  min-width: 40px;
+  min-height: 40px;
+  position: relative;
 }
 
 .vitaboxBoardSelector {

@@ -1,75 +1,84 @@
 <template>
-  <v-container class="gridSensor">
-    <v-card light flat>
-      <v-card dark flat>
-        <v-flex xs12 class="pa-0">
-          <v-layout class="pl-3 pr-3 text-md-center">
-            <v-card dark width="100%" class="pb-1" flat>
+  <v-content style="height:100%">
+    <v-container class="gridSensor">
+      <v-card v-if="sensor" dark class="my-1 pa-3">
+        <v-card-title primary-title>
+          <v-layout row>
+            <v-flex xs4 sm3 md3 style="position:relative">
+              <img :src="board.Boardmodel.type=='environmental'?require('@/assets/'+sensor.Sensormodel.tag+'_icon.svg'):require('@/assets/'+board.Boardmodel.tag+'_icon.svg')" class="envIcon">
+            </v-flex>
+            <v-flex xs8 sm9 md9 class="primary_l--text main-title">
               <v-card-title primary-title>
                 <div>
-                  <h1 class="primary_l--text main-title mb-0">
-                    Sensor - 
-                    <span class="thin">
-                      {{ this.selectedSensor.Sensormodel.measure }}
-                    </span>
-                  </h1>
+                  <div class="headline mb-0">{{ sensor.Sensormodel.measure }}</div>
+                  <div class="subheading">{{ board.description?board.Boardmodel.name+" - "+board.description:board.Boardmodel.name }}</div>
                 </div>
               </v-card-title>
-            </v-card>
+            </v-flex>
           </v-layout>
-        </v-flex>
-        <v-flex>
-          <v-layout>
-            <v-avatar class="pl-2 pt-2">
-              <img v-if="selectedSensor.Sensormodel.measure == 'temperatura'" src="@/assets/temp_icon.svg">
-              <img v-if="selectedSensor.Sensormodel.measure == 'humidade'" src="@/assets/humi_icon.svg">
-              <img v-if="selectedSensor.Sensormodel.measure == 'monox. carbono (ppm)'" src="@/assets/mono_icon.svg">
-              <img v-if="selectedSensor.Sensormodel.measure == 'CO2'" src="@/assets/diox_icon.svg">
-            </v-avatar>
-            <span class="pl-2 pt-3 title primary--text">{{ this.$store.state.board.Boardmodel.name }} : {{ this.selectedSensor.Sensormodel.measure }}</span>
-            <v-spacer></v-spacer>
-            <v-icon small>fas fa-calendar-alt</v-icon>
-            <span class="pl-1 pt-4"> Última actualização:  {{ this.lastrecord }} </span>
-            <v-spacer></v-spacer>
-            <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :nudge-right="40" :return-value.sync="date1" lazy transition="scale-transition" offset-y full-width min-width="290px" >
-              <v-text-field slot="activator" v-model="date1" label="Pick Start Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
-              <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
-              <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1, time1)"></v-time-picker>
-            </v-menu>
-            <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :nudge-right="40" :return-value.sync="date2" lazy transition="scale-transition" offset-y full-width min-width="290px" >
-              <v-text-field slot="activator" v-model="date2" label="Pick End Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
-              <v-date-picker v-if="flag2 == false" v-model="date2" :min="this.dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
-              <v-time-picker v-if="flag2 == true" v-model="time2" :min="checkTimeMin()" format="24hr" @change="saveTime2(date2, time2)"></v-time-picker>
-            </v-menu>
-            <v-btn color="primary" @click.native="updateGraph()">Go</v-btn>
-          </v-layout>
-        </v-flex>
+        </v-card-title>
       </v-card>
-      <div v-if="records" class="sensorGraph">
-        <canvas :id=" this.selectedSensor.id"></canvas>
-      </div>
-      <v-layout row wrap>
-        <v-flex class="py-0">
-            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-        </v-flex>
-        <v-flex class="py-0">
-            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-        </v-flex>
-      </v-layout>
-    </v-card>
-  </v-container>
+
+      <v-card v-if="sensor">
+        <v-card-title>
+          <v-layout row class="mx-4 pt-2">
+            <v-flex dark sm12 md4>
+              <v-icon small>fas fa-calendar-alt</v-icon>
+              <span class="pl-1 pt-4"> Última actualização:<br />{{  new Date(sensor.last_commit).toLocaleDateString("pt-pt", options) }} </span>
+            </v-flex>
+            <v-flex sm6 md3>       
+              <v-menu ref="menu1" :close-on-content-click="false" v-model="menu1" :nudge-right="40" :return-value.sync="date1" lazy transition="scale-transition" offset-y full-width min-width="290px" >
+                <v-text-field slot="activator" v-model="date1" label="Pick Start Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
+                <v-date-picker v-if="flag1 == false" v-model="date1" min="2000-01-01" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag1=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+                <v-time-picker v-if="flag1 == true" v-model="time1" format="24hr" @change="saveTime1(date1, time1)"></v-time-picker>
+              </v-menu>
+            </v-flex>
+            <v-flex sm6 md3> 
+              <v-menu ref="menu2" :close-on-content-click="false" v-model="menu2" :nudge-right="40" :return-value.sync="date2" lazy transition="scale-transition" offset-y full-width min-width="290px" >
+                <v-text-field slot="activator" v-model="date2" label="Pick End Date" prepend-icon="far fa-calendar" readonly ></v-text-field>
+                <v-date-picker v-if="flag2 == false" v-model="date2" :min="dateMin" :max="new Date().toISOString().substr(0, 10)" locale="pt-pt" @change="flag2=true" no-title  prev-icon="fas fa-angle-left" next-icon="fas fa-angle-right"> </v-date-picker>
+                <v-time-picker v-if="flag2 == true" v-model="time2" :min="checkTimeMin()" format="24hr" @change="saveTime2(date2, time2)"></v-time-picker>
+              </v-menu>
+            </v-flex>
+            <v-flex md2> 
+              <v-btn color="primary" @click.native="updateGraph()">Go</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-title>
+
+        <v-card-text>
+          <div class="sensorGraph">
+            <canvas :id="sensor.id"></canvas>
+          </div>
+          
+          <v-layout v-if="records" row wrap>
+            <v-flex class="py-0">
+                <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            </v-flex>
+            <v-flex class="py-0">
+                <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+                <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+
+      <v-btn dark class="ml-0" @click="$router.go(-1)">
+        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
+      </v-btn>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import Chart from "chart.js";
 
 export default {
   name: "sensorDetail",
   props: {
-    selectedSensor: Object
+    sensor: Object,
+    board: Object
   },
   data: () => {
     return {
@@ -99,11 +108,12 @@ export default {
     };
   },
   mounted() {
-    this.initGraph();
-    this.getValues(0);
+    if (this.sensor) {
+      this.initGraph();
+    }
   },
   watch: {
-    selectedSensor(val) {
+    sensor(val) {
       this.getValues(0);
     }
   },
@@ -126,6 +136,8 @@ export default {
       this.flag2 = false;
       var datetime = date + " " + time;
       this.$refs.menu2.save(datetime);
+      this.dateMax = date;
+      this.timeMax = time;
     },
     getCurrentTime() {
       var currentdate = new Date();
@@ -138,36 +150,37 @@ export default {
       return datetime;
     },
     getValues(page) {
-      if (this.$store.state.board.Boardmodel.type === "environmental") {
+      if (this.board.Boardmodel.type === "environmental") {
         event_bus.$data.http
           .get(
-            "/record/sensor/" +
-              this.selectedSensor.id +
-              "/page/" +
-              (this.page + page)
+            "/record/sensor/" + this.sensor.id + "/page/" + (this.page + page)
           )
           .then(response => {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
-            this.lastrecord = this.records[this.records.length - 1].datetime;
-            this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
-              "pt-pt",
-              this.options
-            );
+            this.lastrecord = new Date(
+              this.records[this.records.length - 1].datetime
+            ).toLocaleDateString("pt-pt", this.options);
           })
           .catch(error => {
             if (error.response) {
-              event_bus.$emit("error", error.response.data);
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
             } else {
-              event_bus.$emit("error", error.message);
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
             }
           });
       } else {
         event_bus.$data.http
           .get(
             "/record/sensor/" +
-              this.selectedSensor.id +
+              this.sensor.id +
               "/patient/" +
               this.$store.state.patient.id +
               "/page/" +
@@ -177,23 +190,27 @@ export default {
             this.records = response.data.records.sort(this.compare);
             this.page += page;
             this.designGraph();
-            this.lastrecord = this.records[this.records.length - 1].datetime;
-            this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
-              "pt-pt",
-              this.options
-            );
+            this.lastrecord = new Date(
+              this.records[this.records.length - 1].datetime
+            ).toLocaleDateString("pt-pt", this.options);
           })
           .catch(error => {
             if (error.response) {
-              event_bus.$emit("error", error.response.data);
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
             } else {
-              event_bus.$emit("error", error.message);
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
             }
           });
       }
     },
     initGraph() {
-      this.chart = new Chart(document.getElementById(this.selectedSensor.id), {
+      this.chart = new Chart(document.getElementById(this.sensor.id), {
         type: "line",
         options: {
           legend: { display: true },
@@ -202,6 +219,7 @@ export default {
           maintainAspectRatio: false
         }
       });
+      this.getValues(0);
     },
     designGraph() {
       let length = this.records.length;
@@ -210,14 +228,14 @@ export default {
       });
       const colours = this.records.map(
         x =>
-          x.value < this.selectedSensor.Sensormodel.min_acceptable ||
-          x.value > this.selectedSensor.Sensormodel.max_acceptable
+          x.value < this.sensor.Sensormodel.min_acceptable ||
+          x.value > this.sensor.Sensormodel.max_acceptable
             ? "rgba(206,33,33,.8)"
             : "rgba(71, 183,132,.8)"
       );
       this.chart.data.datasets = [
         {
-          label: this.selectedSensor.Sensormodel.measure,
+          label: this.sensor.Sensormodel.measure,
           data: this.records.map(x => {
             return x.value;
           }),
@@ -230,7 +248,7 @@ export default {
           label: "minimum acceptable",
           data: Array.from(
             { length },
-            i => this.selectedSensor.Sensormodel.min_acceptable
+            i => this.sensor.Sensormodel.min_acceptable
           ),
           borderWidth: 2,
           fill: false,
@@ -241,7 +259,7 @@ export default {
           label: "maximum acceptable",
           data: Array.from(
             { length },
-            i => this.selectedSensor.Sensormodel.max_acceptable
+            i => this.sensor.Sensormodel.max_acceptable
           ),
           borderWidth: 2,
           fill: false,
@@ -288,11 +306,15 @@ export default {
       return 0;
     },
     updateGraph() {
-      if (this.$store.state.board.Boardmodel.type === "environmental") {
+      console.log(
+        "start: " + this.dateMin + "T" + this.timeMin,
+        "end: " + this.dateMax + "T" + this.timeMax
+      );
+      if (this.board.Boardmodel.type === "environmental") {
         event_bus.$data.http
           .get(
             "/record/sensor/" +
-              this.selectedSensor.id +
+              this.sensor.id +
               "/start/" +
               (this.dateMin + "T" + this.timeMin) +
               "/end/" +
@@ -304,16 +326,22 @@ export default {
           })
           .catch(error => {
             if (error.response) {
-              event_bus.$emit("error", error.response.data);
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
             } else {
-              event_bus.$emit("error", error.message);
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
             }
           });
       } else {
         event_bus.$data.http
           .get(
             "/record/sensor/" +
-              this.selectedSensor.id +
+              this.sensor.id +
               "/patient/" +
               this.$store.state.patient.id +
               "/start/" +
@@ -327,9 +355,15 @@ export default {
           })
           .catch(error => {
             if (error.response) {
-              event_bus.$emit("error", error.response.data);
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
             } else {
-              event_bus.$emit("error", error.message);
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
             }
           });
       }
