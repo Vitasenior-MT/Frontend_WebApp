@@ -1,7 +1,7 @@
 <template>
   <v-content >
     <v-layout wrap>
-      <v-flex v-if="errors.length > 0">
+      <v-flex v-if="errors.length > 0" class="mb-3">
 
         <v-list two-line dense>
           <v-list-tile v-for="item in errors" :key="item.id" @click="()=>{}">
@@ -21,16 +21,6 @@
               <v-btn icon ripple @click.native="checkError(item)">
                 <v-icon color="grey lighten-1">fas fa-eye-slash</v-icon>
               </v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-
-          <v-list-tile >
-            <v-list-tile-content>
-              <v-btn color="success">Success</v-btn>
-            </v-list-tile-content>
-
-            <v-list-tile-action>
-              <v-icon>fas fa-smile</v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>

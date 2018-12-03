@@ -2,12 +2,12 @@
   <v-content v-if="this.$store.state.patient">
     <v-container class="pa-0">
       <v-layout row wrap>
-        <v-flex class="hidden-sm-and-down" >
+        <v-flex >
           <div class="pb-2">
             <v-card color="transparent" flat>
               <v-layout class="pb-0" wrap>
-                  <v-card dark height="100%" width="100%" id="patientBanner">
-                    <v-layout wrap fill-height >
+                  <v-card dark width="100%" id="patientBanner">
+                    <v-layout wrap>
                       <v-flex xs4 md2 class="text-xs-center pt-3 pb-3">
                         <v-avatar tile size="70"><img src="@/assets/logo.png"></v-avatar>
                       </v-flex>
@@ -54,13 +54,10 @@
                             </v-list-tile>
                           </v-flex>
                           <v-flex>
-                            <v-list-tile>
-                              <v-list-tile-content>
-                                <v-list-tile-action>
-                                  <edit-patient :patient="this.$store.state.patient"></edit-patient>
-                                </v-list-tile-action>
-                              </v-list-tile-content>
-                            </v-list-tile>
+                            <v-layout class="d-inline-flex">
+                              <edit-patient :patient="this.$store.state.patient"></edit-patient>
+                              <send-notification :to_patient="true"></send-notification>
+                            </v-layout>
                           </v-flex>
                         </v-layout>
                       </v-flex>
@@ -95,13 +92,15 @@ import ProfileList from "@/components/doctoroffice/profile/ProfileList.vue";
 import ExamList from "@/components/doctoroffice/exam/ExamList.vue";
 import PatientDashboard from "@/components/doctoroffice/dashboard/PatientDashboard.vue";
 import PatientEdit from "@/components/doctoroffice/patient/PatientEdit.vue";
+import NotificationSend from "@/components/frontoffice/notification/NotificationCreate.vue";
 
 export default {
   components: {
     "profile-list": ProfileList,
     "exam-list": ExamList,
     "patient-dashboard": PatientDashboard,
-    "edit-patient": PatientEdit
+    "edit-patient": PatientEdit,
+    "send-notification": NotificationSend
   },
   methods: {
     calculate_age(dob) {
@@ -175,6 +174,6 @@ export default {
   bottom: 50%;
   transform: translateY(-50%);
   width: 100%;
-  height: 48px;
+  min-height: 48px;
 }
 </style>

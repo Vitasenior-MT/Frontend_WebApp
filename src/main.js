@@ -12,7 +12,7 @@ Vue.use(Vuetify, {
   theme: {
     raven: '#212120',
     ash: '#5b5b5b',
-    ash_l: '#fafafa',
+    ash_l: '#cccccc',
     primary: '#F37027',
     primary_l: '#fc9c02',
     primary_d: '#d65526',

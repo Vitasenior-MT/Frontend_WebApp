@@ -4,12 +4,13 @@
         <v-flex xs12 class="pa-0">
           <v-layout class="text-md-center">
             <v-card dark class="pb-3" width="100%" flat>
-              <v-card-title primary-title>
-                <h1 class="main-title pb-4 primary_l--text">Patient - <span class="thin"> {{ $store.state.patient.name}} </span></h1>
+              <v-card-title>
+                <div style="width:100%;position:relative;">
+                  <p class="text-xs-center mb-0"><label class="primary_l--text headline font-weight-medium">Patient - </label><label class="headline font-weight-thin"> {{ $store.state.patient.name}} </label></p>
+                  <p class="grey--text text-xs-center mb-0 body-2"> {{ $store.state.patient.id}} </p>
+                  <send-notification id="send_btn" :to_patient="true"></send-notification>
+                </div>
               </v-card-title>
-              <v-card-text class="pt-3">
-                <h5 class="grey--text"> {{ $store.state.patient.id}} </h5>
-              </v-card-text>
             </v-card>
           </v-layout>
         </v-flex>
@@ -124,6 +125,7 @@ import { event_bus } from "@/plugins/bus.js";
 import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
 import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 import RemoveBoard from "@/components/frontoffice/patient/RemoveBoard.vue";
+import NotificationSend from "@/components/frontoffice/notification/NotificationCreate.vue";
 
 export default {
   data() {
@@ -206,10 +208,16 @@ export default {
   components: {
     "add-board": SetBoard,
     "add-doctor": SetDoctor,
-    "remove-board": RemoveBoard
+    "remove-board": RemoveBoard,
+    "send-notification": NotificationSend
   }
 };
 </script>
 
 <style>
+#send_btn{
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
 </style>

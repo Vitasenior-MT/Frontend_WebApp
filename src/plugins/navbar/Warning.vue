@@ -1,17 +1,16 @@
 <template >
-  <v-btn dark @click="showWarnings" >
-    <v-layout class="pl-2">
-      <v-badge v-model="show" color="red">
-        <span slot="badge">{{value>99?"99+":value}}</span>
-          <v-icon v-if="!show" color="ash">fas fa-bell-slash</v-icon>
-          <v-icon v-else color="white">fas fa-bell</v-icon>
-      </v-badge>
-    </v-layout>
+  <v-btn dark @click="showWarnings">
+    <v-badge v-model="show" color="red">
+      <span slot="badge">{{value>99?"99+":value}}</span>
+      <v-icon v-if="!show" color="ash">fas fa-bell-slash</v-icon>
+      <v-icon v-else color="white">fas fa-bell</v-icon>
+    </v-badge>
   </v-btn>
 </template>
 
 <script>
 import socketio from "socket.io-client";
+import { event_bus } from "@/plugins/bus.js";
 
 export default {
   data() {
@@ -19,10 +18,9 @@ export default {
       show: false,
       value: 0,
       socket: socketio(
-        // process.env.NODE_ENV === "production"
-        //   ? "https://vitasenior-ws.eu-gb.mybluemix.net"
-        //   : "http://192.168.161.13:8008/",
-        "https://vitasenior-ws.eu-gb.mybluemix.net",
+        process.env.NODE_ENV === "production"
+          ? "https://vitasenior-ws.eu-gb.mybluemix.net/socketio"
+          : "http://192.168.161.115:8008/socketio",
         {
           query: { token: this.$store.state.user.token },
           reconnection: true
@@ -47,10 +45,13 @@ export default {
     },
     listenSocket() {
       this.socket.on("connect", () => {
-        console.log("connected");
+        console.log("ws connected");
       });
       this.socket.on("message", data => {
-        console.log("received:", data.content, data.msg);
+        if (process.env.NODE_ENV !== "production") {
+          console.log("ws message:", data.content, data.msg);
+        }
+
         if (
           data.content == "warning_env" ||
           data.content == "warning_bio" ||
@@ -61,7 +62,7 @@ export default {
         }
       });
       this.socket.on("disconnect", () => {
-        console.log("disconnected");
+        console.log("ws disconnected");
       });
       this.socket.on("unauthorized", error => {
         if (

@@ -9,7 +9,7 @@
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-select :items="boards" v-model="selected" label="Select" hint="Boards to add" item-text="Boardmodel.name" prepend-icon="fas fa-stethoscope" append-icon="fas fa-angle-down" return-object></v-select>
+            <v-select :items="boards" v-model="selected" label="Select" hint="Boards to add" :item-text="(item)=>{return item.description?item.Boardmodel.name+' - '+item.description:item.Boardmodel.name}" prepend-icon="fas fa-stethoscope" append-icon="fas fa-angle-down" return-object></v-select>
             <v-flex sm4 md3><v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn></v-flex>
           </v-layout>
         </v-container>

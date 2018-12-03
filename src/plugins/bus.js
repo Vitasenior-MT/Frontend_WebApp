@@ -5,32 +5,24 @@ import store from '@/plugins/store.js'
 export const event_bus = new Vue({
   data: {
     http: null,
+    peer: null,
     token: store.state.user.token,
-
-    // url: process.env.NODE_ENV === "production" ? "https://vitasenior.eu-gb.mybluemix.net" : "http://192.168.161.94:8080"
-    url: "https://vitasenior.eu-gb.mybluemix.net"
+    url: process.env.NODE_ENV === "production" ? "https://vitasenior.eu-gb.mybluemix.net" : "http://192.168.161.94:8080"
   },
   created() {
-    this.http = axios.create({
-      baseURL: this.url,
-      headers: this.token ? {
-        "Authorization": this.token,
-        "Content-Type": "application/json",
-        "Accept-Version": "1.0.0",
-        "Accept-Language": "pt"
-      } : {
-          "Content-Type": "application/json",
-          "Accept-Version": "1.0.0",
-          "Accept-Language": "pt"
-        }
-    });
+    this.initHttp(this.token);
   },
   watch: {
     token(val) {
+      this.initHttp(val);
+    }
+  },
+  methods: {
+    initHttp(token) {
       this.http = axios.create({
         baseURL: this.url,
-        headers: val !== null ? {
-          "Authorization": val,
+        headers: token ? {
+          "Authorization": token,
           "Content-Type": "application/json",
           "Accept-Version": "1.0.0",
           "Accept-Language": "pt"

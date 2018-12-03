@@ -33,7 +33,8 @@ export default {
   data: () => {
     return {
       email: "jose@a.aa",
-      password: "123qweASD"
+      password: "123qweASD",
+      text: "ola <br /> mundo"
     };
   },
   mounted() {
@@ -55,6 +56,7 @@ export default {
           if (response.data.token) {
             event_bus.$data.token = response.data.token;
             this.$store.commit("setUserData", {
+              id: response.data.id,
               token: response.data.token,
               name: response.data.name,
               email: response.data.email,

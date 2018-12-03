@@ -4,7 +4,7 @@
     <v-divider class="vitaboxDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
       <router-link v-for="(item, index) in this.$store.state.vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/frontoffice/dashboard"'>
-      <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
+        <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
         <v-list-tile class="vitaboxSelector">
           <v-list-tile-avatar class="primary--text">
             <v-icon>fa fa-tv</v-icon>

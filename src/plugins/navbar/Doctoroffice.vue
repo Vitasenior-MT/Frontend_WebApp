@@ -12,9 +12,9 @@
     </div>
     <v-divider class="patientDivider"></v-divider>
     <v-list class="office_menu py-0" three-line >
-      <template v-for="(item, index) in patients">
+      <router-link v-for="(item, index) in patients" :key="item.id" @click.native="selectedPatient(item)" :to='"/doctoroffice/dashboard"'>
         <v-divider v-if="index !== 0" class="patientDivider" inset  :key="index"></v-divider>
-        <v-list-tile @click.native="selectedPatient(item)" class="patientSelector" :key="item.id">
+        <v-list-tile class="patientSelector">
           <v-list-tile-avatar class="primary--text">
             <v-icon>fa fa-user</v-icon>
           </v-list-tile-avatar>
@@ -23,7 +23,7 @@
             <v-list-tile-sub-title class="white--text" small>{{ item.name }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
-      </template>
+      </router-link>
     </v-list>
     <v-divider class="patientDivider"></v-divider>
   </div>
@@ -61,6 +61,7 @@ export default {
         .get("/doctor/patient")
         .then(response => {
           this.patients = response.data.patients;
+          this.$store.commit("setPatientsList", response.data.patients);
           if (response.data.patients.length > 0) {
             this.selectedPatient(response.data.patients[0]);
           }
@@ -97,7 +98,6 @@ export default {
     },
     selectedPatient(patientData) {
       this.$store.commit("setPatientData", patientData);
-      this.$router.push("/doctoroffice/dashboard");
     },
     updatePatient(patient) {
       this.patients.forEach(x => {

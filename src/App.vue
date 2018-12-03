@@ -2,9 +2,9 @@
   <v-app>
     <progress-bar></progress-bar>
 
-    <navbar></navbar>
+    <navbar v-if="checked"></navbar>
 
-    <main>
+    <main v-if="checked">
       <transition name="fade">
         <div id="navpanel" class="bckground1">
           <router-view></router-view>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { event_bus } from "@/plugins/bus.js";
 import Log from "@/components/utils/Log.vue";
 import Footer from "@/components/utils/Footer.vue";
@@ -26,7 +27,59 @@ import Progress from "./components/utils/Progress.vue";
 
 export default {
   name: "app",
-  mounted() {},
+  data: () => {
+    return {
+      checked: false
+    };
+  },
+  mounted() {
+    event_bus.$emit("waiting", true);
+    axios({
+      method: "GET",
+      url:
+        process.env.NODE_ENV === "production"
+          ? "https://vitasenior.eu-gb.mybluemix.net/check"
+          : "http://192.168.161.94:8080/check",
+      headers: this.$store.state.user.token
+        ? {
+            "Authorization": this.$store.state.user.token,
+            "Content-Type": "application/json",
+            "Accept-Version": "1.0.0",
+            "Accept-Language": "pt"
+          }
+        : {
+            "Content-Type": "application/json",
+            "Accept-Version": "1.0.0",
+            "Accept-Language": "pt"
+          }
+    })
+      .then(() => {
+        if (this.$store.state.user.is_admin) {
+          this.$router.push("/backoffice/vitabox/list");
+        } else if (this.$store.state.user.is_doctor) {
+          this.$router.push("/doctoroffice/dashboard");
+        } else {
+          this.$router.push("/frontoffice/dashboard");
+        }
+        event_bus.$emit("waiting", false);
+        this.checked = true;
+      })
+      .catch(error => {
+        if (error.response) {
+          if (error.response.status !== 401)
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
+        } else {
+          event_bus.$emit("toast", { message: error.message, type: "error" });
+        }
+        this.$router.push("/");
+        this.$store.commit("cleanData");
+        this.checked = true;
+        event_bus.$emit("waiting", false);
+      });
+  },
   components: {
     foot: Footer,
     log: Log,
