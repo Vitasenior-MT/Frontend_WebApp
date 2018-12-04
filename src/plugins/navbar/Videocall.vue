@@ -34,44 +34,19 @@ export default {
       streamToSend: null,
       streamToShow: null,
       remotePeerID: "1",
-      peer: Peer(this.$store.state.user.id, {
-        key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
-        host:
-          process.env.NODE_ENV === "production"
-            ? "vitasenior-peer.eu-gb.mybluemix.net"
-            : "192.168.161.206",
-        port: process.env.NODE_ENV === "production" ? "443" : "8808",
-        secure: process.env.NODE_ENV === "production" ? true : false
-      })
+      peer: null,
+      mediaConnection: null
     };
   },
   mounted: async function() {
-    this.peer.on("call", mediaConnection => {
-      mediaConnection.answer(this.streamToSend);
-      mediaConnection.on("stream", stream => {
-        console.log(stream);
-        this.$refs.remoteVideo.srcObject = stream;
-        this.$refs.localVideo.srcObject = this.streamToShow;
-      });
-      mediaConnection.on("close", () => {
-        console.log("mediaConnection closed");
-      });
-    });
-
-    this.peer.on("open", conn => {
-      console.log("peer registred", conn);
-    });
-    this.peer.on("data", msg => {
-      console.log("peer message: ", msg);
-    });
-    this.peer.on("connection", msg => {
-      console.log("peer connected: ", msg);
-    });
-    this.peer.on("error", error => {
-      console.log("peer error: ", error.message);
-    });
-    this.peer.on("disconnected", () => {
-      console.log("peer disconnected");
+    this.peer = Peer(this.$store.state.user.id, {
+      key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
+      host:
+        process.env.NODE_ENV === "production"
+          ? "vitasenior-peer.eu-gb.mybluemix.net"
+          : "192.168.161.206",
+      port: process.env.NODE_ENV === "production" ? "443" : "8808",
+      secure: process.env.NODE_ENV === "production" ? true : false
     });
 
     try {
@@ -86,24 +61,68 @@ export default {
     } catch (e) {
       console.log("local video error: ", e);
     }
-  },
-  beforeDestroy() {
-    this.peer.destroy();
-    this.peer = null;
+
+    this.startPeerEventListening();
   },
   methods: {
+    startPeerEventListening() {
+      this.peer.on("call", mediaConnection => {
+        console.log("connection", mediaConnection);
+        this.mediaConnection = mediaConnection;
+        // console.log("stream", this.streamToSend);
+        mediaConnection.answer(this.streamToSend);
+        this.$refs.localVideo.srcObject = this.streamToShow;
+        this.startConnectionEventListening();
+      });
+
+      this.peer.on("open", conn => {
+        console.log("peer registred", conn);
+      });
+      this.peer.on("data", msg => {
+        console.log("peer message: ", msg);
+      });
+      this.peer.on("connection", msg => {
+        console.log("peer connected: ", msg);
+      });
+      this.peer.on("error", error => {
+        console.log("peer error: ", error.message);
+      });
+      this.peer.on("disconnected", () => {
+        console.log("peer disconnected");
+      });
+    },
     async tryConnect() {
       this.peer.connect(this.remotePeerID);
     },
     startConnection() {
-      this.peer.call(this.remotePeerID, this.streamToSend);
+      this.mediaConnection = this.peer.call(
+        this.remotePeerID,
+        this.streamToSend
+      );
       this.$refs.localVideo.srcObject = this.streamToShow;
+      this.startConnectionEventListening();
     },
     stopConnection() {
-      this.stream.getTracks().forEach(track => track.stop());
-      this.stream = null;
+      this.$refs.remoteVideo.srcObject = null;
+      this.$refs.localVideo.srcObject = null;
+      this.mediaConnection.close();
     },
+    startConnectionEventListening() {
+      this.mediaConnection.on("stream", stream => {
+        console.log(stream);
+        this.$refs.remoteVideo.srcObject = stream;
+      });
+      this.mediaConnection.on("close", () => {
+        console.log("mediaConnection closed");
+        this.stopConnection();
+      });
+    },
+
     close() {
+      this.streamToSend.getTracks().forEach(track => track.stop());
+      this.streamToShow.getTracks().forEach(track => track.stop());
+      this.peer.destroy();
+      this.peer = null;
       this.$emit("close");
     }
   }
