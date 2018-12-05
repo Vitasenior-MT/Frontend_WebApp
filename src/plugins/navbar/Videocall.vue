@@ -4,14 +4,21 @@
 
     <v-card-text>
       <div>
+        <p>{{message}}</p>
         <video ref="localVideo" autoplay playsinline></video>
         <video ref="remoteVideo" autoplay playinline></video>
 
-        <div>
-          <button @click="this.tryConnect" color="success">Connect</button>
+        <div v-if="status==1">
           <button @click="this.startConnection" color="success">Start</button>
-          
-          <button @click="this.stopConnection" color="success">Stop</button>
+          <br>
+        </div>
+        <div v-if="status==2">
+          <button @click="this.acceptConnection" color="success">Accept</button>
+          <button @click="this.rejectConnection" color="success">Cancel</button>
+          <br>
+        </div>
+        <div v-if="status==3">
+          <button @click="this.stopConnection" color="success">Finish</button>
           <br>
         </div>
       </div>
@@ -35,7 +42,9 @@ export default {
       streamToShow: null,
       remotePeerID: "1",
       peer: null,
-      mediaConnection: null
+      mediaConnection: null,
+      status: 0,
+      message: ""
     };
   },
   mounted: async function() {
@@ -66,13 +75,12 @@ export default {
   },
   methods: {
     startPeerEventListening() {
+      this.status = 1;
+
       this.peer.on("call", mediaConnection => {
-        console.log("connection", mediaConnection);
         this.mediaConnection = mediaConnection;
-        // console.log("stream", this.streamToSend);
-        mediaConnection.answer(this.streamToSend);
-        this.$refs.localVideo.srcObject = this.streamToShow;
-        this.startConnectionEventListening();
+        this.message = mediaConnection.metadata.user + " is calling";
+        this.status = 2;
       });
 
       this.peer.on("open", conn => {
@@ -91,25 +99,37 @@ export default {
         console.log("peer disconnected");
       });
     },
-    async tryConnect() {
+    tryConnect() {
       this.peer.connect(this.remotePeerID);
     },
     startConnection() {
       this.mediaConnection = this.peer.call(
         this.remotePeerID,
-        this.streamToSend
+        this.streamToSend,
+        { metadata: { user: "Diogo" } }
       );
-      this.$refs.localVideo.srcObject = this.streamToShow;
       this.startConnectionEventListening();
+      this.status = 3;
+    },
+    acceptConnection() {
+      this.mediaConnection.answer(this.streamToSend);
+      this.startConnectionEventListening();
+      this.message = "";
+      this.status = 3;
     },
     stopConnection() {
+      this.mediaConnection.close();
       this.$refs.remoteVideo.srcObject = null;
       this.$refs.localVideo.srcObject = null;
+      this.message = "Call finished";
+      this.status = 1;
+    },
+    rejectConnection() {
       this.mediaConnection.close();
     },
     startConnectionEventListening() {
+      this.$refs.localVideo.srcObject = this.streamToShow;
       this.mediaConnection.on("stream", stream => {
-        console.log(stream);
         this.$refs.remoteVideo.srcObject = stream;
       });
       this.mediaConnection.on("close", () => {
