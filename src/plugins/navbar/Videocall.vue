@@ -10,7 +10,6 @@
 
         <div v-if="status==1">
           <button @click="this.startConnection" color="success">Start</button>
-          <button @click="this.negotiateConnection" color="success">Negotiate</button>
           <br>
         </div>
         <div v-if="status==2">
@@ -77,14 +76,21 @@ export default {
   methods: {
     listenPeerEvent() {
       this.peer.on("call", mediaConnection => {
-        this.mediaConnection = mediaConnection;
-        this.acceptMediaConnection();
+        if ((this.status === 4 && this.remotePeerID === mediaConnection.peer)) {
+          this.mediaConnection = mediaConnection;
+          this.mediaConnection.answer(this.streamToSend);
+          this.status = 5;
+          this.listenMediaConnection();
+          this.message = "";
+        } else {
+          dataConnection.send({ type: "unauthorized" });
+        }
       });
       this.peer.on("connection", dataConnection => {
         if (this.status === 1) {
           this.dataConnection = dataConnection;
-          console.log("data connection: ", this.dataConnection);
           this.status = 2;
+          this.listenDataConnection();
         } else {
           dataConnection.send({ type: "occupied" });
         }
@@ -98,73 +104,56 @@ export default {
 
       this.status = 1;
     },
-    startDataConnection() {
+    startConnection() {
       this.dataConnection = this.peer.connect(this.remotePeerID);
       this.dataConnection.send({
         type: "call",
-        username: this.$store.state.user.name,
-        userid: this.$store.state.user.id
+        username: this.$store.state.user.name
       });
       this.status = 2;
+      console.log("invite sent");
     },
-    acceptDataConnection() {
-      // this.remotePeerID = this.dataConnection;
-       this.dataConnection.send({ type: "accept" });
-      this.status = 2;
+    acceptConnection() {
+      this.remotePeerID = this.dataConnection.peer;
+      this.dataConnection.send({ type: "accept" });
+      this.status = 4;
+      console.log("accept invite");
     },
-    rejectDataConnection() {
+    rejectConnection() {
       this.dataConnection.send({ type: "reject" });
       this.status = 1;
+      console.log("reject invite");
     },
     listenDataConnection() {
       this.dataConnection.on("data", data => {
         switch (data.type) {
           case "call":
-            this.status = 2;
             this.message = data.username + " is calling";
+            this.status = 3;
             break;
           case "accept":
-            this.startMediaConnection();
+            this.mediaConnection = this.peer.call(
+              this.remotePeerID,
+              this.streamToSend,
+              { metadata: { user: "Diogo" } }
+            );
+            this.status = 5;
+            console.log("invite accepted");
+            this.listenMediaConnection();
             break;
           case "reject":
+            this.message = "the call was rejected";
             this.status = 1;
             break;
           case "occupied":
+            this.message = "the user is occupied";
             this.status = 1;
-            this.message = data.username + "the user is occupied";
             break;
         }
       });
       this.dataConnection.on("error", err => {
         console.log("dataConnection error: ", err);
       });
-    },
-    startMediaConnection() {
-      this.mediaConnection = this.peer.call(
-        this.remotePeerID,
-        this.streamToSend,
-        { metadata: { user: "Diogo" } }
-      );
-      this.status = 3;
-      this.listenMediaConnection();
-    },
-    acceptMediaConnection() {
-      this.mediaConnection.answer(this.streamToSend);
-      this.status = 3;
-      this.listenMediaConnection();
-      this.message = "";
-    },
-    stopMediaConnection() {
-      this.mediaConnection.close();
-      this.$refs.remoteVideo.srcObject = null;
-      this.$refs.localVideo.srcObject = null;
-      this.message = "Call finished";
-      this.status = 1;
-    },
-    rejectMediaConnection() {
-      this.mediaConnection.close();
-      this.message = "Call refused";
-      this.status = 1;
     },
     listenMediaConnection() {
       this.$refs.localVideo.srcObject = this.streamToShow;
@@ -180,11 +169,18 @@ export default {
         this.stopConnection();
       });
     },
+    stopMediaConnection() {
+      this.mediaConnection.close();
+      this.$refs.remoteVideo.srcObject = null;
+      this.$refs.localVideo.srcObject = null;
+      this.message = "Call finished";
+      this.status = 1;
+    },
     close() {
-      this.streamToSend.getTracks().forEach(track => track.stop());
-      this.streamToShow.getTracks().forEach(track => track.stop());
-      this.peer.destroy();
-      this.peer = null;
+      // this.streamToSend.getTracks().forEach(track => track.stop());
+      // this.streamToShow.getTracks().forEach(track => track.stop());
+      // this.peer.destroy();
+      // this.peer = null;
       this.$emit("close");
     }
   }
