@@ -8,16 +8,22 @@
         <video ref="localVideo" autoplay playsinline></video>
         <video ref="remoteVideo" autoplay playinline></video>
 
+        <div v-if="status==0">Initiating...
+          <br>
+        </div>
         <div v-if="status==1">
           <button @click="this.startConnection" color="success">Start</button>
           <br>
         </div>
-        <div v-if="status==2">
+        <div v-if="status==2">Waiting...
+          <br>
+        </div>
+        <div v-if="status==3">
           <button @click="this.acceptConnection" color="success">Accept</button>
           <button @click="this.rejectConnection" color="success">Cancel</button>
           <br>
         </div>
-        <div v-if="status==3">
+        <div v-if="status==4">
           <button @click="this.stopConnection" color="success">Finish</button>
           <br>
         </div>
@@ -76,11 +82,11 @@ export default {
   methods: {
     listenPeerEvent() {
       this.peer.on("call", mediaConnection => {
-        if ((this.status === 4 && this.remotePeerID === mediaConnection.peer)) {
+        if (this.status === 2 && this.remotePeerID === mediaConnection.peer) {
           this.mediaConnection = mediaConnection;
           this.mediaConnection.answer(this.streamToSend);
-          this.status = 5;
           this.listenMediaConnection();
+          this.status = 4;
           this.message = "";
         } else {
           dataConnection.send({ type: "unauthorized" });
@@ -114,9 +120,10 @@ export default {
       console.log("invite sent");
     },
     acceptConnection() {
+      console.log("perr: ", this.dataConnection.peer);
       this.remotePeerID = this.dataConnection.peer;
       this.dataConnection.send({ type: "accept" });
-      this.status = 4;
+      this.status = 2;
       console.log("accept invite");
     },
     rejectConnection() {
@@ -126,6 +133,7 @@ export default {
     },
     listenDataConnection() {
       this.dataConnection.on("data", data => {
+        console.log("data: ", data);
         switch (data.type) {
           case "call":
             this.message = data.username + " is calling";
@@ -137,7 +145,7 @@ export default {
               this.streamToSend,
               { metadata: { user: "Diogo" } }
             );
-            this.status = 5;
+            this.status = 4;
             console.log("invite accepted");
             this.listenMediaConnection();
             break;
