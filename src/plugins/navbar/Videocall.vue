@@ -1,35 +1,44 @@
 <template>
   <v-card>
     <v-card-title class="headline grey lighten-2" primary-title>Video Call</v-card-title>
-
     <v-card-text>
-      <div>
-        <p>{{message}}</p>
-        <video ref="localVideo" autoplay playsinline></video>
-        <video ref="remoteVideo" autoplay playinline></video>
+      <v-layout row wrap>
+        <v-flex xs4>
+          <v-list two-line>
+            <v-list-tile v-for="item in vitaboxes" :key="item.id" @click="selectVitabox(item)">
+              <v-list-tile-content>{{ item.address }}</v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-flex>
+        <v-flex xs8>
+          <div v-if="selectedVitabox">
+            <p>{{message}}</p>
+            <video ref="localVideo" autoplay playsinline></video>
+            <video ref="remoteVideo" autoplay playinline></video>
 
-        <div v-if="status==0">Initiating...
-          <br>
-        </div>
-        <div v-if="status==1">
-          <button @click="this.startConnection" color="success">Start</button>
-          <br>
-        </div>
-        <div v-if="status==2">Waiting...
-          <br>
-        </div>
-        <div v-if="status==3">
-          <button @click="this.acceptConnection" color="success">Accept</button>
-          <button @click="this.rejectConnection" color="success">Cancel</button>
-          <br>
-        </div>
-        <div v-if="status==4">
-          <button @click="this.stopConnection" color="success">Finish</button>
-          <br>
-        </div>
-      </div>
+            <div v-if="status==0">Initiating...
+              <br>
+            </div>
+            <div v-if="status==1">
+              <button @click="this.startConnection" color="success">Start</button>
+              <br>
+            </div>
+            <div v-if="status==2">Waiting...
+              <br>
+            </div>
+            <div v-if="status==3">
+              <button @click="this.acceptConnection" color="success">Accept</button>
+              <button @click="this.rejectConnection" color="success">Cancel</button>
+              <br>
+            </div>
+            <div v-if="status==4">
+              <button @click="this.stopConnection" color="success">Finish</button>
+              <br>
+            </div>
+          </div>
+        </v-flex>
+      </v-layout>
     </v-card-text>
-
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -46,12 +55,13 @@ export default {
     return {
       streamToSend: null,
       streamToShow: null,
-      remotePeerID: "1",
       peer: null,
       mediaConnection: null,
       dataConnection: null,
       status: 0,
-      message: ""
+      message: "",
+      vitaboxes: this.$store.state.vitaboxes,
+      selectedVitabox: null
     };
   },
   mounted: async function() {
@@ -94,8 +104,10 @@ export default {
       });
       this.peer.on("connection", dataConnection => {
         if (this.status === 1) {
+          console.log(dataConnection);
           this.dataConnection = dataConnection;
           this.status = 2;
+          console.log(this.dataConnection);
           this.listenDataConnection();
         } else {
           dataConnection.send({ type: "occupied" });
@@ -110,13 +122,18 @@ export default {
 
       this.status = 1;
     },
+    selectVitabox(item) {
+      this.selectedVitabox = item;
+      // this.dataConnection = this.peer.connect(this.selectedVitabox.id);
+      this.dataConnection = this.peer.connect("1");
+      this.listenDataConnection();
+    },
     startConnection() {
-      this.dataConnection = this.peer.connect(this.remotePeerID);
+      this.status = 2;
       this.dataConnection.send({
         type: "call",
         username: this.$store.state.user.name
       });
-      this.status = 2;
       console.log("invite sent");
     },
     acceptConnection() {
@@ -132,6 +149,7 @@ export default {
       console.log("reject invite");
     },
     listenDataConnection() {
+      console.log("entrou no listenDataConnection");
       this.dataConnection.on("data", data => {
         console.log("data: ", data);
         switch (data.type) {
@@ -141,7 +159,8 @@ export default {
             break;
           case "accept":
             this.mediaConnection = this.peer.call(
-              this.remotePeerID,
+              // this.selectedVitabox.id,
+              "1",
               this.streamToSend,
               { metadata: { user: "Diogo" } }
             );
@@ -177,7 +196,7 @@ export default {
         this.stopConnection();
       });
     },
-    stopMediaConnection() {
+    stopConnection() {
       this.mediaConnection.close();
       this.$refs.remoteVideo.srcObject = null;
       this.$refs.localVideo.srcObject = null;

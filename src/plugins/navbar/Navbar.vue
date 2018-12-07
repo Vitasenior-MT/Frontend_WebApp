@@ -53,7 +53,7 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <v-dialog v-model="videocall_dialog" dark lazy max-width="700">
+      <v-dialog v-model="videocall_dialog" dark lazy max-width="900">
         <video-call @close="videocall_dialog=false"></video-call>
       </v-dialog>
     </div>
