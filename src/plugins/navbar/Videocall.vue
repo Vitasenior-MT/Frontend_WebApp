@@ -5,30 +5,30 @@
       <v-layout row wrap>
         <v-flex xs4>
           <v-list two-line>
-            <v-list-tile v-for="item in vitaboxes" :key="item.id" @click="selectVitabox(item)">
+            <v-list-tile v-for="item in vitaboxes" :key="item.id" @click="selectVitabox(item.id)">
               <v-list-tile-content>{{ item.address }}</v-list-tile-content>
             </v-list-tile>
           </v-list>
         </v-flex>
         <v-flex xs8>
-          <div v-if="dataConnection">
-            <div :id="status==3?'cameraBoard':''">
+          <div v-if="dataConnections.length>0">
+            <div :id="status==4?'cameraBoard':''">
               <video class="invisible" ref="localVideo" autoplay playsinline></video>
               <video class="invisible" ref="remoteVideo" autoplay playinline></video>
             </div>
             <p>{{message}}</p>
 
-            <div v-if="status==0">
-              <button @click="this.cancelConnection" color="success">Cancel</button>
-            </div>
-            <div v-if="status==1">
+            <div v-if="status==1 && selectedPeer!==null">
               <button @click="this.startConnection" color="success">Start</button>
             </div>
             <div v-if="status==2">
+              <button @click="this.cancelConnection" color="success">Cancel</button>
+            </div>
+            <div v-if="status==3">
               <button @click="this.acceptConnection" color="success">Accept</button>
               <button @click="this.rejectConnection" color="success">Cancel</button>
             </div>
-            <div v-if="status==3">
+            <div v-if="status==4">
               <button @click="this.stopConnection" color="success">Finish</button>
             </div>
             <br>
@@ -53,8 +53,10 @@ export default {
       streamToSend: null,
       streamToShow: null,
       peer: null,
+      selectedPeer: null,
+      remotePeerID: null,
       mediaConnection: null,
-      dataConnection: null,
+      dataConnections: [],
       status: 0,
       message: "initializing...",
       vitaboxes: this.$store.state.vitaboxes
@@ -65,7 +67,7 @@ export default {
       key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
       host:
         process.env.NODE_ENV === "production"
-          ? "vitasenior-peer-test.eu-gb.mybluemix.net"
+          ? "vitasenior-peer.eu-gb.mybluemix.net"
           : "192.168.161.206",
       port: process.env.NODE_ENV === "production" ? "443" : "8808",
       secure: process.env.NODE_ENV === "production" ? true : false
@@ -74,9 +76,7 @@ export default {
     this.listenPeerEvent();
   },
   beforeDestroy() {
-    if (this.dataConnection) {
-      this.dataConnection.close();
-    }
+    this.dataConnections.forEach(x => x.close());
     if (this.mediaConnection) {
       this.mediaConnection.close();
       this.stopCamera();
@@ -87,27 +87,22 @@ export default {
   methods: {
     listenPeerEvent() {
       this.peer.on("call", mediaConnection => {
-        if (
-          this.status === 2 &&
-          this.dataConnection.peer === mediaConnection.peer
-        ) {
+        console.log("status on call", this.status);
+        if (this.status === 2 && this.remotePeerID === mediaConnection.peer) {
           this.mediaConnection = mediaConnection;
           this.mediaConnection.answer(this.streamToSend);
-          this.status = 3;
+          this.status = 4;
           this.message = "";
           this.listenMediaConnection();
         } else {
-          dataConnection.send({ type: "unauthorized" });
+          this.dataConnections.forEach(x => {
+            if (x.peer === mediaConnection.peer)
+              x.send({ type: "unauthorized" });
+          });
         }
       });
       this.peer.on("connection", dataConnection => {
-        if (this.status === 1) {
-          this.dataConnection = dataConnection;
-          this.status = 2;
-          this.listenDataConnection();
-        } else {
-          dataConnection.send({ type: "occupied" });
-        }
+        this.listenDataConnection(dataConnection);
       });
       this.peer.on("error", error => {
         console.log("peer error: ", error.message);
@@ -118,68 +113,93 @@ export default {
       this.status = 1;
       this.message = "";
     },
-    selectVitabox(item) {
-      this.dataConnection = this.peer.connect("1"); // this.dataConnection = this.peer.connect(item.id);
-      this.listenDataConnection();
+    selectVitabox(peer) {
+      // this.selectedPeer = peer;
+      this.selectedPeer = "1";
+      if (!this.dataConnections.find(x => x.peer === peer)) {
+        let dataConnection = this.peer.connect(peer);
+        this.listenDataConnection(dataConnection);
+      }
     },
     startConnection() {
-      this.status = 0;
-      this.message = "waiting...";
-      this.dataConnection.send({
-        type: "call",
-        username: this.$store.state.user.name
-      });
+      if (this.status === 1)
+        if (this.selectedPeer) {
+          this.status = 2;
+          this.message = "waiting...";
+          this.remotePeerID = this.selectedPeer;
+          this.dataConnections.forEach(x => {
+            if (x.peer === this.remotePeerID)
+              x.send({ type: "call", username: this.$store.state.user.name });
+          });
+        } else this.message = "Vitabox not selected";
+      else this.message = "You're in another call";
     },
     acceptConnection() {
+      this.status = 2;
+      this.message = "waiting...";
       this.startCamera().then(success => {
-        if (success) {
-          this.dataConnection.send({ type: "accept" });
-          this.status = 0;
-          this.message = "waiting...";
-        } else {
-          this.dataConnection.send({
-            type: "unable",
-            message: "camera not working"
+        if (success)
+          this.dataConnections.forEach(x => {
+            if (x.peer === this.remotePeerID) x.send({ type: "accept" });
+          });
+        else {
+          this.dataConnections.forEach(x => {
+            if (x.peer === this.remotePeerID)
+              x.send({
+                type: "unable",
+                message: "error starting the WebCam"
+              });
           });
           this.status = 1;
-          this.message = "";
+          this.message = "error starting the WebCam";
         }
       });
     },
     rejectConnection() {
-      this.dataConnection.send({ type: "reject" });
+      this.dataConnections.forEach(x => {
+        if (x.peer === this.remotePeerID) x.send({ type: "reject" });
+      });
       this.status = 1;
       this.message = "";
     },
     cancelConnection() {
-      this.dataConnection.send({ type: "cancel" });
+      this.dataConnections.forEach(x => {
+        if (x.peer === this.remotePeerID) x.send({ type: "cancel" });
+      });
       this.status = 1;
       this.message = "";
     },
-    listenDataConnection() {
-      this.dataConnection.on("data", data => {
+    listenDataConnection(dataConnection) {
+      dataConnection.on("data", data => {
         switch (data.type) {
           case "call":
-            this.status = 2;
-            this.message = data.username + " is calling";
+            if (this.status === 1) {
+              // this.remotePeerID = dataConnection.peer;
+              this.remotePeerID = "1";
+              this.status = 3;
+              this.message = data.username + " is calling";
+            } else {
+              dataConnection.send({ type: "occupied" });
+            }
             break;
           case "accept":
             this.startCamera().then(success => {
               if (success) {
+                console.log("stream to send", this.streamToSend);
+                console.log("peer object", this.peer);
                 this.mediaConnection = this.peer.call(
-                  "1", // this.dataConnection.peer,
-                  this.streamToSend,
-                  { metadata: { user: "Diogo" } }
+                  this.remotePeerID,
+                  this.streamToSend
                 );
-                this.status = 3;
+                this.status = 4;
                 this.message = "";
                 this.listenMediaConnection();
               } else {
                 this.status = 1;
                 this.message = "error starting the WebCam";
-                this.dataConnection.send({
+                dataConnection.send({
                   type: "unable",
-                  message: "camera not working"
+                  message: "error starting the WebCam"
                 });
               }
             });
@@ -206,11 +226,14 @@ export default {
             break;
         }
       });
-      this.dataConnection.on("error", err => {
+      dataConnection.on("error", err => {
         console.log("dataConnection error: ", err);
       });
+      this.dataConnections.push(dataConnection);
     },
     listenMediaConnection() {
+      console.log("iniciou escuta de eventos media", this.mediaConnection);
+
       this.$refs.localVideo.className = "localView";
       this.$refs.localVideo.srcObject = this.streamToShow;
       this.mediaConnection.on("stream", stream => {

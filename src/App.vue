@@ -12,14 +12,12 @@
       </transition>
     </main>
 
-
     <log></log>
     <foot></foot>
   </v-app>
 </template>
 
 <script>
-import axios from "axios";
 import { event_bus } from "@/plugins/bus.js";
 import Log from "@/components/utils/Log.vue";
 import Footer from "@/components/utils/Footer.vue";
@@ -34,25 +32,8 @@ export default {
   },
   mounted() {
     event_bus.$emit("waiting", true);
-    axios({
-      method: "GET",
-      url:
-        process.env.NODE_ENV === "production"
-          ? "https://vitasenior.eu-gb.mybluemix.net/check"
-          : "http://192.168.161.94:8080/check",
-      headers: this.$store.state.user.token
-        ? {
-            "Authorization": this.$store.state.user.token,
-            "Content-Type": "application/json",
-            "Accept-Version": "1.0.0",
-            "Accept-Language": "pt"
-          }
-        : {
-            "Content-Type": "application/json",
-            "Accept-Version": "1.0.0",
-            "Accept-Language": "pt"
-          }
-    })
+    event_bus.$data.http
+      .get("/check")
       .then(() => {
         if (this.$store.state.user.is_admin) {
           this.$router.push("/backoffice/vitabox/list");
