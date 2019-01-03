@@ -47,7 +47,7 @@
           >OFFICE</v-btn>
           <notification></notification>
           <warning></warning>
-          <v-btn @click="videocall_dialog = true" slot="activator" dark>
+          <v-btn @click="videocall_dialog = true" slot="activator" dark> 
             <v-icon color="white">fas fa-video</v-icon>
           </v-btn>
         </v-toolbar-items>

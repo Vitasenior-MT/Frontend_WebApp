@@ -51,6 +51,7 @@ export default {
         if (process.env.NODE_ENV !== "production") {
           console.log("ws message:", data.content, data.msg);
         }
+        // console.log("ws message:", data.content, data.msg);
 
         if (
           data.content == "warning_env" ||

@@ -110,6 +110,7 @@ export default {
   mounted() {
     this.peer = Peer(this.$store.state.user.id, {
       key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
+      token: this.$store.state.user.token,
       host:
         process.env.NODE_ENV === "production"
           ? "vitasenior-peer.eu-gb.mybluemix.net"
@@ -122,34 +123,39 @@ export default {
   },
   watch: {
     vitaboxes(vitaboxes) {
-      // vitaboxes.forEach(vitabox => {
-      //   if (!this.dataConnections.find(x => x.peer === vitabox.id)) {
-      //     let dataConnection = this.peer.connect(vitabox.id);
-      //     dataConnection.on("open", () =>
-      //       this.listenDataConnection(dataConnection, vitabox)
-      //     );
-      //   }
-      // });
-      //---- dev -----
-      if (vitaboxes.length > 0) {
-        if (!this.dataConnections.find(x => x.peer === "1")) {
-          let dataConnection = this.peer.connect("1");
-          dataConnection.on("open", () =>
-            this.listenDataConnection(dataConnection, vitaboxes[0])
-          );
+      if (this.peer.open) {
+        //----- prod -----
+        // vitaboxes.forEach(vitabox => {
+        //   if (!this.dataConnections.find(x => x.peer === vitabox.id)) {
+        //     let dataConnection = this.peer.connect(vitabox.id);
+        //     dataConnection.on("open", () =>
+        //       this.listenDataConnection(dataConnection, vitabox)
+        //     );
+        //   }
+        // });
+        // //---- dev -----
+        if (vitaboxes.length > 0) {
+          if (!this.dataConnections.find(x => x.peer === "1")) {
+            let dataConnection = this.peer.connect("1");
+            dataConnection.on("open", () => {
+              console.log("peer: connection open with 1");
+              this.listenDataConnection(dataConnection, vitaboxes[0]);
+            });
+          }
         }
+        // //---------------
       }
-      //---------------
     },
     dataConnections(dataConnections) {
+      //----- prod -----
       // this.offlineVitaboxes = this.vitaboxes.filter(
       //   x => dataConnections.filter(y => y.peer === x.id).length < 1
       // );
-      //---- dev -----
+      // //---- dev -----
       this.offlineVitaboxes = this.vitaboxes.filter(
         x => dataConnections.filter(y => y.peer === "1").length < 1
       );
-      //--------------
+      // //--------------
     }
   },
   beforeDestroy() {
@@ -178,12 +184,13 @@ export default {
         }
       });
       this.peer.on("connection", dataConnection => {
+        //----- prod -----
         // let vitabox = this.vitaboxes.filter(x => x.id === dataConnection.peer);
-        //---- dev -----^
+        // //---- dev -----
         let vitabox = this.vitaboxes.filter(
           x => x.id === "ee41fbb1-da23-422d-8b73-26b0fb07fed4"
         );
-        //--------------
+        // //--------------
         this.listenDataConnection(dataConnection, vitabox);
       });
       this.peer.on("error", error => {
@@ -248,10 +255,11 @@ export default {
         switch (data.type) {
           case "call":
             if (this.status === 1) {
+              //----- prod -----
               // this.remotePeerID = vitabox.id;
-              //---- dev -----
+              // //---- dev -----
               this.remotePeerID = "1";
-              //--------------
+              // //--------------
               this.status = 3;
               this.message =
                 data.username + " from " + vitabox.address + " is calling";
@@ -312,19 +320,19 @@ export default {
         console.log("dataConnection error: ", err);
       });
 
+      //----- prod -----
       // this.dataConnections.push({
       //   connection: dataConnection,
       //   peer: vitabox.id,
       //   address: vitabox.address
       // });
-
-      //---- dev -----
+      // //---- dev -----
       this.dataConnections.push({
         connection: dataConnection,
         peer: "1",
         address: vitabox.address
       });
-      //--------------
+      // //--------------
     },
     listenMediaConnection() {
       this.mediaConnection.on("stream", stream => {

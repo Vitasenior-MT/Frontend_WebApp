@@ -5,20 +5,54 @@
       <v-layout row wrap>
         <v-flex md4>
           <v-card-text>
-            <v-text-field :mask="'nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn'" :rules="[() => id.length > 1 || 'Vitabox ID is required']" label="ID" v-model="id" type="text"></v-text-field>
-            <v-text-field :rules="[() => password.length > 1 || 'Vitabox password is required']" label="Password" v-model="password" type="password"></v-text-field>
+            <v-text-field
+              :mask="'nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn'"
+              :rules="[() => id.length > 1 || 'Vitabox ID is required']"
+              label="ID"
+              v-model="id"
+              type="text"
+            ></v-text-field>
+            <v-text-field
+              :rules="[() => password.length > 1 || 'Vitabox password is required']"
+              label="Password"
+              v-model="password"
+              type="password"
+            ></v-text-field>
           </v-card-text>
         </v-flex>
         <v-flex md4>
           <v-card-text>
-            <v-textarea :rules="[() => address.length > 1 || 'Vitabox address is required']" name="address" v-model="address" label="Address"></v-textarea>
+            <v-textarea
+              :rules="[() => address.length > 1 || 'Vitabox address is required']"
+              name="address"
+              v-model="address"
+              label="Address"
+            ></v-textarea>
           </v-card-text>
         </v-flex>
         <v-flex md4>
           <v-card-text>
-            <v-overflow-btn v-model="district" :items="districts" item-text="name" label="District" editable single-line append-icon="fas fa-angle-down"></v-overflow-btn>
-            <v-overflow-btn v-model="locality" :items="district?localities[this.districts.indexOf(district)]:[]" item-text="localities" label="Locality" editable single-line :disabled="district?false:true" append-icon="fas fa-angle-down" class="mt-0"></v-overflow-btn>
-            </v-card-text>
+            <v-overflow-btn
+              v-model="district"
+              :items="districts"
+              item-text="name"
+              label="District"
+              editable
+              single-line
+              append-icon="fas fa-angle-down"
+            ></v-overflow-btn>
+            <v-overflow-btn
+              v-model="locality"
+              :items="district?localities[this.districts.indexOf(district)]:[]"
+              item-text="localities"
+              label="Locality"
+              editable
+              single-line
+              :disabled="district?false:true"
+              append-icon="fas fa-angle-down"
+              class="mt-0"
+            ></v-overflow-btn>
+          </v-card-text>
         </v-flex>
       </v-layout>
     </v-card>
@@ -476,7 +510,10 @@ export default {
             event_bus.$emit("waiting", false);
           });
       } else {
-        event_bus.$emit("error", "insert all the fields and the marker at map");
+        event_bus.$emit("toast", {
+          message: "insert all the fields and the marker at map",
+          type: "error"
+        });
       }
     },
     setMarker(location) {
