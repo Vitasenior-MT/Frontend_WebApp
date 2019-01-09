@@ -50,13 +50,13 @@ export default {
   },
   created() {
     this.getPatients(this.$store.state.vitabox.id);
-    this.getVitaboxBoards(this.$store.state.vitabox.id);
+    this.getBoards(this.$store.state.vitabox.id);
   },
   watch: {
     vitabox(x) {
       if (x) {
         this.getPatients(x.id);
-        this.getVitaboxBoards(x.id);
+        this.getBoards(x.id);
       }
     }
   },
@@ -67,6 +67,7 @@ export default {
       event_bus.$data.http
         .get("/vitabox/" + vitabox_id + "/patient")
         .then(response => {
+          this.$store.commit("setPatientsList", response.data.patients);
           this.patients = response.data.patients;
           event_bus.$emit("waiting", false);
         })
@@ -82,7 +83,7 @@ export default {
           event_bus.$emit("waiting", false);
         });
     },
-    getVitaboxBoards(vitabox_id) {
+    getBoards(vitabox_id) {
       event_bus.$emit("waiting", true);
       event_bus.$data.http
         .get("/vitabox/" + vitabox_id + "/board")

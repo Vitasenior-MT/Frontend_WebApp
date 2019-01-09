@@ -2,17 +2,29 @@
   <v-expansion-panel id="add_patient_to_box" inset dark>
     <v-expansion-panel-content hide-actions>
       <div slot="header">
-        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
+        <v-btn color="primary" dark>
+          <v-icon class="pr-2">fas fa-plus</v-icon>
+          <label>new user</label>
+        </v-btn>
       </div>
 
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
             <v-flex xs12 md8>
-              <v-text-field :rules="[() => form.email.length>5 && form.email.indexOf('@') > -1 || 'Invalid email']" label="Email" v-model="form.email"></v-text-field>
+              <v-text-field
+                :rules="[() => form.email.length>5 && form.email.indexOf('@') > -1 || 'Invalid email']"
+                label="Email"
+                v-model="form.email"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 md4 class="text-xs-right">
-               <v-checkbox label="register has sponsor?" v-model="form.sponsor" color="raven"></v-checkbox>
+              <v-select
+                :items="['Informal caregiver','Formal caregiver','Additional sponsor']"
+                label="Role"
+                v-model="role"
+                append-icon="fas fa-angle-down"
+              ></v-select>
             </v-flex>
             <v-flex sx12>
               <v-btn dark color="ash" block @click.native="save">Save</v-btn>
@@ -20,7 +32,6 @@
           </v-layout>
         </v-container>
       </v-form>
-      
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -41,8 +52,14 @@ export default {
         name: "",
         since: null,
         id: ""
-      }
+      },
+      role: "Informal caregiver"
     };
+  },
+  watch: {
+    role(val) {
+      this.form.sponsor = val === "Additional sponsor";
+    }
   },
   methods: {
     save() {
@@ -59,6 +76,13 @@ export default {
               message: "user was successfully registered to vitabox",
               type: "success"
             });
+            this.form = {
+              email: "",
+              sponsor: false,
+              name: "",
+              since: null,
+              id: ""
+            };
             event_bus.$emit("waiting", false);
           })
           .catch(error => {

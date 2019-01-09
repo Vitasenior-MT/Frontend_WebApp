@@ -381,4 +381,13 @@ export default {
   height: 50vh;
   position: relative;
 }
+
+.envIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  bottom: 50%;
+  transform: translate(-50%, -50%);
+}
 </style>

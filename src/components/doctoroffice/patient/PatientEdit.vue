@@ -12,10 +12,10 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
-                <v-text-field :rules="[() => parseFloat(patient.weight) > 30 && parseFloat(patient.weight) < 130 || 'invalid weight']" label="Weight" type="number" v-model="patient.weight"></v-text-field>
+                <v-text-field :rules="[() => parseFloat(patient.weight) > 30 && parseFloat(patient.weight) < 130 || 'invalid weight']" label="Weight" type="number" v-model="patient.weight" suffix="kg"></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field :rules="[() =>  parseFloat(patient.height) > 1 && parseFloat(patient.height) < 2.2 || 'invalid height']" label="Height" type="number" v-model="patient.height"></v-text-field>
+                <v-text-field :rules="[() =>  parseFloat(patient.height) > 1 && parseFloat(patient.height) < 2.2 || 'invalid height']" label="Height" type="number" v-model="patient.height" suffix="meters"></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>

@@ -1,9 +1,23 @@
 <template>
   <div id="disable_patient">
-    <v-btn icon small color="transparent" @click.native="()=>dialog_disable_patient=true">
-      <v-icon v-if="patient.active">fas fa-play-circle</v-icon>
-      <v-icon v-else>fas fa-pause-circle</v-icon>
-    </v-btn>
+
+    <v-tooltip bottom v-if="patient.active">
+      <v-btn slot="activator" icon small color="transparent" @click.native="()=>dialog_disable_patient=true">
+        <v-icon>fas fa-play-circle</v-icon>
+      </v-btn>
+      <span>active</span>
+    </v-tooltip>
+    <v-tooltip bottom v-else-if="!patient.active && !patient.weight && !patient.height">
+      <v-icon slot="activator" dark>fas fa-sync-alt</v-icon>
+      <span>waiting for the doctor to start activity</span>
+    </v-tooltip>
+    <v-tooltip bottom v-else>
+      <v-btn slot="activator" icon small color="transparent" @click.native="()=>dialog_disable_patient=true">
+        <v-icon>fas fa-pause-circle</v-icon>
+      </v-btn>
+      <span>paused activity</span>
+    </v-tooltip>
+
     <v-dialog v-model="dialog_disable_patient" max-width="500px">
       <v-card>
         <v-card-title>

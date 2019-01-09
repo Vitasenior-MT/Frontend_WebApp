@@ -1,30 +1,21 @@
 <template>
-  <v-card id="edit_profile">
+  <v-card id="vitabox_reset">
     <v-card-title>
-      <span class="headline primary_d--text">Edit profile</span>
+      <span class="headline error--text">Reset vitabox</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>
       </v-btn>
     </v-card-title>
-    <v-card-text v-if="item">
-      <v-container grid-list-md>
-        <v-layout wrap>
-          <v-flex>
-            <v-text-field
-              :rules="[() => (parseInt(item.frequency)>0 && parseInt(item.frequency)<360) || 'invalid time interva between exams']"
-              label="Frequency"
-              v-model="item.frequency"
-              type="number"
-              suffix="hours"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-      </v-container>
+    <v-card-text
+      v-if="vitabox"
+    >Reseting the board will remove all associations to users, patients and equipment as well as generating a new password.
+      <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="ash" dark @click.native="save">Save</v-btn>
+      <v-btn v-if="!checked" block disabled>PROCEED</v-btn>
+      <v-btn dark v-else color="error darken-1" block @click.native="reset">PROCEED</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -33,29 +24,31 @@
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "edit_exam",
+  name: "vitabox_reset",
   props: {
-    item: Object
+    vitabox: Object
+  },
+  data: () => {
+    return {
+      checked: false
+    };
   },
   methods: {
     close() {
       this.$emit("close");
     },
-    save() {
+    reset() {
       event_bus.$emit("waiting", true);
-      event_bus.$data.http
-        .put("/patient/" + this.$store.state.patient.id + "/exam", {
-          board_id: this.item.id,
-          frequency: this.item.frequency === "" ? null : this.item.frequency
-        })
-        .then(response => {
-          this.$store.commit("setPatientBoardData", this.item);
 
+      event_bus.$data.http
+        .put("/vitabox/" + this.vitabox.id + "/reset", {})
+        .then(response => {
+          this.$emit("reseted");
+          this.close();
           event_bus.$emit("toast", {
-            message: "exam was successfully updated",
+            message: "vitabox was successfully reseted",
             type: "success"
           });
-          this.close();
           event_bus.$emit("waiting", false);
         })
         .catch(error => {
@@ -76,3 +69,6 @@ export default {
   }
 };
 </script>
+
+<style>
+</style>

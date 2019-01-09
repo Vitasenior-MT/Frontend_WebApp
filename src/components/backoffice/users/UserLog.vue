@@ -1,13 +1,15 @@
 <template>
-  <v-card id="user_logs" >
+  <v-card id="user_logs">
     <v-card-title v-if="user!==null">
       <span class="headline">Logs - {{user.name}}</span>
       <v-spacer></v-spacer>
-      <v-btn icon @click.native="close"><v-icon color="error">fas fa-times</v-icon></v-btn>
+      <v-btn icon @click.native="close">
+        <v-icon color="error">fas fa-times</v-icon>
+      </v-btn>
     </v-card-title>
-    <v-card-text class="px-5">
+    <v-card-text class="px-4">
       <v-divider light></v-divider>
-      <v-list v-if="logs.length>0">
+      <v-list v-if="logs.length>0" id="logsboard">
         <v-list-tile v-for="log in logs" :key="log.id" two-line @click="()=>{}">
           <v-list-tile-content>
             <v-list-tile-sub-title>{{formatDate(log.datetime)}}</v-list-tile-sub-title>
@@ -16,6 +18,7 @@
         </v-list-tile>
       </v-list>
       <div v-else class="subheading text-xs-center warning--text">This user has no log</div>
+      <br>
     </v-card-text>
   </v-card>
 </template>
@@ -95,3 +98,10 @@ export default {
   }
 };
 </script>
+
+<style>
+#logsboard {
+  overflow-y: scroll;
+  max-height: 600px;
+}
+</style>

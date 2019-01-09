@@ -1,19 +1,35 @@
 <template>
-   <v-expansion-panel id="create_measure" inset>
+  <v-expansion-panel id="create_measure" inset>
     <v-expansion-panel-content hide-actions>
       <div slot="header">
-        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
+        <v-btn color="primary" dark>
+          <v-icon>fas fa-plus</v-icon>
+        </v-btn>
       </div>
       <v-container grid-list-md>
-        <v-layout wrap>
+        <v-layout wrap v-if="items">
           <v-flex xs12 md6>
-            <v-select :rules="[() => selected_measure !== null || 'Measure unit is required']" :items="items" item-text="measure" label="Measure unit" v-model="selected_measure" single-line append-icon="fas fa-angle-down" return-object></v-select>
+            <v-select
+              :rules="[() => selected_measure !== null || 'Measure unit is required']"
+              :items="items"
+              item-text="measure"
+              label="Measure unit"
+              v-model="selected_measure"
+              single-line
+              append-icon="fas fa-angle-down"
+              return-object
+            ></v-select>
           </v-flex>
           <v-flex xs12 sm6 md2>
             <v-text-field label="Minimum acceptable" v-model="measure.min" type="number"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6 md2>
-            <v-text-field :rules="[() => parseFloat(measure.min) < parseFloat(measure.max) || 'Maximum must be greater than Minimum']" label="Maximum acceptable" v-model="measure.max" type="number"></v-text-field>
+            <v-text-field
+              :rules="[() => parseFloat(measure.min) < parseFloat(measure.max) || 'Maximum must be greater than Minimum']"
+              label="Maximum acceptable"
+              v-model="measure.max"
+              type="number"
+            ></v-text-field>
           </v-flex>
           <v-flex xs12 md2>
             <v-btn dark color="ash" block @click.native="save">Save</v-btn>
@@ -41,25 +57,32 @@ export default {
         tag: "",
         measure: ""
       },
-      items: [
-        { measure: "pressão arterial sistólica", tag: "systolic" },
-        { measure: "pressão arterial diastólica", tag: "diastolic" },
-        { measure: "pulsação arterial", tag: "pulse" },
-        { measure: "oximetria do pulso", tag: "spo2" },
-        { measure: "peso", tag: "weight" },
-        { measure: "gordura corporal", tag: "bodyfat" },
-        { measure: "massa óssea", tag: "bonemass" },
-        { measure: "massa muscular", tag: "musclemass" },
-        { measure: "gordura visceral", tag: "visceralfat" },
-        { measure: "água", tag: "water" },
-        { measure: "calorias", tag: "callories" },
-        { measure: "passos", tag: "steps" },
-        { measure: "metros", tag: "meters" },
-        { measure: "frequência cardíaca", tag: "heartrate" },
-        { measure: "temperatura corporal", tag: "bodytemp" }
-      ],
+      items: [],
       selected_measure: null
     };
+  },
+  created() {
+    event_bus.$emit("waiting", true);
+    event_bus.$data.http
+      .get("/sensormodel")
+      .then(response => {
+        this.items = response.data.sensors;
+        event_bus.$emit("waiting", false);
+      })
+      .catch(error => {
+        if (error.response) {
+          event_bus.$emit("toast", {
+            message: error.response.data,
+            type: "error"
+          });
+        } else {
+          event_bus.$emit("toast", {
+            message: error.message,
+            type: "error"
+          });
+        }
+        event_bus.$emit("waiting", false);
+      });
   },
   methods: {
     save() {

@@ -125,36 +125,36 @@ export default {
     vitaboxes(vitaboxes) {
       if (this.peer.open) {
         //----- prod -----
-        // vitaboxes.forEach(vitabox => {
-        //   if (!this.dataConnections.find(x => x.peer === vitabox.id)) {
-        //     let dataConnection = this.peer.connect(vitabox.id);
-        //     dataConnection.on("open", () =>
-        //       this.listenDataConnection(dataConnection, vitabox)
-        //     );
-        //   }
-        // });
-        // //---- dev -----
-        if (vitaboxes.length > 0) {
-          if (!this.dataConnections.find(x => x.peer === "1")) {
-            let dataConnection = this.peer.connect("1");
-            dataConnection.on("open", () => {
-              console.log("peer: connection open with 1");
-              this.listenDataConnection(dataConnection, vitaboxes[0]);
-            });
+        vitaboxes.forEach(vitabox => {
+          if (!this.dataConnections.find(x => x.peer === vitabox.id)) {
+            let dataConnection = this.peer.connect(vitabox.id);
+            dataConnection.on("open", () =>
+              this.listenDataConnection(dataConnection, vitabox)
+            );
           }
-        }
+        });
+        // //---- dev -----
+        // if (vitaboxes.length > 0) {
+        //   if (!this.dataConnections.find(x => x.peer === "1")) {
+        //     let dataConnection = this.peer.connect("1");
+        //     dataConnection.on("open", () => {
+        //       console.log("peer: connection open with 1");
+        //       this.listenDataConnection(dataConnection, vitaboxes[0]);
+        //     });
+        //   }
+        // }
         // //---------------
       }
     },
     dataConnections(dataConnections) {
       //----- prod -----
-      // this.offlineVitaboxes = this.vitaboxes.filter(
-      //   x => dataConnections.filter(y => y.peer === x.id).length < 1
-      // );
-      // //---- dev -----
       this.offlineVitaboxes = this.vitaboxes.filter(
-        x => dataConnections.filter(y => y.peer === "1").length < 1
+        x => dataConnections.filter(y => y.peer === x.id).length < 1
       );
+      // //---- dev -----
+      // this.offlineVitaboxes = this.vitaboxes.filter(
+      //   x => dataConnections.filter(y => y.peer === "1").length < 1
+      // );
       // //--------------
     }
   },
@@ -184,12 +184,13 @@ export default {
         }
       });
       this.peer.on("connection", dataConnection => {
+        console.log("peer connected");
         //----- prod -----
-        // let vitabox = this.vitaboxes.filter(x => x.id === dataConnection.peer);
+        let vitabox = this.vitaboxes.filter(x => x.id === dataConnection.peer);
         // //---- dev -----
-        let vitabox = this.vitaboxes.filter(
-          x => x.id === "ee41fbb1-da23-422d-8b73-26b0fb07fed4"
-        );
+        // let vitabox = this.vitaboxes.filter(
+        //   x => x.id === "ee41fbb1-da23-422d-8b73-26b0fb07fed4"
+        // );
         // //--------------
         this.listenDataConnection(dataConnection, vitabox);
       });
@@ -256,9 +257,9 @@ export default {
           case "call":
             if (this.status === 1) {
               //----- prod -----
-              // this.remotePeerID = vitabox.id;
+              this.remotePeerID = vitabox.id;
               // //---- dev -----
-              this.remotePeerID = "1";
+              // this.remotePeerID = "1";
               // //--------------
               this.status = 3;
               this.message =
@@ -321,17 +322,17 @@ export default {
       });
 
       //----- prod -----
-      // this.dataConnections.push({
-      //   connection: dataConnection,
-      //   peer: vitabox.id,
-      //   address: vitabox.address
-      // });
-      // //---- dev -----
       this.dataConnections.push({
         connection: dataConnection,
-        peer: "1",
+        peer: vitabox.id,
         address: vitabox.address
       });
+      // //---- dev -----
+      // this.dataConnections.push({
+      //   connection: dataConnection,
+      //   peer: "1",
+      //   address: vitabox.address
+      // });
       // //--------------
     },
     listenMediaConnection() {

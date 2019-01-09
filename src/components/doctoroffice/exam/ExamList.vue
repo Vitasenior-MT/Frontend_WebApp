@@ -45,7 +45,7 @@ export default {
           class: "headers"
         },
         {
-          text: "Frequency",
+          text: "Periodicity",
           value: "frequecy",
           sortable: false,
           class: "headers"

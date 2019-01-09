@@ -1,112 +1,146 @@
 <template>
   <v-content style="height:100%">
     <v-layout row wrap>
-        <v-flex xs12 class="pa-0">
-          <v-layout class="text-md-center">
-            <v-card dark class="pb-3" width="100%" flat>
-              <v-card-title>
-                <div style="width:100%;position:relative;">
-                  <p class="text-xs-center mb-0"><label class="primary_l--text headline font-weight-medium">Patient - </label><label class="headline font-weight-thin"> {{ $store.state.patient.name}} </label></p>
-                  <p class="grey--text text-xs-center mb-0 body-2"> {{ $store.state.patient.id}} </p>
-                  <send-notification id="send_btn" :to_patient="true"></send-notification>
-                </div>
-              </v-card-title>
-            </v-card>
-          </v-layout>
-        </v-flex>
+      <v-flex xs12 class="pa-0">
+        <v-layout class="text-md-center">
+          <v-card dark class="pb-3" width="100%" flat>
+            <v-card-title>
+              <div style="width:100%;position:relative;">
+                <p class="text-xs-center mb-0">
+                  <label class="primary_l--text headline font-weight-medium">Patient -</label>
+                  <label class="headline font-weight-thin">{{ $store.state.patient.name}}</label>
+                </p>
+                <p class="grey--text text-xs-center mb-0 body-2">{{ $store.state.patient.id}}</p>
+                <send-notification id="send_btn" :to_patient="true"></send-notification>
+              </div>
+            </v-card-title>
+          </v-card>
+        </v-layout>
+      </v-flex>
     </v-layout>
     <v-layout row wrap class="pb-1">
-        <v-flex md12 lg4 class="pa-0">
-          <v-layout fill-height>
-            <v-card dark width="100%" height="100%" class="text-xs-center" flat>
-              <v-avatar class="patientAvatar" size="150px"><img src="@/assets/logo.png"></v-avatar>
-              <br/>
-              <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
-              <v-icon v-if="$store.state.patient.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
-              <v-icon v-if="$store.state.patient.gender == 'undefined'" class="pink--text">fas fa-times-circle</v-icon>
-              <v-list dark >
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
-                    <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-content>
-                    <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
-                    <v-list-tile-title class="text-xs-center">{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</v-list-tile-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>
-                    <v-list-tile-sub-title class="text-xs-center primary--text">Age</v-list-tile-sub-title>
-                    <v-list-tile-title class="text-xs-center">{{ this.calculate_age($store.state.patient.birthdate) }}</v-list-tile-title>
-                  </v-list-tile-content>
-                  <v-list-tile-content>
-                    <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
-                    <v-list-tile-title class="text-xs-center">{{ $store.state.patient.birthdate }}</v-list-tile-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-              </v-list>
-            </v-card>
-          </v-layout>
-        </v-flex>
-        <v-flex md12 lg8>
+      <v-flex md12 lg4 class="pa-0">
+        <v-layout fill-height>
+          <v-card dark width="100%" height="100%" class="text-xs-center" flat>
+            <v-avatar class="patientAvatar" size="150px">
+              <img src="@/assets/logo.png">
+            </v-avatar>
+            <br>
+            <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
+            <v-icon v-if="$store.state.patient.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
+            <v-icon
+              v-if="$store.state.patient.gender == 'undefined'"
+              class="pink--text"
+            >fas fa-times-circle</v-icon>
+            <v-list dark>
+              <v-list-tile>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
+                  <v-list-tile-title
+                    class="text-xs-center"
+                  >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
+                  <v-list-tile-title
+                    class="text-xs-center"
+                  >{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title class="text-xs-center primary--text">Age</v-list-tile-sub-title>
+                  <v-list-tile-title
+                    class="text-xs-center"
+                  >{{ this.calculate_age($store.state.patient.birthdate) }}</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
+                  <v-list-tile-title class="text-xs-center">{{ $store.state.patient.birthdate }}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card>
+        </v-layout>
+      </v-flex>
+      <v-flex md12 lg8>
         <v-card dark flat height="100%">
           <v-tabs centered color="primary" dark icons-and-text>
             <v-tabs-slider color="white"></v-tabs-slider>
-            <v-tab href="#tab-1">
-              Profiles
+            <v-tab href="#tab-1">Profiles
               <v-icon>fas fa-clipboard</v-icon>
             </v-tab>
-            <v-tab href="#tab-2">
-              Doctors
+            <v-tab href="#tab-2">Doctors
               <v-icon>fas fa-user-md</v-icon>
             </v-tab>
-            <v-tab href="#tab-3">
-              Boards
+            <v-tab href="#tab-3">Boards
               <v-icon>fas fa-microchip</v-icon>
             </v-tab>
             <v-tab-item v-for="i in 3" :id="'tab-' + i" :key="i">
-              <v-data-table v-if="i == 1" :headers="headersProfiles" :items="$store.state.patient.Profiles" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
+              <v-data-table
+                v-if="i == 1"
+                :headers="headersProfiles"
+                :items="$store.state.patient.Profiles"
+                hide-actions
+                class="elevation-1"
+                dark
+                sort-icon="fas fa-sort-down"
+                no-data-text="no profiles related to the patient"
+              >
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.measure }}</td>
                   <td class="text-xs-left">{{ props.item.min }}</td>
                   <td class="text-xs-left">{{ props.item.max }}</td>
                 </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
-                </template>
-              </v-data-table>  
+              </v-data-table>
               <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
-              <v-data-table v-if="i == 2" :headers="headersDoctors" :items="$store.state.patient.Doctors" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
+              <v-data-table
+                v-if="i == 2"
+                :headers="headersDoctors"
+                :items="$store.state.patient.Doctors"
+                hide-actions
+                class="elevation-1"
+                dark
+                sort-icon="fas fa-sort-down"
+                no-data-text="no doctors registered to the patient"
+              >
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.name }}</td>
                   <td class="text-xs-left">{{ props.item.email }}</td>
-                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                  <td class="justify-center layout px-0">
-                  </td>
-                </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
+                  <td
+                    class="text-xs-left"
+                  >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  <td class="justify-center layout px-0"></td>
                 </template>
               </v-data-table>
-              <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>  
-              <v-data-table v-if="i == 3" :headers="headersBoards" :items="$store.state.patient.Boards" hide-actions class="elevation-1" dark  sort-icon="fas fa-sort-down">
+              <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>
+              <v-data-table
+                v-if="i == 3"
+                :headers="headersBoards"
+                :items="$store.state.patient.Boards"
+                hide-actions
+                class="elevation-1"
+                dark
+                sort-icon="fas fa-sort-down"
+                no-data-text="no boards related to the patient"
+              >
                 <template slot="items" slot-scope="props">
-                  <td class="text-xs-left">{{ props.item.Boardmodel.name }}<label v-if="props.item.description"> - </label>{{ props.item.description}}</td>
-                  <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                  <td class="text-xs-left">{{ props.item.frequency ? props.item.frequency+" hours" : "none" }}</td>
-                  <td><remove-board v-if="$store.state.vitabox.sponsor" :board="props.item"></remove-board></td>
+                  <td class="text-xs-left">
+                    {{ props.item.Boardmodel.name }}
+                    <label v-if="props.item.description">-</label>
+                    {{ props.item.description}}
+                  </td>
+                  <td
+                    class="text-xs-left"
+                  >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+                  <td
+                    class="text-xs-left"
+                  >{{ props.item.frequency ? props.item.frequency+" hours" : "none" }}</td>
+                  <td>
+                    <remove-board v-if="$store.state.vitabox.sponsor" :board="props.item"></remove-board>
+                  </td>
                 </template>
-                <template slot="no-data">
-                  <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">
-                      No data to display here 
-                  </v-alert>
-                </template>
-              </v-data-table>  
+              </v-data-table>
             </v-tab-item>
           </v-tabs>
         </v-card>
@@ -114,7 +148,8 @@
     </v-layout>
     <v-flex class="pb-2">
       <v-btn dark class="ml-0" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left </v-icon> <span class="pl-1"> Go Back</span>
+        <v-icon>fas fa-long-arrow-alt-left</v-icon>
+        <span class="pl-1">Go Back</span>
       </v-btn>
     </v-flex>
   </v-content>
@@ -215,7 +250,7 @@ export default {
 </script>
 
 <style>
-#send_btn{
+#send_btn {
   position: absolute;
   top: 0;
   right: 5px;

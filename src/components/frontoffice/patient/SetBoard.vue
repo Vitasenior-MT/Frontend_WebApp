@@ -1,20 +1,32 @@
 <template>
   <v-expansion-panel id="add_board_to_patient" popout dark>
     <v-expansion-panel-content hide-actions>
-
       <div slot="header">
-        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
+        <v-btn color="primary">
+          <v-icon class="pr-2">fas fa-plus</v-icon>
+          <label>set device</label>
+        </v-btn>
       </div>
 
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-select :items="boards" v-model="selected" label="Select" hint="Boards to add" :item-text="(item)=>{return item.description?item.Boardmodel.name+' - '+item.description:item.Boardmodel.name}" prepend-icon="fas fa-stethoscope" append-icon="fas fa-angle-down" return-object></v-select>
-            <v-flex sm4 md3><v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn></v-flex>
+            <v-select
+              :items="boards"
+              v-model="selected"
+              label="Select"
+              hint="Boards to add"
+              :item-text="(item)=>{return item.description?item.Boardmodel.name+' - '+item.description:item.Boardmodel.name}"
+              prepend-icon="fas fa-stethoscope"
+              append-icon="fas fa-angle-down"
+              return-object
+            ></v-select>
+            <v-flex sm4 md3>
+              <v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-form>
-      
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -36,9 +48,16 @@ export default {
       .get("/vitabox/" + this.$store.state.vitabox.id + "/board")
       .then(response => {
         this.boards = response.data.boards.filter(
-          board => board.Boardmodel.type === "non-wearable"
+          board =>
+            (board.Boardmodel.type === "wearable" &&
+              board.description === "") ||
+            board.Boardmodel.type === "non-wearable"
         );
         event_bus.$emit("waiting", false);
+        event_bus.$emit("toast", {
+          message: "equipment successfully added to patient",
+          type: "success"
+        });
       })
       .catch(error => {
         if (error.response) {

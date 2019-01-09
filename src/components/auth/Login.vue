@@ -3,18 +3,33 @@
     <v-container fill-height>
       <v-layout justify-center wrap align-center class="pb-5 mb-5">
         <v-flex id="auth_card">
-          <v-card id="login" >
-            <v-card-title id="login_title"><p class="title mb-0">Login</p></v-card-title>
+          <v-card id="login">
+            <v-card-title id="login_title">
+              <p class="title mb-0">Login</p>
+            </v-card-title>
             <v-card-text id="login_box">
-                <v-text-field prepend-icon="fas fa-user" v-model="email" name="email" label="Email" id="email" type="text"></v-text-field>
-                <v-text-field prepend-icon="fas fa-lock" v-model="password" name="password" label="Password" id="password" type="password"></v-text-field>
+              <v-text-field
+                prepend-icon="fas fa-user"
+                v-model="email"
+                name="email"
+                label="Email"
+                id="email"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="fas fa-lock"
+                v-model="password"
+                name="password"
+                label="Password"
+                id="password"
+                type="password"
+              ></v-text-field>
               <v-btn small block flat class="primary--text" to="/forgot">forgot password</v-btn>
             </v-card-text>
             <v-card-actions class="bottom_action">
               <v-btn flat class="primary--text" to="/signup">register</v-btn>
               <v-spacer></v-spacer>
-              <v-btn class="raven primary--text" @click.native="login">
-                Login
+              <v-btn class="raven primary--text" @click.native="login">Login
                 <v-icon dark right>fas fa-sign-in-alt</v-icon>
               </v-btn>
             </v-card-actions>
@@ -32,9 +47,8 @@ export default {
   name: "login",
   data: () => {
     return {
-      email: "jose@a.aa",
-      password: "123qweASD",
-      text: "ola <br /> mundo"
+      email: process.env.NODE_ENV === "production" ? "" : "jose@a.aa",
+      password: process.env.NODE_ENV === "production" ? "" : "123qweASD"
     };
   },
   mounted() {

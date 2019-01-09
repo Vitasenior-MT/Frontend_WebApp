@@ -9,7 +9,16 @@
     </v-card-title>
     <v-card-text class="pt-1">
       <v-container grid-list-md>
-        <v-select :rules="[() => selected !== null || 'Profile model is required']" :items="models" item-text="name" label="Profile" v-model="selected" single-line append-icon="fas fa-angle-down" return-object></v-select>
+        <v-select
+          :rules="[() => selected !== null || 'Profile model is required']"
+          :items="models"
+          item-text="name"
+          label="Profile"
+          v-model="selected"
+          single-line
+          append-icon="fas fa-angle-down"
+          return-object
+        ></v-select>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -61,53 +70,49 @@ export default {
       if (this.selected) {
         event_bus.$emit("waiting", true);
 
-        let promises = [];
-
+        let profiles = [];
         this.$store.state.patient.Profiles.forEach(profile => {
           let match = this.selected.measures.filter(m => m.tag === profile.tag);
           if (match[0]) {
-            profile.min = match[0].min;
-            profile.max = match[0].max;
-            promises.push(
-              new Promise((resolve, reject) => {
-                event_bus.$data.http
-                  .put(
-                    "/patient/" +
-                      this.$store.state.patient.id +
-                      "/profile/" +
-                      profile.id,
-                    { min: profile.min, max: profile.max }
-                  )
-                  .then(response => {
-                    this.$store.commit("setProfileData", profile);
-                    resolve();
-                  })
-                  .catch(error => reject());
-              })
-            );
+            profiles.push({
+              id: profile.id,
+              min: match[0].min,
+              max: match[0].max
+            });
           }
         });
-        Promise.all(promises).then(
-          () => {
+
+        event_bus.$data.http
+          .put("/patient/" + this.$store.state.patient.id + "/profile", {
+            profiles: profiles,
+            description: this.selected.name
+          })
+          .then(response => {
+            this.$store.commit("setProfileData", profiles);
+            let patient = this.$store.state.patient;
+            patient.profile = this.selected.name;
+            this.$store.commit("setPatientData", patient);
             event_bus.$emit("waiting", false);
             event_bus.$emit("toast", {
               message: "profiles was successfully updated",
               type: "success"
             });
-          },
-          error => {
+            this.close();
+          })
+          .catch(error => {
+            if (error.response) {
+              event_bus.$emit("toast", {
+                message: error.response.data,
+                type: "error"
+              });
+            } else {
+              event_bus.$emit("toast", {
+                message: error.message,
+                type: "error"
+              });
+            }
             event_bus.$emit("waiting", false);
-            event_bus.$emit("toast", {
-              message: "cannot update some profiles",
-              type: "error"
-            });
-          }
-        );
-      } else {
-        event_bus.$emit("toast", {
-          message: "insert all fields",
-          type: "error"
-        });
+          });
       }
     },
     close() {

@@ -38,6 +38,12 @@
           </v-avatar>Vitasenior-MT
         </v-toolbar-title>
         <v-spacer></v-spacer>
+        <div>
+          <span class="primary--text">welcome</span>
+          <br>
+          <span class="headline font-weight-light white--text">{{$store.state.user.name}}</span>
+        </div>
+        <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn
             v-if="this.$store.state.user.is_doctor || this.$store.state.user.is_admin"
@@ -47,15 +53,15 @@
           >OFFICE</v-btn>
           <notification></notification>
           <warning></warning>
-          <v-btn @click="videocall_dialog = true" slot="activator" dark> 
+          <v-btn @click="videocall_dialog = true" slot="activator" dark disabled>
             <v-icon color="white">fas fa-video</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
 
-      <v-dialog v-model="videocall_dialog"  dark max-width="900">
+      <!-- <v-dialog v-model="videocall_dialog"  dark max-width="900">
         <video-call :openned="videocall_dialog" @close="videocall_dialog=false" @open="videocall_dialog=true"></video-call>
-      </v-dialog>
+      </v-dialog>-->
     </div>
 
     <div v-else>
@@ -68,9 +74,9 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn flat dark to="/Signin" class="top_bar_item">
-            <v-icon left dark>fas fa-sign-in-alt</v-icon>Signin
+            <v-icon left dark>fas fa-sign-in-alt</v-icon>Login
           </v-btn>
-          <v-btn flat dark to="/Signup" color="grey lighten-1" class="top_bar_item">Signup</v-btn>
+          <v-btn flat dark to="/Signup" color="grey lighten-1" class="top_bar_item">Register</v-btn>
         </v-toolbar-items>
       </v-toolbar>
     </div>

@@ -31,7 +31,6 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   name: "remove_board",
   props: {
-    box: Object,
     board: Object
   },
   data: () => {
@@ -46,7 +45,7 @@ export default {
       this.dialog_remove_board = false;
 
       event_bus.$data.http
-        .delete("/vitabox/" + this.box.id + "/board", {
+        .delete("/vitabox/" + this.$store.state.vitabox.id + "/board", {
           data: {
             board_id: this.board.id
           }
@@ -58,6 +57,7 @@ export default {
             type: "success"
           });
           event_bus.$emit("waiting", false);
+          event_bus.$emit("updatePatients");
         })
         .catch(error => {
           if (error.response) {

@@ -85,9 +85,13 @@ const mutations = {
     state.patient = null;
   },
   setProfileData(state, profileData) {
-    state.patient.Profiles.forEach(x => {
-      if (x.id === profileData.id) x = profileData;
-    });
+    profileData.forEach(y =>
+      state.patient.Profiles.forEach(x => {
+        if (x.id === y.id) {
+          x.min = y.min;
+          x.max = y.max;
+        }
+      }));
   },
   setPatientBoardData(state, boardData) {
     state.patient.Boards.forEach(x => {

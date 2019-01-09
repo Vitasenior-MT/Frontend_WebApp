@@ -1,12 +1,30 @@
 <template>
   <content id="profile_list">
     <v-card dark flat height="391">
-      <v-card-title  class="pl-0">
-        <v-btn color="primary" dark @click="()=>dialog_define_profile=true" class="mb-2">Define Profile</v-btn>
+      <v-card-title>
+        <div>
+          <span class="primary_d--text">Defined profile</span>
+          <div class="headline">{{$store.state.patient.profile}}</div>
+        </div>
         <v-spacer></v-spacer>
-        <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
+        <v-btn
+          small
+          color="primary"
+          dark
+          @click="()=>dialog_define_profile=true"
+          class="mb-2"
+        >{{$store.state.patient.profile==="Default"?"Define Profile":"Alter Profile"}}</v-btn>
       </v-card-title>
-      <v-data-table :headers="headers" :search="search" :items="$store.state.patient.Profiles" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[4]" class="pt-2" dark >
+      <v-data-table
+        :headers="headers"
+        :items="$store.state.patient.Profiles"
+        sort-icon="fas fa-angle-down"
+        next-icon="fas fa-angle-right"
+        prev-icon="fas fa-angle-left"
+        :rows-per-page-items="[10]"
+        class="pt-2"
+        dark
+      >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.measure }}</td>
           <td class="text-xs-left">{{ props.item.min }}</td>
@@ -18,7 +36,11 @@
           </td>
         </template>
         <template slot="no-data">
-          <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle"> Nothing to display here </v-alert>
+          <v-alert
+            :value="true"
+            color="error"
+            icon="fas fa-exclamation-triangle"
+          >Nothing to display here</v-alert>
         </template>
       </v-data-table>
     </v-card>
@@ -40,13 +62,12 @@ export default {
   name: "profile_list",
   data() {
     return {
-      search: "",
       dialog_edit_profile: false,
       dialog_define_profile: false,
       selected_profile: null,
       headers: [
         {
-          text: "Profile",
+          text: "",
           value: "measure",
           sortable: true,
           class: "headers"

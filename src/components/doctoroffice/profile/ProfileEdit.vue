@@ -14,7 +14,12 @@
             <v-text-field label="Minimum acceptable" v-model="item.min" type="number"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>
-            <v-text-field :rules="[() => parseFloat(item.min) < parseFloat(item.max) || 'Maximum must be greater than Minimum']" label="Maximum acceptable" v-model="item.max" type="number"></v-text-field>
+            <v-text-field
+              :rules="[() => parseFloat(item.min) < parseFloat(item.max) || 'Maximum must be greater than Minimum']"
+              label="Maximum acceptable"
+              v-model="item.max"
+              type="number"
+            ></v-text-field>
           </v-flex>
         </v-layout>
       </v-container>
@@ -42,16 +47,27 @@ export default {
       if (parseFloat(this.item.max) > parseFloat(this.item.min)) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
-          .put(
-            "/patient/" +
-              this.$store.state.patient.id +
-              "/profile/" +
-              this.item.id,
-            { min: this.item.min, max: this.item.max }
-          )
+          .put("/patient/" + this.$store.state.patient.id + "/profile", {
+            profiles: [
+              {
+                id: this.item.id,
+                min: this.item.min,
+                max: this.item.max
+              }
+            ],
+            description: "Custom"
+          })
           .then(response => {
-            this.$store.commit("setProfileData", this.item);
-
+            this.$store.commit("setProfileData", [
+              {
+                id: this.item.id,
+                min: this.item.min,
+                max: this.item.max
+              }
+            ]);
+            let patient = this.$store.state.patient;
+            patient.profile = "Custom";
+            this.$store.commit("setPatientData", patient);
             event_bus.$emit("toast", {
               message: "profile was successfully updated",
               type: "success"

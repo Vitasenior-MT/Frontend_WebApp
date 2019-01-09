@@ -3,14 +3,27 @@
     <v-flex xs12 class="pb-1 pt-1">
       <v-card>
         <v-layout row>
-          <v-avatar tile class="pl-3"><img :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"></v-avatar>
-          <span class="title pa-3 primary--text"> {{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
+          <v-avatar tile class="pl-3">
+            <img
+              :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"
+            >
+          </v-avatar>
+          <span
+            class="title pa-3 primary--text"
+          >{{ this.selectedSensorGraph.board.Boardmodel.name }} : {{ this.selectedSensorGraph.sensor.Sensormodel.measure }}</span>
           <v-spacer></v-spacer>
-            <v-icon small>fas fa-calendar-alt</v-icon>
-            <span class="pa-3"> Última actualização:  {{ this.lastrecord }} </span>
+          <v-icon small>fas fa-calendar-alt</v-icon>
+          <span class="pa-3">
+            Última actualização:
+            {{selectedSensorGraph.sensor.last_commit ? new Date(selectedSensorGraph.sensor.last_commit).toLocaleDateString("pt-pt"): null }}
+          </span>
           <v-spacer></v-spacer>
-          <v-tooltip bottom >
-            <v-btn slot="activator" color="primary_d" @click.native='goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)'>
+          <v-tooltip bottom>
+            <v-btn
+              slot="activator"
+              color="primary_d"
+              @click.native="goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)"
+            >
               <v-icon>fas fa-info-circle</v-icon>
             </v-btn>
             <span>Sensor Details</span>
@@ -21,16 +34,24 @@
     <v-flex class="hidden-sm-and-down pr-1 pb-1 pt-0" md9>
       <v-card class="bioGraphCard" light flat>
         <div v-if="records" id="bioGraph">
-          <canvas :id="this.selectedSensorGraph.sensor.id"></canvas>
+          <canvas id="chartjsgraph"></canvas>
         </div>
         <v-layout row wrap>
           <v-flex class="py-0">
-            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)"><v-icon>fas fa-angle-double-left</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-left</v-icon></v-btn>
+            <v-btn v-if="records.length>24" block color="primary" flat @click.native="getValues(1)">
+              <v-icon>fas fa-angle-double-left</v-icon>
+            </v-btn>
+            <v-btn v-else block flat disabled>
+              <v-icon>fas fa-angle-double-left</v-icon>
+            </v-btn>
           </v-flex>
           <v-flex class="py-0">
-            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)"><v-icon>fas fa-angle-double-right</v-icon></v-btn>
-            <v-btn v-else block flat disabled><v-icon>fas fa-angle-double-right</v-icon></v-btn>
+            <v-btn v-if="page>1" color="primary" block flat @click.native="getValues(-1)">
+              <v-icon>fas fa-angle-double-right</v-icon>
+            </v-btn>
+            <v-btn v-else block flat disabled>
+              <v-icon>fas fa-angle-double-right</v-icon>
+            </v-btn>
           </v-flex>
         </v-layout>
       </v-card>
@@ -39,12 +60,21 @@
       <v-layout wrap>
         <v-flex xs6 sm4 md12 class="pa-0" v-for="item in boardSensors.slice(0, 5)" :key="item.id">
           <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
-            <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+            <v-list-tile
+              class="px-0 py-2"
+              :color="verifyValue(item.sensor)"
+              @click.native="showGraph(item)"
+            >
               <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
-                <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
+                <img
+                  class="bioLogo"
+                  :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"
+                >
               </v-list-tile-avatar>
               <v-list-tile-content>
-                <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+                <v-list-tile-title
+                  class="font-weight-bold"
+                >{{ item.sensor.last_values ? item.sensor.last_values[0]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
                 <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -54,12 +84,18 @@
     </v-flex>
     <v-flex xs6 sm4 md3 class="pb-2 hidden-sm-and-down" v-for="item in boardSensors.slice(5)" :key="item.id">
       <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
-        <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+        <v-list-tile
+          class="px-0 py-2"
+          :color="verifyValue(item.sensor)"
+          @click.native="showGraph(item)"
+        >
           <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
             <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+            <v-list-tile-title
+              class="font-weight-bold"
+            >{{ item.sensor.last_values ? item.sensor.last_values[0]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
             <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -67,12 +103,18 @@
     </v-flex>
     <v-flex xs6 sm4 md3 class="pb-2 hidden-md-and-up" v-for="item in boardSensors" :key="item.id">
       <v-list light class="py-0 vitaboxDetailsSelector" style="height:60px;">
-        <v-list-tile class="px-0 py-2" :color="verifyValue(item.sensor)" @click.native="showGraph(item)">
+        <v-list-tile
+          class="px-0 py-2"
+          :color="verifyValue(item.sensor)"
+          @click.native="showGraph(item)"
+        >
           <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
             <img class="bioLogo" :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')">
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title class="font-weight-bold">{{ item.sensor.last_values ? item.sensor.last_values[item.sensor.last_values.length-1]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
+            <v-list-tile-title
+              class="font-weight-bold"
+            >{{ item.sensor.last_values ? item.sensor.last_values[0]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
             <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -98,12 +140,11 @@ export default {
   },
   data: () => {
     return {
-      selectedSensorGraph: [],
+      selectedSensorGraph: null,
       patientBoards: [],
       boardSensors: [],
       chart: null,
       records: [],
-      lastrecord: null,
       page: 1
     };
   },
@@ -114,14 +155,12 @@ export default {
   mounted() {
     if (this.selectedSensorGraph != null) {
       this.initGraph();
-      this.getValues(0);
     }
   },
   watch: {
     selectedPatient(val) {
       this.getPatientBoards();
       if (this.selectedSensorGraph != null) {
-        this.designGraph();
         this.getValues(0);
       }
     }
@@ -147,9 +186,9 @@ export default {
       this.selectedSensorGraph = sensor;
       this.records = [];
       this.getValues(0);
-      this.designGraph();
     },
     getValues(page) {
+      // console.log(this.selectedSensorGraph);
       event_bus.$data.http
         .get(
           "/record/sensor/" +
@@ -163,23 +202,24 @@ export default {
           this.records = response.data.records.sort(this.compare);
           this.page += page;
           this.designGraph();
-          this.lastrecord = this.records[this.records.length - 1].datetime;
-          this.lastrecord = new Date(this.lastrecord).toLocaleDateString(
-            "pt-pt",
-            this.options
-          );
         })
         .catch(error => {
           if (error.response) {
-            event_bus.$emit("error", error.response.data);
+            event_bus.$emit("toast", {
+              message: error.response.data,
+              type: "error"
+            });
           } else {
-            event_bus.$emit("error", error.message);
+            event_bus.$emit("toast", {
+              message: error.message,
+              type: "error"
+            });
           }
         });
     },
     initGraph() {
       this.chart = new Chart(
-        document.getElementById(this.selectedSensorGraph.sensor.id),
+        document.getElementById("chartjsgraph"),
         {
           type: "line",
           options: {
@@ -190,9 +230,11 @@ export default {
           }
         }
       );
+      this.getValues(0);
     },
     designGraph() {
       let length = this.records.length;
+      // console.log("data", this.chart.data);
       this.chart.data.labels = this.records.map(x => {
         return this.formatDate(x.datetime);
       });
@@ -278,10 +320,11 @@ export default {
       return 0;
     },
     goToBoardDetails(boardData, sensorData, patientData) {
-      this.$store.commit("setBoardData", boardData);
-      this.$store.commit("setSensorData", sensorData);
       this.$store.commit("setPatientData", patientData);
-      this.$router.push("/frontoffice/board/detail");
+      this.$router.push({
+        name: "FOSensorDetail",
+        params: { sensor: sensorData, board: boardData }
+      });
     },
     verifyValue(sensor) {
       let profile = this.selectedPatient.Profiles.filter(
@@ -289,8 +332,8 @@ export default {
       )[0];
       if (
         sensor.last_values &&
-        profile.max > sensor.last_values[sensor.last_values.length - 1] &&
-        profile.min < sensor.last_values[sensor.last_values.length - 1]
+        profile.max > sensor.last_values[0] &&
+        profile.min < sensor.last_values[0]
       )
         return "success";
       else return "error";

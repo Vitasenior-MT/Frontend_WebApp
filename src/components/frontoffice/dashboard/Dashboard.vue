@@ -8,6 +8,7 @@
               <v-icon class="primary_d--text">fa fa-compass</v-icon>
             </v-flex>
             <v-flex xs10 class="py-3">
+              <h3 class="primary_l--text">Vitabox</h3>
               <span >{{ this.$store.state.vitabox.address }}</span>
             </v-flex>
             <v-flex xs1>
@@ -37,7 +38,6 @@ export default {
   },
   methods: {
     goToVitaboxDetails(vitaboxData) {
-      this.$store.commit("setVitaboxData", vitaboxData);
       this.$router.push("/frontoffice/vitabox/detail");
     }
   }

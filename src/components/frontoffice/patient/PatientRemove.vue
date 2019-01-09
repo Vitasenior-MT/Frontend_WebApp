@@ -52,7 +52,11 @@ export default {
           }
         })
         .then(response => {
-          this.$emit("remove", this.patient);
+          // this.$emit("remove", this.patient);
+          let patients=this.$store.state.patients;
+          patients.splice(patients.indexOf(props.item), 1);
+          this.$store.commit("setPatientsList", newList);
+          
           event_bus.$emit("toast", {
             message: "patient was successfully removed from vitabox",
             type: "success"

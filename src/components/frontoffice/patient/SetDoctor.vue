@@ -1,20 +1,30 @@
 <template>
   <v-expansion-panel id="add_board_to_patient" popout>
     <v-expansion-panel-content hide-actions>
-
       <div slot="header">
-        <v-btn color="primary" dark><v-icon>fas fa-plus</v-icon></v-btn>
+        <v-btn color="primary">
+          <v-icon class="pr-2">fas fa-plus</v-icon>
+          <label>add doctor</label>
+        </v-btn>
       </div>
 
       <v-form>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-text-field prepend-icon="fas fa-user-md" v-model="email" name="email" label="Doctor email" id="email" type="text"></v-text-field>
-            <v-flex sm4 md3><v-btn block class=" mt-3" dark color="ash" @click.native="save">Save</v-btn></v-flex>
+            <v-text-field
+              prepend-icon="fas fa-user-md"
+              v-model="email"
+              name="email"
+              label="Doctor email"
+              id="email"
+              type="text"
+            ></v-text-field>
+            <v-flex sm4 md3>
+              <v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-form>
-      
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -39,10 +49,10 @@ export default {
           })
           .then(response => {
             this.$store.commit("addDoctorToPatient", response.data.doctor);
-            event_bus.$emit(
-              "success",
-              "doctor was successfully defined to user"
-            );
+            event_bus.$emit("toast", {
+              message: "doctor was successfully defined to user",
+              type: "success"
+            });
             event_bus.$emit("waiting", false);
           })
           .catch(error => {

@@ -1,18 +1,15 @@
 <template>
   <div v-if="users.length>0">
     <add-user v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @adduser="(user)=>users.push(user)"></add-user>
-    <v-data-table :headers="headersUsers" :items="users" hide-actions class="elevation-1" dark sort-icon="fas fa-sort-down">
+    <v-data-table :headers="headersUsers" :items="users" class="elevation-1" dark sort-icon="fas fa-sort-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[5]" no-data-text="no users related to the vitabox">
       <template slot="items" slot-scope="props">
         <td><v-icon v-if="props.item.sponsor" small>fas fa-crown</v-icon></td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.email }}</td>
         <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-        <td  v-if="$store.state.vitabox.sponsor">
+        <td  v-if="$store.state.vitabox.sponsor && props.item.id!==$store.state.user.id">
           <remove-user :box="$store.state.vitabox" :user="props.item" @remove="()=>users.splice(users.indexOf(props.item), 1)"></remove-user>
         </td>
-      </template>
-      <template slot="no-data">
-        <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle">no data to display here</v-alert>
       </template>
     </v-data-table>
   </div>
@@ -20,8 +17,8 @@
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
-import UserAdd from "@/components/frontoffice/user/AddToVitabox.vue";
-import UserRemove from "@/components/frontoffice/user/RemoveFromVitabox.vue";
+import UserAdd from "@/components/frontoffice/user/UserAdd.vue";
+import UserRemove from "@/components/frontoffice/user/UserRemove.vue";
 
 export default {
   data() {

@@ -488,6 +488,7 @@ export default {
         event_bus.$data.http
           .post("/vitabox/" + this.id + "/register", vitabox)
           .then(response => {
+            vitabox.registered = true;
             this.$store.commit("addVitaboxToList", vitabox);
             event_bus.$emit("toast", {
               message: "vitabox was successfully registered",
