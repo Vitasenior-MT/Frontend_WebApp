@@ -40,7 +40,7 @@
             <v-flex sm6>
               <v-text-field
                 :mask="'nn:nn:nn:nn:nn:nn:nn:nn'"
-                :rules="[() => board.mac_addr.length > 1 || 'Board Mac address is required']"
+                :rules="[() => (board.mac_addr.length > 1 || board.mac_addr.length == 0) || 'Board Mac address is required']"
                 label="MAC address"
                 v-model="board.mac_addr"
                 type="text"
@@ -48,7 +48,7 @@
             </v-flex>
             <v-flex sm6>
               <v-text-field
-                :rules="[() => board.password.length > 1 || 'Board password is required']"
+                :rules="[() => (board.password.length > 1 || board.password.length == 0) || 'Board password is required']"
                 label="Password"
                 v-model="board.password"
                 type="password"
@@ -95,9 +95,13 @@ export default {
       if (
         this.board.mac_addr !== "" &&
         this.board.password !== "" &&
-        this.board.type !== ""
+        this.board.type !== "" &&
+        ((this.board.type === "environmental" &&
+          this.board.description !== "") ||
+          this.board.type !== "environmental")
       ) {
         event_bus.$emit("waiting", true);
+
         if (this.board.type === "wearable") {
           if (this.selectedPatient !== null) {
             this.board.description = this.selectedPatient.name;

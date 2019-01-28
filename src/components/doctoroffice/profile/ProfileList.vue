@@ -1,6 +1,6 @@
 <template>
   <content id="profile_list">
-    <v-card dark flat height="391">
+    <v-card dark flat height="100%">
       <v-card-title>
         <div>
           <span class="primary_d--text">Defined profile</span>
@@ -22,17 +22,19 @@
         next-icon="fas fa-angle-right"
         prev-icon="fas fa-angle-left"
         :rows-per-page-items="[10]"
-        class="pt-2"
         dark
       >
         <template slot="items" slot-scope="props">
-          <td class="text-xs-left">{{ props.item.measure }}</td>
-          <td class="text-xs-left">{{ props.item.min }}</td>
-          <td class="text-xs-left">{{ props.item.max }}</td>
-          <td class="right layout px-0">
-            <v-btn icon class="mx-0" @click="editProfile(props.item)">
-              <v-icon color="teal">fas fa-edit</v-icon>
-            </v-btn>
+          <td class="text-xs-left column">{{ props.item.measure }}</td>
+          <td class="text-xs-left column">{{ props.item.min }}</td>
+          <td class="text-xs-left column">{{ props.item.max }}</td>
+          <td class="text-xs-right column">
+            <v-tooltip bottom>
+              <v-btn slot="activator" icon class="mx-0" @click="editProfile(props.item)">
+                <v-icon color="teal">fas fa-edit</v-icon>
+              </v-btn>
+              <span>edit profile</span>
+            </v-tooltip>
           </td>
         </template>
         <template slot="no-data">
@@ -70,16 +72,15 @@ export default {
           text: "",
           value: "measure",
           sortable: true,
-          class: "headers"
+          class: "column"
         },
-        { text: "Min", value: "min", sortable: false, class: "headers" },
-        { text: "Max", value: "max", sortable: false, class: "headers" },
+        { text: "Min", value: "min", sortable: false, class: "column" },
+        { text: "Max", value: "max", sortable: false, class: "column" },
         {
           text: "Actions",
           value: "actions",
           sortable: false,
-          class: "headers",
-          align: "right"
+          class: "column"
         }
       ]
     };
@@ -96,3 +97,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.column{
+  padding: 0 16px !important;
+}
+</style>

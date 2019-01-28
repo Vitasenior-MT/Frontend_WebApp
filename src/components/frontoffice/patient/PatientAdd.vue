@@ -13,14 +13,14 @@
           <v-layout wrap>
             <v-flex xs12 lg3>
               <v-text-field
-                :rules="[() => patient.name.length > 3 || 'Patient name is required']"
+                :rules="[() => (patient.name.length > 3 || patient.name.length == 0) || 'Patient name is required']"
                 label="Name"
                 v-model="patient.name"
               ></v-text-field>
             </v-flex>
             <v-flex xs12 md6 lg2>
               <v-select
-                :rules="[() => patient.gender.length > 1 || 'Patient gender is required']"
+                :rules="[() => (patient.gender.length > 3 || patient.gender.length == 0) || 'Patient gender is required']"
                 :items="items"
                 label="Gender"
                 v-model="patient.gender"
@@ -43,7 +43,6 @@
               >
                 <v-text-field
                   slot="activator"
-                  :rules="[() => patient.birthdate !== null || 'Patient birthdate is required']"
                   label="Birthdate"
                   v-model="patient.birthdate"
                   append-icon="fas fa-calendar-alt"
@@ -64,14 +63,14 @@
             <v-flex xs12 md6 lg2>
               <v-text-field
                 mask="#########"
-                :rules="[() => patient.nif.length === 9 || 'Invalid Patient NIF']"
+                :rules="[() => (patient.nif.length === 9 || patient.nif.length === 0) || 'Invalid Patient NIF']"
                 label="NIF"
                 v-model="patient.nif"
               ></v-text-field>
             </v-flex>
             <v-flex xs12 md6 lg2>
               <v-text-field
-                :rules="[() => /^[0-9]{8}([ -]*[0-9][ ]*[A-Z]{2}[0-9])*$/.test(patient.cc) || 'Invalid Patient CC']"
+                :rules="[() => (/^[0-9]{8}([ -]*[0-9][ ]*[A-Z]{2}[0-9])*$/.test(patient.cc) || patient.cc.length == 0) || 'Invalid Patient CC']"
                 label="CC"
                 v-model="patient.cc"
               ></v-text-field>
@@ -133,14 +132,7 @@ export default {
         event_bus.$data.http
           .post("/vitabox/" + this.box.id + "/patient", this.patient)
           .then(response => {
-            this.patient.id = response.data.id;
-            this.patient.since = new Date();
-            
-            let patients=this.$store.state.patients;
-            patients.push(this.patient);
-            this.$store.commit("setPatientsList", patients);
-            
-            // this.$emit("addpatient", this.patient);
+            event_bus.$emit("updatePatients");
             event_bus.$emit("toast", {
               message: "patient was successfully added to vitabox",
               type: "success"
@@ -149,11 +141,8 @@ export default {
               name: "",
               birthdate: null,
               gender: "",
-              height: null,
-              weight: null,
               id: null,
               since: null,
-              active: false,
               nif: "",
               cc: ""
             };

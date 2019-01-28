@@ -1,7 +1,7 @@
 <template>
   <v-card id="edit_profile">
     <v-card-title>
-      <span class="headline primary_d--text">Edit profile</span>
+      <span class="headline primary_d--text">Edit frequency: {{item.Boardmodel.name}}</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>

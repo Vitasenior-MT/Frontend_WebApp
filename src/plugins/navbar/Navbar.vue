@@ -16,15 +16,6 @@
             <doctoroffice v-else-if="is_doctor"></doctoroffice>
             <frontoffice v-else></frontoffice>
           </div>
-
-          <v-btn id="btn_logout" class="raven primary--text" @click="logout" block>
-            <v-layout row class="pa-0">
-              <v-flex xs4>
-                <v-icon class="pa-0">fas fa-sign-out-alt</v-icon>
-              </v-flex>
-              <v-flex xs8 class="pa-0 text-xs-left">Logout</v-flex>
-            </v-layout>
-          </v-btn>
         </div>
       </v-navigation-drawer>
 
@@ -38,12 +29,6 @@
           </v-avatar>Vitasenior-MT
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <div>
-          <span class="primary--text">welcome</span>
-          <br>
-          <span class="headline font-weight-light white--text">{{$store.state.user.name}}</span>
-        </div>
-        <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn
             v-if="this.$store.state.user.is_doctor || this.$store.state.user.is_admin"
@@ -51,17 +36,9 @@
             class="white--text"
             @click="switchActivity"
           >OFFICE</v-btn>
-          <notification></notification>
-          <warning></warning>
-          <v-btn @click="videocall_dialog = true" slot="activator" dark disabled>
-            <v-icon color="white">fas fa-video</v-icon>
-          </v-btn>
         </v-toolbar-items>
+        <user-profile></user-profile>
       </v-toolbar>
-
-      <!-- <v-dialog v-model="videocall_dialog"  dark max-width="900">
-        <video-call :openned="videocall_dialog" @close="videocall_dialog=false" @open="videocall_dialog=true"></video-call>
-      </v-dialog>-->
     </div>
 
     <div v-else>
@@ -84,9 +61,7 @@
 </template>
 
 <script>
-import Warning from "./Warning.vue";
-import Videocall from "./Videocall.vue";
-import Notification from "./Notification.vue";
+import UserProfile from "./Profile.vue";
 import Frontoffice from "./Frontoffice.vue";
 import Backoffice from "./Backoffice.vue";
 import Doctoroffice from "./Doctoroffice.vue";
@@ -100,8 +75,7 @@ export default {
       fixed: true,
       is_admin: false,
       is_doctor: false,
-      as_user: false,
-      videocall_dialog: false
+      as_user: false
     };
   },
   mounted() {
@@ -150,30 +124,20 @@ export default {
 
       if (this.$store.state.user.is_admin) {
         this.$router.push("/backoffice/vitabox/list");
-      } else if (this.$store.state.user.is_doctor) {
-        this.$router.push("/doctoroffice/dashboard");
       } else {
-        this.$router.push("/frontoffice/dashboard");
+        this.$router.push("/alert/list");
       }
 
       event_bus.$emit("waiting", false);
-    },
-    logout() {
-      this.$router.push("/");
-      this.$store.commit("cleanData");
     }
   },
   components: {
-    "video-call": Videocall,
-    warning: Warning,
-    notification: Notification,
+    "user-profile": UserProfile,
     frontoffice: Frontoffice,
     backoffice: Backoffice,
     doctoroffice: Doctoroffice
   }
 };
-</script>
-
 </script>
 
 <style>
@@ -185,17 +149,8 @@ export default {
   height: 100%;
 }
 #body_menu {
-  height: calc(100% - 64px - 36px);
+  height: calc(100% - 64px);
   position: relative;
   overflow-y: auto;
-}
-#btn_logout {
-  height: 36px;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-}
-#btn_logout > div > i {
-  margin-right: 5px;
 }
 </style>

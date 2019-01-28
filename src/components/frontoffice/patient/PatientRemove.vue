@@ -1,17 +1,30 @@
 <template>
   <div id="remove_patient">
-    <v-btn flat icon small color="error" @click.native="()=>dialog_remove_patient=true">
-      <v-icon>fas fa-minus-circle</v-icon>
-    </v-btn>
+    <v-tooltip bottom>
+      <v-btn
+        slot="activator"
+        flat
+        icon
+        small
+        color="error"
+        @click.native="()=>dialog_remove_patient=true"
+      >
+        <v-icon>fas fa-minus-circle</v-icon>
+      </v-btn>
+      <span>remove patient</span>
+    </v-tooltip>
     <v-dialog v-model="dialog_remove_patient" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline error--text">Remove patient from vitabox</span>
           <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_remove_patient=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+          <v-btn icon @click.native="()=>dialog_remove_patient=false">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
         </v-card-title>
-        <v-card-text  v-if="patient">
-          Removing the patient will cause the <b>loss of record history</b>.
+        <v-card-text v-if="patient">
+          Removing the patient will cause the
+          <b>loss of record history</b>.
           <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
         </v-card-text>
         <v-card-actions>
@@ -22,7 +35,6 @@
       </v-card>
     </v-dialog>
   </div>
-  
 </template>
 
 <script>
@@ -52,11 +64,7 @@ export default {
           }
         })
         .then(response => {
-          // this.$emit("remove", this.patient);
-          let patients=this.$store.state.patients;
-          patients.splice(patients.indexOf(props.item), 1);
-          this.$store.commit("setPatientsList", newList);
-          
+          event_bus.$emit("updatePatients");
           event_bus.$emit("toast", {
             message: "patient was successfully removed from vitabox",
             type: "success"

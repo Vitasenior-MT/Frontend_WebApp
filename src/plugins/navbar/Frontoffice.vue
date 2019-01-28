@@ -1,9 +1,21 @@
 <template>
   <div id="frontoffice">
-    <v-btn small color="primary" class="mt-0" block dark to="/frontoffice/vitabox/register">Register Vitabox</v-btn>
+    <v-btn
+      small
+      color="primary"
+      class="mt-0"
+      block
+      dark
+      to="/frontoffice/vitabox/register"
+    >Register Vitabox</v-btn>
     <v-divider class="vitaboxDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
-      <router-link v-for="(item, index) in this.$store.state.vitaboxes" :key="item.id" @click.native="selectedVitabox(item)" :to='"/frontoffice/dashboard"'>
+      <router-link
+        v-for="(item, index) in this.$store.state.vitaboxes"
+        :key="item.id"
+        @click.native="selectedVitabox(item)"
+        :to="'/frontoffice/dashboard'"
+      >
         <v-divider v-if="index !== 0" class="vitaboxDivider" :inset="true"></v-divider>
         <v-list-tile class="vitaboxSelector">
           <v-list-tile-avatar class="primary--text">
@@ -11,7 +23,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title class="primary--text">Vitabox</v-list-tile-title>
-            <v-list-tile-sub-title class="white--text" small>{{ item.address }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title class="white--text" small>{{getVitaboxName(item)}}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </router-link>
@@ -54,6 +66,17 @@ export default {
     },
     selectedVitabox(vitaboxData) {
       this.$store.commit("setVitaboxData", vitaboxData);
+    },
+    getVitaboxName(item) {
+      return (
+        item.locality
+          .replace(/_/g, " ")
+          .split(" ")
+          .map(x => x[0].toUpperCase() + x.substr(1))
+          .join(" ") +
+        " - " +
+        item.address
+      );
     }
   }
 };

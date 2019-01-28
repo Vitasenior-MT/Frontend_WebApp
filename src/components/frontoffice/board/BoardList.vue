@@ -32,8 +32,11 @@
             :box="$store.state.vitabox"
             :board="props.item"
           ></disable-board>
-          <v-icon small v-else-if="props.item.active">fas fa-play</v-icon>
-          <v-icon small v-else>fas fa-pause</v-icon>
+          <v-tooltip v-else bottom>
+            <v-icon slot="activator" small v-if="props.item.active">fas fa-play</v-icon>
+            <v-icon slot="activator" small v-else>fas fa-pause</v-icon>
+            <span>{{props.item.active?'active':'inactive'}}</span>
+          </v-tooltip>
         </td>
         <td class="text-xs-left layout">
           <update-board v-if="$store.state.vitabox.sponsor" :board="props.item"></update-board>

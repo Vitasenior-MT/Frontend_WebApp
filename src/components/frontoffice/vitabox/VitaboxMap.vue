@@ -33,10 +33,6 @@ export default {
     };
   },
   mounted() {
-    console.log(
-      this.$store.state.vitabox.latitude,
-      this.$store.state.vitabox.longitude
-    );
     let myLatLng = new google.maps.LatLng(
       this.$store.state.vitabox.latitude,
       this.$store.state.vitabox.longitude

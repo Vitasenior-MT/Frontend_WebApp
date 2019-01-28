@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
-import Cookies from 'js-cookie';
 
 Vue.use(Vuex)
 
@@ -69,20 +68,19 @@ const mutations = {
     state.vitabox = null;
     state.board = null;
     state.sensor = null;
+    state.patients = [];
     state.patient = null;
-    state.user.token = null;
-    state.user.id = null;
-    state.user.name = null;
-    state.user.email = null;
-    state.user.photo = null;
-    state.user.is_admin = false;
-    state.user.is_doctor = false;
-    state.user.warnings = 0;
-    state.user.errors = 0;
-    state.vitabox = null;
-    state.board = null;
-    state.sensor = null;
-    state.patient = null;
+    state.user = {
+      id: null,
+      token: null,
+      name: null,
+      email: null,
+      photo: null,
+      is_admin: false,
+      is_doctor: false,
+      warnings: 0,
+      errors: 0
+    }
   },
   setProfileData(state, profileData) {
     profileData.forEach(y =>

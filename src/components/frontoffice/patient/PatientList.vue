@@ -41,7 +41,10 @@
             <v-icon slot="activator" dark>fas fa-play</v-icon>
             <span>active</span>
           </v-tooltip>
-          <v-tooltip bottom v-else-if="!props.item.active && !props.item.weight && !props.item.height">
+          <v-tooltip
+            bottom
+            v-else-if="!props.item.active && !props.item.weight && !props.item.height"
+          >
             <v-icon slot="activator" dark>fas fa-sync-alt</v-icon>
             <span>waiting for the doctor to start activity</span>
           </v-tooltip>
@@ -51,9 +54,12 @@
           </v-tooltip>
         </td>
         <td class="layout px-0">
-          <v-btn color="primary_d" @click="goToBoardDetails(props.item)">
-            <v-icon>fas fa-info-circle</v-icon>
-          </v-btn>
+          <v-tooltip bottom>
+            <v-btn slot="activator" color="primary_d" @click="goToBoardDetails(props.item)">
+              <v-icon>fas fa-info-circle</v-icon>
+            </v-btn>
+            <span>patient details</span>
+          </v-tooltip>
           <remove-patient
             v-if="$store.state.vitabox.sponsor"
             :box="$store.state.vitabox"

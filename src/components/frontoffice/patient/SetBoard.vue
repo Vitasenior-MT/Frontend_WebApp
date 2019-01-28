@@ -54,10 +54,6 @@ export default {
             board.Boardmodel.type === "non-wearable"
         );
         event_bus.$emit("waiting", false);
-        event_bus.$emit("toast", {
-          message: "equipment successfully added to patient",
-          type: "success"
-        });
       })
       .catch(error => {
         if (error.response) {

@@ -1,8 +1,11 @@
 <template>
   <div id="update_board">
-    <v-btn icon small color="transparent" @click.native="()=>dialog_update_board=true">
+    <v-tooltip bottom>
+    <v-btn slot="activator" icon small color="transparent" @click.native="()=>dialog_update_board=true">
       <v-icon color="teal darken-2">fas fa-edit</v-icon>
     </v-btn>
+    <span>edit description</span>
+    </v-tooltip>
     <v-dialog v-model="dialog_update_board" max-width="500px">
       <v-card>
         <v-card-title>

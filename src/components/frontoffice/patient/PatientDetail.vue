@@ -22,10 +22,12 @@
       <v-flex md12 lg4 class="pa-0">
         <v-layout fill-height>
           <v-card dark width="100%" height="100%" class="text-xs-center" flat>
-            <v-avatar class="patientAvatar" size="150px">
-              <img src="@/assets/logo.png">
+            <v-avatar size="150px">
+              <img v-if="patient_photo" :src="patient_photo">
+              <img v-else src="@/assets/logo.png">
             </v-avatar>
             <br>
+            <v-btn v-if="$store.state.vitabox.sponsor" @click="chg_photo_dialog=true">alter</v-btn>
             <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
             <v-icon v-if="$store.state.patient.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
             <v-icon
@@ -152,6 +154,10 @@
         <span class="pl-1">Go Back</span>
       </v-btn>
     </v-flex>
+
+    <v-dialog max-width="400" v-model="chg_photo_dialog">
+      <change-photo :to_patient="true" @changed="changePhoto" @close="chg_photo_dialog=false"></change-photo>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -160,7 +166,8 @@ import { event_bus } from "@/plugins/bus.js";
 import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
 import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 import RemoveBoard from "@/components/frontoffice/patient/RemoveBoard.vue";
-import NotificationSend from "@/components/frontoffice/notification/NotificationCreate.vue";
+import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
+import ChgPhoto from "@/components/user/utils/ChgPhoto.vue";
 
 export default {
   data() {
@@ -174,7 +181,7 @@ export default {
         second: "numeric"
       },
       measures: [],
-      dialog: false,
+      chg_photo_dialog: false,
       headersProfiles: [
         { text: "Measure", value: "measure", sortable: true },
         { text: "Min", sortable: false },
@@ -205,7 +212,8 @@ export default {
         tag: "",
         min: 0,
         max: 0
-      }
+      },
+      patient_photo: null
     };
   },
   computed: {
@@ -220,6 +228,7 @@ export default {
   },
   mounted() {
     this.getMeasures();
+    this.changePhoto();
   },
   methods: {
     calculate_age(dob) {
@@ -238,13 +247,20 @@ export default {
           });
         });
       }
+    },
+    changePhoto() {
+      this.patient_photo = this.$store.state.patient.photo
+        ? event_bus.$data.url + "/file/" + this.$store.state.patient.photo
+        : null;
+      this.chg_photo_dialog = false;
     }
   },
   components: {
     "add-board": SetBoard,
     "add-doctor": SetDoctor,
     "remove-board": RemoveBoard,
-    "send-notification": NotificationSend
+    "send-notification": NotificationSend,
+    "change-photo": ChgPhoto
   }
 };
 </script>

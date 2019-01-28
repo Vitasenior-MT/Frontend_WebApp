@@ -18,6 +18,7 @@
               label="Doctor email"
               id="email"
               type="text"
+              :rules="[() => ((email.length>5 && email.indexOf('@') > -1) || email.length==0) || 'Invalid email']"
             ></v-text-field>
             <v-flex sm4 md3>
               <v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn>

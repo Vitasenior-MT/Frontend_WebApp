@@ -1,9 +1,12 @@
 <template>
   <div id="disable_board">
-    <v-btn icon small color="transparent" @click.native="()=>dialog_disable_board=true">
+    <v-tooltip bottom>
+    <v-btn slot="activator" icon small color="transparent" @click.native="()=>dialog_disable_board=true">
       <v-icon v-if="board.active">fas fa-play-circle</v-icon>
       <v-icon v-else>fas fa-pause-circle</v-icon>
     </v-btn>
+    <span>{{board.active?'active':'inactive'}}</span>
+    </v-tooltip>
     <v-dialog v-model="dialog_disable_board" max-width="500px">
       <v-card>
         <v-card-title>

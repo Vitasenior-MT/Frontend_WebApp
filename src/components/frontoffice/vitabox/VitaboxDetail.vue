@@ -52,7 +52,7 @@
           <v-icon>fas fa-hand-holding-heart</v-icon>
         </v-tab>
         <v-tab href="#tab-boards">
-          <span>Boards</span>
+          <span>Equipment</span>
           <v-icon>fas fa-microchip</v-icon>
         </v-tab>
         <v-tab href="#tab-users">
@@ -83,7 +83,7 @@
 import BoardList from "@/components/frontoffice/board/BoardList.vue";
 import PatientList from "@/components/frontoffice/patient/PatientList.vue";
 import UserList from "@/components/frontoffice/user/UserList.vue";
-import NotificationSend from "@/components/frontoffice/notification/NotificationCreate.vue";
+import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
 import VitaboxMap from "@/components/frontoffice/vitabox/VitaboxMap.vue";
 
 export default {

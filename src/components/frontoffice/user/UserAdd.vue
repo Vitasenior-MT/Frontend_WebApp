@@ -13,7 +13,7 @@
           <v-layout wrap>
             <v-flex xs12 md8>
               <v-text-field
-                :rules="[() => form.email.length>5 && form.email.indexOf('@') > -1 || 'Invalid email']"
+                :rules="[() => ((form.email.length>5 && form.email.indexOf('@') > -1) || form.email.length==0) || 'Invalid email']"
                 label="Email"
                 v-model="form.email"
               ></v-text-field>

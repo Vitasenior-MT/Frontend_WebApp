@@ -1,22 +1,44 @@
 <template>
   <content id="profile_list">
-    <v-card dark flat height="391">
-      <v-card-title  class="pl-0">
+    <v-card dark flat height="100%">
+      <v-card-title class="pl-0">
         <v-spacer></v-spacer>
-        <v-text-field prepend-icon="fas fa-search" label="Search" single-line hide-details v-model="search"></v-text-field>
+        <v-text-field
+          prepend-icon="fas fa-search"
+          label="Search"
+          single-line
+          hide-details
+          v-model="search"
+        ></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :search="search" :items="$store.state.patient.Boards" sort-icon="fas fa-angle-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[4]" class="pt-2" dark >
+      <v-data-table
+        :headers="headers"
+        :search="search"
+        :items="$store.state.patient.Boards"
+        sort-icon="fas fa-angle-down"
+        next-icon="fas fa-angle-right"
+        prev-icon="fas fa-angle-left"
+        :rows-per-page-items="[4]"
+        dark
+      >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
           <td class="text-xs-left">{{ props.item.frequency?props.item.frequency:"undefined" }}</td>
-          <td class="right layout px-0">
-            <v-btn icon class="mx-0" @click="editExam(props.item)">
-              <v-icon color="teal">fas fa-edit</v-icon>
-            </v-btn>
+          <td class="text-xs-right">
+            <v-tooltip bottom>
+              <v-btn slot="activator" icon class="mx-0" @click="editExam(props.item)">
+                <v-icon color="teal">fas fa-edit</v-icon>
+              </v-btn>
+              <span>{{props.item.frequency?'edit schedule':'schedule exame'}}</span>
+            </v-tooltip>
           </td>
         </template>
         <template slot="no-data">
-          <v-alert :value="true" color="error" icon="fas fa-exclamation-triangle"> Nothing to display here </v-alert>
+          <v-alert
+            :value="true"
+            color="error"
+            icon="fas fa-exclamation-triangle"
+          >Nothing to display here</v-alert>
         </template>
       </v-data-table>
     </v-card>
@@ -41,14 +63,17 @@ export default {
         {
           text: "Board",
           value: "Boardmodel.name",
-          sortable: true,
-          class: "headers"
+          sortable: true
         },
         {
           text: "Periodicity",
           value: "frequecy",
-          sortable: false,
-          class: "headers"
+          sortable: false
+        },
+        {
+          text: "Actions",
+          value: "actions",
+          sortable: false
         }
       ]
     };

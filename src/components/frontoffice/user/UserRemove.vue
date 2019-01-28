@@ -1,16 +1,23 @@
 <template>
   <div id="remove_user">
-    <v-btn flat icon small color="error" @click.native="()=>dialog_remove_user=true">
-      <v-icon>fas fa-minus-circle</v-icon>
-    </v-btn>
+    <v-tooltip bottom>
+      <v-btn slot="activator" flat icon small color="error" @click.native="()=>dialog_remove_user=true">
+        <v-icon>fas fa-minus-circle</v-icon>
+      </v-btn>
+      <span>remove user</span>
+    </v-tooltip>
     <v-dialog v-model="dialog_remove_user" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline error--text">Remove access to user from vitabox</span>
           <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_remove_user=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+          <v-btn icon @click.native="()=>dialog_remove_user=false">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
         </v-card-title>
-        <v-card-text>Removing the user will cause the <b>impossibility of access</b> by the user.</v-card-text>
+        <v-card-text>Removing the user will cause the
+          <b>impossibility of access</b> by the user.
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn dark color="error darken-1" block @click.native="removeItem">PROCEED</v-btn>
@@ -18,7 +25,6 @@
       </v-card>
     </v-dialog>
   </div>
-  
 </template>
 
 <script>

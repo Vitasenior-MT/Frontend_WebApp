@@ -37,10 +37,8 @@ export default {
       .then(() => {
         if (this.$store.state.user.is_admin) {
           this.$router.push("/backoffice/vitabox/list");
-        } else if (this.$store.state.user.is_doctor) {
-          this.$router.push("/doctoroffice/dashboard");
         } else {
-          this.$router.push("/frontoffice/dashboard");
+          this.$router.push("/alert/list");
         }
         event_bus.$emit("waiting", false);
         this.checked = true;
@@ -161,5 +159,20 @@ i {
 }
 .headers {
   color: #f37027 !important;
+}
+.dark-hover:hover {
+  background-color: #5e5e5e;
+  /* border-color: #5e5e5e; */
+  cursor: pointer;
+}
+.light-hover:hover {
+  background-color: #e2e2e2;
+  /* border-color: #e2e2e2; */
+  cursor: pointer;
+}
+.align-vertical-center {
+  top: 50%;
+  transform: translateY(-50%);
+  position: relative;
 }
 </style>
