@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="headline">{{title}}</span>
+      <span
+        class="headline"
+      >{{to_patient?$t('user.utils.update_patient_photo',{patient:$store.state.patient.name}):$t('user.utils.update_own_photo')}}</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>
@@ -17,15 +19,15 @@
       </v-container>
     </v-responsive>
     <v-card-text>
-      <label v-if="selectedImage">selected file: {{selectedFilename}}</label>
+      <label v-if="selectedImage">{{$t('user.utils.selected_file')}}: {{selectedFilename}}</label>
     </v-card-text>
     <v-card-actions>
       <input type="file" name="image" @change="onFileChanged" id="file" class="inputfile">
       <div class="primary white--text">
-        <label for="file">Choose a file</label>
+        <label for="file">{{$t('user.utils.browse_file')}}</label>
       </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary" @click="uploadImage">Upload</v-btn>
+      <v-btn color="primary" @click="uploadImage">{{$t('user.utils.upload')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -49,19 +51,6 @@ export default {
       dragging: false,
       selectedFilename: ""
     };
-  },
-  mounted() {
-    if (!this.to_patient)
-      if (this.$store.state.user.photo) {
-        this.title = "Change your Photo";
-      } else {
-        this.title = "Define your Photo";
-      }
-    else if (this.$store.state.patient.photo) {
-      this.title = "Change " + this.$store.state.patient.name + "'s Photo";
-    } else {
-      this.title = "Define " + this.$store.state.patient.name + "'s Photo";
-    }
   },
   methods: {
     onFileChanged(event) {

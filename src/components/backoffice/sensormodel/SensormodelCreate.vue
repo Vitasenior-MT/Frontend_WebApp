@@ -13,31 +13,65 @@
         <v-container grid-list-md>
           <v-layout wrap>
             <v-flex xs12>
-              <v-text-field :rules="[() => sensor.measure.length > 1 || 'Measure is required']" label="Measure (application presentation)" v-model="sensor.measure"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.measure.length > 1 || 'Measure is required']"
+                label="Measure (application presentation)"
+                v-model="sensor.measure"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-text-field :rules="[() => sensor.to_read.length > 5 || 'Measure text is required']" label="Measure (text-to-speech)" v-model="sensor.to_read"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.to_read.length > 5 || 'Measure text is required']"
+                label="Measure (text-to-speech)"
+                v-model="sensor.to_read"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 sm8>
-              <v-text-field :rules="[() => sensor.tag.length > 3 || 'Measure tag is required']" label="Tag (system tag to measure)" v-model="sensor.tag"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.tag.length > 3 || 'Measure tag is required']"
+                label="Tag (system tag to measure)"
+                v-model="sensor.tag"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 sm4>
               <v-text-field label="Measure Unit" v-model="sensor.unit"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-text-field :rules="[() => sensor.transducer.length > 3 || 'Transducer name is required']" label="Transducer name" v-model="sensor.transducer"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.transducer.length > 3 || 'Transducer name is required']"
+                label="Transducer name"
+                v-model="sensor.transducer"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
               <v-text-field label="Minimum acceptable" v-model="sensor.min_acceptable"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
-              <v-text-field :rules="[() => sensor.min_acceptable < sensor.max_acceptable || 'Maximum acceptable must be greater Minimum acceptable']" label="Maximum acceptable" v-model="sensor.max_acceptable"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.min_acceptable < sensor.max_acceptable || 'Maximum acceptable must be greater than Minimum acceptable']"
+                label="Maximum acceptable"
+                v-model="sensor.max_acceptable"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
               <v-text-field label="Minimum possible" v-model="sensor.min_possible"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6>
-              <v-text-field :rules="[() => sensor.min_possible < sensor.max_possible || 'Maximum possible must be greater Minimum possible ']" label="Maximum possible" v-model="sensor.max_possible"></v-text-field>
+              <v-text-field
+                :rules="[() => sensor.min_possible < sensor.max_possible || 'Maximum possible must be greater than Minimum possible ']"
+                label="Maximum possible"
+                v-model="sensor.max_possible"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm6>
+              <v-text-field label="Minimum to graph" v-model="sensor.min_graph"></v-text-field>
+            </v-flex>
+            <v-flex xs12 sm6>
+              <v-text-field
+                :rules="[() => sensor.min_graph < sensor.max_graph || 'Maximum value must be greater than Minimum possible ']"
+                label="Maximum to graph"
+                v-model="sensor.max_graph"
+              ></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
@@ -65,6 +99,8 @@ export default {
         max_acceptable: 1,
         min_possible: 0,
         max_possible: 1,
+        min_graph: 0,
+        max_graph: 1,
         tag: "",
         unit: "",
         to_read: ""
@@ -78,6 +114,7 @@ export default {
       if (
         this.sensor.min_acceptable < this.sensor.max_acceptable &&
         this.sensor.min_possible < this.sensor.max_possible &&
+        this.sensor.min_graph < this.sensor.max_graph &&
         this.sensor.transducer !== "" &&
         this.sensor.measure !== "" &&
         this.sensor.to_read !== "" &&

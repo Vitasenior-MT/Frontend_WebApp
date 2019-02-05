@@ -14,7 +14,7 @@
             ></v-text-field>
             <v-text-field
               :rules="[() => password.length > 1 || 'Vitabox password is required']"
-              label="Password"
+              :label="$t('frontoffice.vitabox.pass')"
               v-model="password"
               type="password"
             ></v-text-field>
@@ -26,7 +26,7 @@
               :rules="[() => address.length > 1 || 'Vitabox address is required']"
               name="address"
               v-model="address"
-              label="Address"
+              :label="$t('frontoffice.vitabox.address')"
             ></v-textarea>
           </v-card-text>
         </v-flex>
@@ -36,7 +36,7 @@
               v-model="district"
               :items="districts"
               item-text="name"
-              label="District"
+              :label="$t('frontoffice.vitabox.district')"
               editable
               single-line
               append-icon="fas fa-angle-down"
@@ -45,7 +45,7 @@
               v-model="locality"
               :items="district?localities[this.districts.indexOf(district)]:[]"
               item-text="localities"
-              label="Locality"
+              :label="$t('frontoffice.vitabox.locality')"
               editable
               single-line
               :disabled="district?false:true"
@@ -57,7 +57,7 @@
       </v-layout>
     </v-card>
     <div id="google-map-register"></div>
-    <v-btn dark color="ash" @click="register">Register</v-btn>
+    <v-btn dark color="ash" @click="register">{{$t('frontoffice.vitabox.register')}}</v-btn>
   </v-content>
 </template>
 

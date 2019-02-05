@@ -1,24 +1,31 @@
 <template>
-  <v-expansion-panel id="add_patient_to_box" inset dark>
-    <v-expansion-panel-content hide-actions>
-      <div slot="header">
-        <v-btn color="primary" dark>
-          <v-icon class="pr-2">fas fa-plus</v-icon>
-          <label>{{ $t("frontoffice.patient.new_patient") }}</label>
-        </v-btn>
-      </div>
+  <div id="disable_patient">
+    <v-tooltip left>
+      <v-btn slot="activator" icon small @click.native="()=>dialog_update_patient=true">
+        <v-icon color="white">fas fa-clipboard-list</v-icon>
+      </v-btn>
+      <span>{{ $t("frontoffice.patient.update_info_tooltip") }}</span>
+    </v-tooltip>
 
-      <v-form>
-        <v-container grid-list-md>
+    <v-dialog v-model="dialog_update_patient" max-width="500px">
+      <v-card v-if="patient">
+        <v-card-title>
+          <span class="headline warning--text">{{ $t("frontoffice.patient.update_info_title") }}</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click.native="()=>dialog_update_patient=false">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
           <v-layout wrap>
-            <v-flex xs12 lg3>
+            <v-flex xs12>
               <v-text-field
                 :rules="[() => (patient.name.length > 3 || patient.name.length == 0) || 'Patient name is required']"
                 :label="$t('frontoffice.patient.name')"
                 v-model="patient.name"
               ></v-text-field>
             </v-flex>
-            <v-flex xs12 md6 lg2>
+            <v-flex xs12 md6>
               <v-select
                 :items="genderOptions"
                 item-text="name"
@@ -30,7 +37,7 @@
                 append-icon="fas fa-angle-down"
               ></v-select>
             </v-flex>
-            <v-flex xs12 md6 lg3>
+            <v-flex xs12 md6>
               <v-menu
                 ref="menu"
                 lazy
@@ -62,7 +69,7 @@
                 ></v-date-picker>
               </v-menu>
             </v-flex>
-            <v-flex xs12 md6 lg2>
+            <v-flex xs12 md6>
               <v-text-field
                 mask="#########"
                 :rules="[() => (patient.nif.length === 9 || patient.nif.length === 0) || 'Invalid Patient NIF']"
@@ -70,59 +77,43 @@
                 v-model="patient.nif"
               ></v-text-field>
             </v-flex>
-            <v-flex xs12 md6 lg2>
+            <v-flex xs12 md6>
               <v-text-field
                 :rules="[() => (/^[0-9]{8}([ -]*[0-9][ ]*[A-Z]{2}[0-9])*$/.test(patient.cc) || patient.cc.length == 0) || 'Invalid Patient CC']"
                 :label="$t('frontoffice.patient.cc')"
                 v-model="patient.cc"
               ></v-text-field>
             </v-flex>
-            <v-flex xs12 class="pt-1">
-              <label class="primary--text">info:</label>
-              {{ $t('frontoffice.patient.add_info') }}
-            </v-flex>
-            <v-flex sx12>
-              <v-btn
-                dark
-                color="ash"
-                block
-                @click.native="save"
-              >{{ $t('frontoffice.patient.save') }}</v-btn>
-            </v-flex>
           </v-layout>
-        </v-container>
-      </v-form>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            dark
+            color="warning darken-1"
+            block
+            @click.native="save"
+          >{{ $t("frontoffice.patient.submit") }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "add_patient_to_box",
-  props: {
-    box: Object
-  },
   data: () => {
     return {
-      patient: {
-        name: "",
-        birthdate: null,
-        gender: "",
-        height: null,
-        weight: null,
-        id: null,
-        since: null,
-        active: false,
-        nif: "",
-        cc: ""
-      },
+      patient: null,
+      dialog_update_patient: false,
       genderOptions: [],
       menu: false
     };
   },
   mounted() {
+    this.patient = this.$store.state.patient;
     this.genderOptions = [
       { type: "male", name: this.$t("frontoffice.patient.male") },
       { type: "female", name: this.$t("frontoffice.patient.female") },
@@ -145,22 +136,20 @@ export default {
       ) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
-          .post("/vitabox/" + this.box.id + "/patient", this.patient)
+          .put("/patient/" + this.patient.id + "/info", {
+            gender: this.patient.gender,
+            name: this.patient.name,
+            birthdate: this.patient.birthdate,
+            nif: this.patient.nif,
+            cc: this.patient.cc
+          })
           .then(response => {
             event_bus.$emit("updatePatients");
             event_bus.$emit("toast", {
-              message: "patient was successfully added to vitabox",
+              message: "patient was successfully updated",
               type: "success"
             });
-            this.patient = {
-              name: "",
-              birthdate: null,
-              gender: "",
-              id: null,
-              since: null,
-              nif: "",
-              cc: ""
-            };
+            this.$store.commit("setPatientData", this.patient);
             event_bus.$emit("waiting", false);
           })
           .catch(error => {

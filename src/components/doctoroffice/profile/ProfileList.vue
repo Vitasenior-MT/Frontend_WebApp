@@ -3,7 +3,7 @@
     <v-card dark flat height="100%">
       <v-card-title>
         <div>
-          <span class="primary_d--text">Defined profile</span>
+          <span class="primary_d--text">{{$t('frontoffice.patient.defined_profile')}}</span>
           <div class="headline">{{$store.state.patient.profile}}</div>
         </div>
         <v-spacer></v-spacer>
@@ -13,7 +13,7 @@
           dark
           @click="()=>dialog_define_profile=true"
           class="mb-2"
-        >{{$store.state.patient.profile==="Default"?"Define Profile":"Alter Profile"}}</v-btn>
+        >{{$t('frontoffice.patient.alter_profile')}}</v-btn>
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -33,7 +33,7 @@
               <v-btn slot="activator" icon class="mx-0" @click="editProfile(props.item)">
                 <v-icon color="teal">fas fa-edit</v-icon>
               </v-btn>
-              <span>edit profile</span>
+              <span>{{$t('frontoffice.patient.edit_profile')}}</span>
             </v-tooltip>
           </td>
         </template>
@@ -74,10 +74,20 @@ export default {
           sortable: true,
           class: "column"
         },
-        { text: "Min", value: "min", sortable: false, class: "column" },
-        { text: "Max", value: "max", sortable: false, class: "column" },
         {
-          text: "Actions",
+          text: this.$t("frontoffice.patient.min"),
+          value: "min",
+          sortable: false,
+          class: "column"
+        },
+        {
+          text: this.$t("frontoffice.patient.max"),
+          value: "max",
+          sortable: false,
+          class: "column"
+        },
+        {
+          text: this.$t("frontoffice.patient.actions"),
           value: "actions",
           sortable: false,
           class: "column"
@@ -99,7 +109,7 @@ export default {
 </script>
 
 <style>
-.column{
+.column {
   padding: 0 16px !important;
 }
 </style>

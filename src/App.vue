@@ -162,12 +162,17 @@ i {
 }
 .dark-hover:hover {
   background-color: #5e5e5e;
-  /* border-color: #5e5e5e; */
   cursor: pointer;
 }
 .light-hover:hover {
   background-color: #e2e2e2;
-  /* border-color: #e2e2e2; */
+  cursor: pointer;
+}
+.primary-hover {
+  background-color: #ffc25f !important;
+}
+.primary-hover:hover {
+  background-color: #ffb53d !important;
   cursor: pointer;
 }
 .align-vertical-center {

@@ -35,7 +35,7 @@
           <v-tooltip v-else bottom>
             <v-icon slot="activator" small v-if="props.item.active">fas fa-play</v-icon>
             <v-icon slot="activator" small v-else>fas fa-pause</v-icon>
-            <span>{{props.item.active?'active':'inactive'}}</span>
+            <span>{{props.item.active?$t('frontoffice.board.active'):$t('frontoffice.board.inactive')}}</span>
           </v-tooltip>
         </td>
         <td class="text-xs-left layout">
@@ -68,11 +68,15 @@ export default {
   data() {
     return {
       headersBoards: [
-        { text: "Board", value: "Boardmodel.name", sortable: true },
-        { text: "MAC Address", sortable: false },
-        { text: "Last Update", sortable: false },
-        { text: "State", sortable: false },
-        { text: "Actions", sortable: false }
+        {
+          text: this.$t("frontoffice.board.indentification"),
+          value: "Boardmodel.name",
+          sortable: true
+        },
+        { text: this.$t("frontoffice.board.mac"), sortable: false },
+        { text: this.$t("frontoffice.board.last_update"), sortable: false },
+        { text: this.$t("frontoffice.board.state"), sortable: false },
+        { text: this.$t("frontoffice.board.actions"), sortable: false }
       ],
       boards: [],
       options: {

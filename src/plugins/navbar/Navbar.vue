@@ -12,8 +12,8 @@
           </v-toolbar>
 
           <div id="body_menu" class="raven">
-            <backoffice v-if="is_admin"></backoffice>
-            <doctoroffice v-else-if="is_doctor"></doctoroffice>
+            <backoffice v-if="this.$store.state.user.as_admin"></backoffice>
+            <doctoroffice v-else-if="this.$store.state.user.as_doctor"></doctoroffice>
             <frontoffice v-else></frontoffice>
           </div>
         </div>
@@ -32,10 +32,10 @@
         <v-toolbar-items>
           <v-btn
             v-if="this.$store.state.user.is_doctor || this.$store.state.user.is_admin"
-            :color="this.as_user?'raven':'primary'"
+            :color="!(this.$store.state.user.as_doctor || this.$store.state.user.as_admin)?'raven':'primary'"
             class="white--text"
             @click="switchActivity"
-          >OFFICE</v-btn>
+          >{{$t('navbar.office')}}</v-btn>
         </v-toolbar-items>
         <user-profile></user-profile>
       </v-toolbar>
@@ -51,9 +51,16 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn flat dark to="/Signin" class="top_bar_item">
-            <v-icon left dark>fas fa-sign-in-alt</v-icon>Login
+            <v-icon left dark>fas fa-sign-in-alt</v-icon>
+            {{ $t('user.auth.login') }}
           </v-btn>
-          <v-btn flat dark to="/Signup" color="grey lighten-1" class="top_bar_item">Register</v-btn>
+          <v-btn
+            flat
+            dark
+            to="/Signup"
+            color="grey lighten-1"
+            class="top_bar_item"
+          >{{ $t('user.auth.register') }}</v-btn>
         </v-toolbar-items>
       </v-toolbar>
     </div>
@@ -72,20 +79,10 @@ export default {
   data: () => {
     return {
       drawer: true,
-      fixed: true,
-      is_admin: false,
-      is_doctor: false,
-      as_user: false
+      fixed: true
     };
   },
   mounted() {
-    this.is_admin = this.$store.state.user.is_admin;
-    this.is_doctor = this.$store.state.user.is_doctor;
-    this.as_user =
-      this.$store.state.user.is_admin || this.$store.state.user.is_doctor
-        ? false
-        : true;
-
     this.resize();
     window.addEventListener("resize", this.resize);
     event_bus.$on("login", this.login);
@@ -98,36 +95,25 @@ export default {
       this.fixed = screen.width > 960 ? true : false;
     },
     switchActivity() {
-      if (this.as_user) {
-        this.is_admin = this.$store.state.user.is_admin;
-        this.is_doctor = this.$store.state.user.is_doctor;
-        this.as_user = false;
-        if (this.$store.state.user.is_admin) {
-          this.$router.push("/backoffice/vitabox/list");
-        } else this.$router.push("/doctoroffice/dashboard");
-      } else {
-        this.is_admin = false;
-        this.is_doctor = false;
-        this.as_user = true;
-        this.$store.commit("setVitaboxData", null);
-        this.$router.push("/frontoffice/dashboard");
-      }
-      event_bus.$emit("switch_dashboard", this.as_user);
-    },
-    login() {
-      this.is_admin = this.$store.state.user.is_admin;
-      this.is_doctor = this.$store.state.user.is_doctor;
-      this.as_user =
-        this.$store.state.user.is_admin || this.$store.state.user.is_doctor
+      this.$store.commit("switchUserRole");
+      event_bus.$emit(
+        "switch_dashboard",
+        this.$store.state.user.as_admin || this.$store.state.user.as_doctor
           ? false
-          : true;
-
-      if (this.$store.state.user.is_admin) {
+          : true
+      );
+      if (this.$store.state.user.as_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {
         this.$router.push("/alert/list");
       }
-
+    },
+    login() {
+      if (this.$store.state.user.as_admin) {
+        this.$router.push("/backoffice/vitabox/list");
+      } else {
+        this.$router.push("/alert/list");
+      }
       event_bus.$emit("waiting", false);
     }
   },

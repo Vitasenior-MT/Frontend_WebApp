@@ -1,27 +1,34 @@
 <template>
-<v-content>
-  <v-tabs centered color="primary" dark icons-and-text>
-    <v-tabs-slider color="white"></v-tabs-slider>
-      <v-tab href="#tab-1">Requests<v-icon>fas fa-inbox</v-icon></v-tab>
-      <v-tab-item id="tab-1">
-        <v-list three-line v-if="requests.length>0">
-          <template v-for="(item, index) in requests">
-            <v-list-tile :key="index" avatar ripple @click="()=>{}">
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.patient }}</v-list-tile-title>
-                <v-list-tile-sub-title>{{ formatDate(item.created_at) }}</v-list-tile-sub-title>
-              </v-list-tile-content>
+  <v-content>
+    <v-toolbar color="primary" dark>
+      <v-spacer></v-spacer>
+      <v-toolbar-title class="text-xs-center mx-0">
+        <v-icon>fas fa-inbox</v-icon>
+        <p class="mb-0 subheading">{{ $t('doctor.requests') }}</p>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
 
-              <v-list-tile-action>
-                <v-btn icon @click.native="responseToRequest(false, item.patient_id)"><v-icon color="red" small>fas fa-times</v-icon></v-btn>
-                <v-btn dark icon color="green" @click.native="responseToRequest(true, item.patient_id)"><v-icon>fas fa-check</v-icon></v-btn>
-              </v-list-tile-action>
-            </v-list-tile>
-          </template>
-        </v-list>
-        <v-alert v-else :value="true" color="gray"> No pendent requests </v-alert>
-      </v-tab-item>
-    </v-tabs>
+    <v-list three-line v-if="requests.length>0">
+      <template v-for="(item, index) in requests">
+        <v-list-tile :key="index" avatar ripple @click="()=>{}">
+          <v-list-tile-content>
+            <v-list-tile-title>{{ item.patient }}</v-list-tile-title>
+            <v-list-tile-sub-title>{{ formatDate(item.created_at) }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-btn icon @click.native="responseToRequest(false, item.patient_id)">
+              <v-icon color="red" small>fas fa-times</v-icon>
+            </v-btn>
+            <v-btn dark icon color="green" @click.native="responseToRequest(true, item.patient_id)">
+              <v-icon>fas fa-check</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </template>
+    </v-list>
+    <v-alert v-else :value="true" color="gray">{{ $t('doctor.no_request') }}</v-alert>
   </v-content>
 </template>
 

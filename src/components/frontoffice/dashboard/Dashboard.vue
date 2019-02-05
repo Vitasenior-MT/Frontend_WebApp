@@ -16,7 +16,7 @@
           <v-list-tile-action class="no-min-width">
             <v-tooltip bottom>
               <v-icon slot="activator" color="blue lighten-1">fa fa-chevron-right</v-icon>
-              <span>Vitabox Details</span>
+              <span>{{ $t('dashboard.vitabox_details') }}</span>
             </v-tooltip>
           </v-list-tile-action>
         </v-list-tile>

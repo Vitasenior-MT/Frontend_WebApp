@@ -4,7 +4,7 @@
       <div slot="header">
         <v-btn color="primary">
           <v-icon class="pr-2">fas fa-plus</v-icon>
-          <label>set device</label>
+          <label>{{$t('frontoffice.patient.set_device')}}</label>
         </v-btn>
       </div>
 
@@ -14,7 +14,7 @@
             <v-select
               :items="boards"
               v-model="selected"
-              label="Select"
+              :label="$t('frontoffice.patient.select_device')"
               hint="Boards to add"
               :item-text="(item)=>{return item.description?item.Boardmodel.name+' - '+item.description:item.Boardmodel.name}"
               prepend-icon="fas fa-stethoscope"
@@ -22,7 +22,13 @@
               return-object
             ></v-select>
             <v-flex sm4 md3>
-              <v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn>
+              <v-btn
+                block
+                class="mt-3"
+                dark
+                color="ash"
+                @click.native="save"
+              >{{$t('frontoffice.patient.save')}}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>

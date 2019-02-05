@@ -4,12 +4,12 @@
       <v-btn slot="activator" icon @click.native="()=>dialog_edit_patient=true">
         <v-icon color="teal">fas fa-edit</v-icon>
       </v-btn>
-      <span>define width and height</span>
+      <span>{{$t('frontoffice.patient.edit_bydoctor_tooltip')}}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_edit_patient" width="500">
       <v-card>
         <v-card-title>
-          <span class="headline primary_d--text">Edit Patient Data</span>
+          <span class="headline primary_d--text">{{$t('frontoffice.patient.edit_bydoctor_title')}}</span>
           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_edit_patient=false">
             <v-icon color="error">fas fa-times</v-icon>
@@ -21,7 +21,7 @@
               <v-flex xs12>
                 <v-text-field
                   :rules="[() => parseFloat(patient.weight) > 30 && parseFloat(patient.weight) < 130 || 'invalid weight']"
-                  label="Weight"
+                  :label="$t('frontoffice.patient.weight')"
                   type="number"
                   v-model="patient.weight"
                   suffix="kg"
@@ -29,11 +29,11 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  :rules="[() =>  parseFloat(patient.height) > 1 && parseFloat(patient.height) < 2.2 || 'invalid height']"
-                  label="Height"
+                  :rules="[() => parseFloat(patient.height) > 1 && parseFloat(patient.height) < 2.2 || 'invalid height']"
+                  :label="$t('frontoffice.patient.height')"
                   type="number"
                   v-model="patient.height"
-                  suffix="meters"
+                  suffix="m"
                 ></v-text-field>
               </v-flex>
             </v-layout>
@@ -41,7 +41,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark color="ash" @click.native="save">Save</v-btn>
+          <v-btn dark color="ash" @click.native="save">{{$t('frontoffice.patient.save')}}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

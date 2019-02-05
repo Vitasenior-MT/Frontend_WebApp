@@ -42,7 +42,7 @@
               <v-text-field
                 slot="activator"
                 v-model="date1"
-                label="Pick Start Date"
+                :label="$t(' dashboard.start_date')"
                 prepend-icon="far fa-calendar"
                 readonly
               ></v-text-field>
@@ -81,7 +81,7 @@
               <v-text-field
                 slot="activator"
                 v-model="date2"
-                label="Pick End Date"
+                :label="$t(' dashboard.end_date')"
                 prepend-icon="far fa-calendar"
                 readonly
               ></v-text-field>
@@ -117,7 +117,7 @@
                 >
                   <v-icon>fas fa-angle-right</v-icon>
                 </v-btn>
-                <span>submit</span>
+                <span>{{$t('frontoffice.board.submit')}}</span>
               </v-tooltip>
             </div>
           </v-flex>
@@ -125,7 +125,7 @@
             <div class="pt-2">
               <v-icon small>fas fa-calendar-alt</v-icon>
               <span class="pl-1 pt-4">
-                Última actualização:
+                {{$t('dashboard.last_update')}}:
                 <br>
                 {{ new Date(sensor.last_commit).toLocaleDateString("pt-pt", {
                 year: "numeric",
@@ -150,13 +150,13 @@
             <v-avatar>
               <v-icon small color="blue darken-3">fas fa-circle</v-icon>
             </v-avatar>
-            {{"minimum acceptable (" + Math.round(this.range.min) + ")"}}
+            {{ $t('dashboard.minimum_acceptable') + " (" + Math.round(this.range.min) + ")"}}
           </v-chip>
           <v-chip small label>
             <v-avatar>
               <v-icon small color="deep-orange darken-2">fas fa-circle</v-icon>
             </v-avatar>
-            {{"maximum acceptable (" + Math.round(this.range.max) + ")"}}
+            {{ $t('dashboard.maximum_acceptable') + " (" + Math.round(this.range.max) + ")"}}
           </v-chip>
         </div>
 
@@ -190,11 +190,6 @@
         </v-layout>
       </v-card-text>
     </v-card>
-
-    <v-btn dark class="ml-0" @click="$router.go(-1)">
-      <v-icon>fas fa-long-arrow-alt-left</v-icon>
-      <span class="pl-1">Go Back</span>
-    </v-btn>
   </v-content>
 </template>
 

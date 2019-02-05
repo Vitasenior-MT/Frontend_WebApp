@@ -16,6 +16,7 @@
           <td>{{ props.item.transducer }}</td>
           <td>[{{ Math.round(props.item.min_acceptable) }};{{ Math.round(props.item.max_acceptable) }}]</td>
           <td>[{{ Math.round(props.item.min_possible) }};{{ Math.round(props.item.max_possible) }}]</td>
+          <td>[{{ Math.round(props.item.min_graph) }};{{ Math.round(props.item.max_graph) }}]</td>
           <td class="right px-0">
             <v-btn icon class="mx-0" @click="editItem(props.item)"><v-icon color="secondary">fas fa-edit</v-icon></v-btn>
             <v-btn icon class="mx-0" @click="deleteItention(props.item)"><v-icon color="error">fas fa-minus-circle</v-icon></v-btn>
@@ -53,6 +54,7 @@ export default {
         { text: "Transducer", align: "left", value: "transducer" },
         { text: "Acceptable", align: "left", sortable: false },
         { text: "Possible", align: "left", sortable: false },
+        { text: "Graph thresholds", align: "left", sortable: false },
         { text: "Actions", align: "right", sortable: false }
       ],
       sensors: [],

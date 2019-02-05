@@ -4,7 +4,7 @@
       <div slot="header">
         <v-btn color="primary" dark>
           <v-icon class="pr-2">fas fa-plus</v-icon>
-          <label>new user</label>
+          <label>{{$t('frontoffice.user.new_user')}}</label>
         </v-btn>
       </div>
 
@@ -20,14 +20,14 @@
             </v-flex>
             <v-flex xs12 md4 class="text-xs-right">
               <v-select
-                :items="['Informal caregiver','Formal caregiver','Additional sponsor']"
-                label="Role"
+                :items="[$t('frontoffice.user.informal_caregiver'),$t('frontoffice.user.formal_caregiver'),$t('frontoffice.user.additional_sponsor')]"
+                :label="$t('frontoffice.user.role')"
                 v-model="role"
                 append-icon="fas fa-angle-down"
               ></v-select>
             </v-flex>
             <v-flex sx12>
-              <v-btn dark color="ash" block @click.native="save">Save</v-btn>
+              <v-btn dark color="ash" block @click.native="save">{{ $t('frontoffice.user.save') }}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -58,7 +58,8 @@ export default {
   },
   watch: {
     role(val) {
-      this.form.sponsor = val === "Additional sponsor";
+      this.form.sponsor =
+        val === "Additional sponsor" || val === "Responsável Adicional";
     }
   },
   methods: {

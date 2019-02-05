@@ -1,14 +1,36 @@
 <template>
   <div v-if="users.length>0">
-    <add-user v-if="$store.state.vitabox.sponsor" :box="$store.state.vitabox" @adduser="(user)=>users.push(user)"></add-user>
-    <v-data-table :headers="headersUsers" :items="users" class="elevation-1" dark sort-icon="fas fa-sort-down" next-icon="fas fa-angle-right" prev-icon="fas fa-angle-left" :rows-per-page-items="[5]" no-data-text="no users related to the vitabox">
+    <add-user
+      v-if="$store.state.vitabox.sponsor"
+      :box="$store.state.vitabox"
+      @adduser="(user)=>users.push(user)"
+    ></add-user>
+    <v-data-table
+      :headers="headersUsers"
+      :items="users"
+      class="elevation-1"
+      dark
+      sort-icon="fas fa-sort-down"
+      next-icon="fas fa-angle-right"
+      prev-icon="fas fa-angle-left"
+      :rows-per-page-items="[5]"
+      no-data-text="no users related to the vitabox"
+    >
       <template slot="items" slot-scope="props">
-        <td><v-icon v-if="props.item.sponsor" small>fas fa-crown</v-icon></td>
+        <td>
+          <v-icon v-if="props.item.sponsor" small>fas fa-crown</v-icon>
+        </td>
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.email }}</td>
-        <td class="text-xs-left">{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-        <td  v-if="$store.state.vitabox.sponsor && props.item.id!==$store.state.user.id">
-          <remove-user :box="$store.state.vitabox" :user="props.item" @remove="()=>users.splice(users.indexOf(props.item), 1)"></remove-user>
+        <td
+          class="text-xs-left"
+        >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
+        <td v-if="$store.state.vitabox.sponsor && props.item.id!==$store.state.user.id">
+          <remove-user
+            :box="$store.state.vitabox"
+            :user="props.item"
+            @remove="()=>users.splice(users.indexOf(props.item), 1)"
+          ></remove-user>
         </td>
       </template>
     </v-data-table>
@@ -43,17 +65,40 @@ export default {
   mounted() {
     this.headersUsers = this.$store.state.vitabox.sponsor
       ? [
-          { text: "Sponsor", sortable: false },
-          { text: "Name", value: "name", sortable: true },
+          {
+            text: this.$t("frontoffice.user.sponsor"),
+            sortable: false
+          },
+          {
+            text: this.$t("frontoffice.user.name"),
+            value: "name",
+            sortable: true
+          },
           { text: "Email", sortable: false },
-          { text: "Since", sortable: false },
-          { text: "Acions", sortable: false }
+          {
+            text: this.$t("frontoffice.user.since"),
+            sortable: false
+          },
+          {
+            text: this.$t("frontoffice.user.actions"),
+            sortable: false
+          }
         ]
       : [
-          { text: "Sponsor", sortable: false },
-          { text: "Name", value: "name", sortable: true },
+          {
+            text: this.$t("frontoffice.user.sponsor"),
+            sortable: false
+          },
+          {
+            text: this.$t("frontoffice.user.name"),
+            value: "name",
+            sortable: true
+          },
           { text: "Email", sortable: false },
-          { text: "Since", sortable: false }
+          {
+            text: this.$t("frontoffice.user.since"),
+            sortable: false
+          }
         ];
   },
   methods: {

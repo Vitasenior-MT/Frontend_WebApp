@@ -20,8 +20,10 @@ const state = {
     is_admin: false,
     is_doctor: false,
     warnings: 0,
-    errors: 0
-  }
+    errors: 0,
+    as_doctor: false,
+    as_admin: false
+  },
 }
 
 const mutations = {
@@ -62,6 +64,8 @@ const mutations = {
     state.user.is_doctor = userData.is_doctor;
     state.user.warnings = userData.warnings;
     state.user.errors = userData.errors;
+    state.user.as_admin = userData.is_admin;
+    state.user.as_doctor = userData.is_doctor;
   },
   cleanData(state) {
     state.vitaboxes = [];
@@ -79,7 +83,9 @@ const mutations = {
       is_admin: false,
       is_doctor: false,
       warnings: 0,
-      errors: 0
+      errors: 0,
+      as_doctor: false,
+      as_admin: false
     }
   },
   setProfileData(state, profileData) {
@@ -98,7 +104,15 @@ const mutations = {
   },
   removeBoardPatient(state, board) {
     state.patient.Boards.splice(state.patient.Boards.indexOf(board), 1)
-  }
+  },
+  switchUserRole(state) {
+    state.user.as_doctor = state.user.is_doctor ? !state.user.as_doctor : false;
+    state.user.as_admin = state.user.is_admin ? !state.user.as_admin : false;
+  },
+  setUserWarningsErrors(state, value) {
+    state.user.warnings = value;
+    state.user.errors = value;
+  },
 }
 
 const actions = {
@@ -140,7 +154,13 @@ const actions = {
   }) => commit('setProfileData'),
   removeBoardPatientData: ({
     commit
-  }) => commit('removeBoardPatient')
+  }) => commit('removeBoardPatient'),
+  switchUserRole: ({
+    commit
+  }) => commit('switchUserRole'),
+  resetUserWarningsErrors: ({
+    commit
+  }) => commit('resetUserWarningsErrors')
 }
 
 

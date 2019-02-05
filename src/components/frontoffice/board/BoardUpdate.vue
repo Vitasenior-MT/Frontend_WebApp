@@ -1,26 +1,37 @@
 <template>
   <div id="update_board">
     <v-tooltip bottom>
-    <v-btn slot="activator" icon small color="transparent" @click.native="()=>dialog_update_board=true">
-      <v-icon color="teal darken-2">fas fa-edit</v-icon>
-    </v-btn>
-    <span>edit description</span>
+      <v-btn
+        slot="activator"
+        icon
+        small
+        color="transparent"
+        @click.native="()=>dialog_update_board=true"
+      >
+        <v-icon color="teal darken-2">fas fa-edit</v-icon>
+      </v-btn>
+      <span>{{ $t('frontoffice.board.edit_tooltip') }}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_update_board" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline warning--text">Switch board activity</span>
+          <span class="headline warning--text">{{ $t('frontoffice.board.edit_title') }}</span>
           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_update_board=false">
             <v-icon color="error">fas fa-times</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text v-if="board">
-          <v-text-field label="new description" v-model="new_description"></v-text-field>
+          <v-text-field :label="$t('frontoffice.board.new_description')" v-model="new_description"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark color="warning darken-1" block @click.native="switchActivity">PROCEED</v-btn>
+          <v-btn
+            dark
+            color="warning darken-1"
+            block
+            @click.native="switchActivity"
+          >{{ $t('frontoffice.board.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

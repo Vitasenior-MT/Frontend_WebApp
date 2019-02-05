@@ -5,6 +5,7 @@ import App from '@/App'
 import router from '@/router'
 import Vuetify from 'vuetify'
 import store from '@/plugins/store'
+import i18n from '@/plugins/i18n'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import Navbar from "@/plugins/navbar"
 
@@ -34,7 +35,8 @@ Vue.use(Navbar);
 new Vue({
   el: '#app',
   router, // inject router to all children
-  store, // inject store to all children
+  store, // inject store to all children,
+  i18n, // inject internationalization to all children,
   template: '<App/>',
   components: {
     App,

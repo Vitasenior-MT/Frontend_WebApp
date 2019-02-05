@@ -7,7 +7,7 @@
       block
       dark
       to="/frontoffice/vitabox/register"
-    >Register Vitabox</v-btn>
+    >{{$t('navbar.register_vitabox')}}</v-btn>
     <v-divider class="vitaboxDivider"></v-divider>
     <v-list class="office_menu py-0" three-line>
       <router-link

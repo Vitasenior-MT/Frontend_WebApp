@@ -4,7 +4,7 @@
       <div slot="header">
         <v-btn color="primary">
           <v-icon class="pr-2">fas fa-plus</v-icon>
-          <label>new device</label>
+          <label>{{ $t('frontoffice.board.new_device') }}</label>
         </v-btn>
       </div>
 
@@ -16,7 +16,7 @@
                 :items="typeOptions"
                 item-text="name"
                 item-value="type"
-                label="Board type"
+                :label="$t('frontoffice.board.type')"
                 v-model="board.type"
                 append-icon="fas fa-angle-down"
               ></v-select>
@@ -26,14 +26,14 @@
                 v-if="board.type==='wearable'"
                 :items="$store.state.patients"
                 item-text="name"
-                label="select patient"
+                :label="$t('frontoffice.board.select_patient')"
                 v-model="selectedPatient"
                 append-icon="fas fa-angle-down"
                 return-object
               ></v-select>
               <v-text-field
                 v-if="board.type==='environmental'"
-                label="set room (eg. 'kitchen')"
+                :label="$t('frontoffice.board.env_label')"
                 v-model="board.description"
               ></v-text-field>
             </v-flex>
@@ -41,7 +41,7 @@
               <v-text-field
                 :mask="'nn:nn:nn:nn:nn:nn:nn:nn'"
                 :rules="[() => (board.mac_addr.length > 1 || board.mac_addr.length == 0) || 'Board Mac address is required']"
-                label="MAC address"
+                :label="$t('frontoffice.board.mac')"
                 v-model="board.mac_addr"
                 type="text"
               ></v-text-field>
@@ -49,14 +49,14 @@
             <v-flex sm6>
               <v-text-field
                 :rules="[() => (board.password.length > 1 || board.password.length == 0) || 'Board password is required']"
-                label="Password"
+                :label="$t('frontoffice.board.password')"
                 v-model="board.password"
                 type="password"
                 append-icon="fas fa-lock"
               ></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-btn block dark color="ash" @click.native="save">Save</v-btn>
+              <v-btn block dark color="ash" @click.native="save">{{$t('frontoffice.board.save')}}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -83,12 +83,18 @@ export default {
         type: ""
       },
       selectedPatient: null,
-      typeOptions: [
-        { type: "wearable", name: "Biometric wearable" },
-        { type: "non-wearable", name: "Medical device" },
-        { type: "environmental", name: "Environmental device" }
-      ]
+      typeOptions: []
     };
+  },
+  mounted() {
+    this.typeOptions = [
+      { type: "wearable", name: this.$t("frontoffice.board.biometric") },
+      { type: "non-wearable", name: this.$t("frontoffice.board.medical") },
+      {
+        type: "environmental",
+        name: this.$t("frontoffice.board.environmental")
+      }
+    ];
   },
   methods: {
     save() {

@@ -5,7 +5,7 @@
         <v-flex id="auth_card">
           <v-card id="register">
             <v-card-title id="register_title">
-              <p class="title mb-0">Register</p>
+              <p class="title mb-0">{{ $t('user.auth.register') }}</p>
             </v-card-title>
             <v-card-text id="register_box">
               <v-layout row wrap>
@@ -14,7 +14,7 @@
                     id="name"
                     v-model="name"
                     prepend-icon="fas fa-user"
-                    label="First Name"
+                    :label="$t('user.auth.first_name')"
                     type="text"
                     required
                   ></v-text-field>
@@ -24,7 +24,7 @@
                     class="pl-1"
                     id="surname"
                     v-model="surname"
-                    label="Last Name"
+                    :label="$t('user.auth.last_name')"
                     type="text"
                     required
                   ></v-text-field>
@@ -34,7 +34,7 @@
                     id="email"
                     v-model="email"
                     prepend-icon="fas fa-envelope"
-                    label="Email"
+                    :label="$t('user.auth.email')"
                     type="text"
                     required
                   ></v-text-field>
@@ -44,7 +44,7 @@
                     id="password"
                     v-model="password"
                     prepend-icon="fas fa-lock"
-                    label="Password"
+                    :label="$t('user.auth.pass')"
                     type="password"
                     required
                   ></v-text-field>
@@ -54,7 +54,7 @@
                     class="pl-1"
                     id="reppassword"
                     v-model="reppassword"
-                    label="Repeat Password"
+                    :label="$t('user.auth.repeat_pass')"
                     type="password"
                     required
                   ></v-text-field>
@@ -62,9 +62,10 @@
               </v-layout>
             </v-card-text>
             <v-card-actions>
-              <v-btn flat class="primary--text" to="/signin">login</v-btn>
+              <v-btn flat class="primary--text" to="/signin">{{ $t('user.auth.login') }}</v-btn>
               <v-spacer></v-spacer>
-              <v-btn class="raven primary--text" @click="register_dialog=true">Register
+              <v-btn class="raven primary--text" @click="register_dialog=true">
+                {{ $t('user.auth.register') }}
                 <v-icon dark right>fas fa-user-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -74,15 +75,14 @@
     </v-container>
 
     <v-dialog v-model="register_dialog" width="500">
-      <v-btn slot="activator" color="red lighten-2" dark>Click Me</v-btn>
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>Privacy Policy</v-card-title>
         <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" flat @click="register_dialog = false">Close</v-btn>
-          <v-btn color="primary" flat @click="registerUser">I accept</v-btn>
+          <v-btn color="error" flat @click="register_dialog = false">{{ $t('user.auth.close') }}</v-btn>
+          <v-btn color="primary" flat @click="registerUser">{{ $t('user.auth.accept') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

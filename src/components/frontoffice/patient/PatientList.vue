@@ -39,26 +39,26 @@
           ></disable-patient>
           <v-tooltip bottom v-else-if="props.item.active">
             <v-icon slot="activator" dark>fas fa-play</v-icon>
-            <span>active</span>
+            <span>{{ $t("frontoffice.patient.active") }}</span>
           </v-tooltip>
           <v-tooltip
             bottom
             v-else-if="!props.item.active && !props.item.weight && !props.item.height"
           >
             <v-icon slot="activator" dark>fas fa-sync-alt</v-icon>
-            <span>waiting for the doctor to start activity</span>
+            <span>{{ $t("frontoffice.patient.waiting") }}</span>
           </v-tooltip>
           <v-tooltip bottom v-else>
             <v-icon slot="activator" dark>fas fa-pause</v-icon>
-            <span>paused activity</span>
+            <span>{{ $t("frontoffice.patient.paused") }}</span>
           </v-tooltip>
         </td>
         <td class="layout px-0">
           <v-tooltip bottom>
-            <v-btn slot="activator" color="primary_d" @click="goToBoardDetails(props.item)">
+            <v-btn slot="activator" color="primary_d" @click="goToPatientDetails(props.item)">
               <v-icon>fas fa-info-circle</v-icon>
             </v-btn>
-            <span>patient details</span>
+            <span>{{ $t("frontoffice.patient.details") }}</span>
           </v-tooltip>
           <remove-patient
             v-if="$store.state.vitabox.sponsor"
@@ -86,14 +86,18 @@ export default {
   data() {
     return {
       headersPatients: [
-        { text: "Name", value: "name", sortable: true },
-        { text: "Gender", sortable: false },
-        { text: "Age", sortable: false },
-        { text: "Weight", sortable: false },
-        { text: "Height", sortable: false },
-        { text: "Since", sortable: false },
-        { text: "State", sortable: false },
-        { text: "Actions", sortable: false }
+        {
+          text: this.$t("frontoffice.patient.name"),
+          value: "name",
+          sortable: true
+        },
+        { text: this.$t("frontoffice.patient.gender"), sortable: false },
+        { text: this.$t("frontoffice.patient.age"), sortable: false },
+        { text: this.$t("frontoffice.patient.weight"), sortable: false },
+        { text: this.$t("frontoffice.patient.height"), sortable: false },
+        { text: this.$t("frontoffice.patient.since"), sortable: false },
+        { text: this.$t("frontoffice.patient.state"), sortable: false },
+        { text: this.$t("frontoffice.patient.actions"), sortable: false }
       ],
       options: {
         year: "numeric",
@@ -118,7 +122,7 @@ export default {
         ? today.getFullYear() - birthdate.getFullYear() - 1
         : today.getFullYear() - birthdate.getFullYear();
     },
-    goToBoardDetails(patientData) {
+    goToPatientDetails(patientData) {
       this.$store.commit("setPatientData", patientData);
       this.$router.push("/frontoffice/patient/detail");
     },

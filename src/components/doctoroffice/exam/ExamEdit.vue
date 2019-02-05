@@ -1,22 +1,24 @@
 <template>
-  <v-card id="edit_profile">
+  <v-card id="edit_profile" v-if="item">
     <v-card-title>
-      <span class="headline primary_d--text">Edit frequency: {{item.Boardmodel.name}}</span>
+      <span
+        class="headline primary_d--text"
+      >{{$t('frontoffice.patient.edit_frequency')}}: {{item.Boardmodel.name}}</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>
       </v-btn>
     </v-card-title>
-    <v-card-text v-if="item">
+    <v-card-text>
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex>
             <v-text-field
               :rules="[() => (parseInt(item.frequency)>0 && parseInt(item.frequency)<360) || 'invalid time interva between exams']"
-              label="Frequency"
+              :label="$t('frontoffice.patient.frequency')"
               v-model="item.frequency"
               type="number"
-              suffix="hours"
+              :suffix="$t('frontoffice.patient.hours')"
             ></v-text-field>
           </v-flex>
         </v-layout>
@@ -24,7 +26,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="ash" dark @click.native="save">Save</v-btn>
+      <v-btn color="ash" dark @click.native="save">{{$t('frontoffice.patient.save')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

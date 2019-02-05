@@ -6,42 +6,69 @@
           <v-card id="forgot">
             <v-stepper v-model="step">
               <v-stepper-header>
-                <v-stepper-step step="1" >Forgot password</v-stepper-step>
+                <v-stepper-step step="1">{{ $t('user.auth.forgot') }}</v-stepper-step>
                 <v-divider></v-divider>
-                <v-stepper-step step="2" >Reset Password</v-stepper-step>
+                <v-stepper-step step="2">{{ $t('user.auth.reset') }}</v-stepper-step>
               </v-stepper-header>
               <v-stepper-items style="height:308px !important;">
-                <v-stepper-content step="1">
-                  <v-card-text class="pb-2">
-                    <p class="subheading">Please insert your email.</p>
+                <v-stepper-content step="1" class="px-1">
+                  <v-card-text class="pb-3">
+                    <p class="subheading">{{ $t('user.auth.forgot_title') }}</p>
                     <v-form>
-                      <v-text-field prepend-icon="fas fa-envelope" v-model="forgot_email" name="email" label="Email" id="forgot_email" type="text"></v-text-field>
+                      <v-text-field
+                        prepend-icon="fas fa-envelope"
+                        v-model="forgot_email"
+                        name="email"
+                        :label="$t('user.auth.email')"
+                        id="forgot_email"
+                        type="text"
+                      ></v-text-field>
                     </v-form>
-                    <p class="mb-5">You'll receive a code that will be valid for 1 hour to reset your password.</p>
+                    <p class="mb-5">{{ $t('user.auth.forgot_text') }}</p>
                   </v-card-text>
-                  <br>
                   <v-card-actions>
-                    <v-btn flat class="primary--text" to="/signin">Login</v-btn>
+                    <v-btn flat class="primary--text" to="/signin">{{ $t('user.auth.login') }}</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn class="raven primary--text" @click.native="forgot">
-                      Send
+                      {{ $t('user.auth.send') }}
                       <v-icon dark right>fas fa-share-square</v-icon>
                     </v-btn>
                   </v-card-actions>
                 </v-stepper-content>
-                <v-stepper-content step="2">
+                <v-stepper-content step="2" class="px-1">
                   <v-card-text class="pb-1">
                     <v-form>
-                      <v-text-field prepend-icon="fas fa-key" v-model="token" name="token" label="Code" id="token" type="text"></v-text-field>
-                      <v-text-field prepend-icon="fas fa-lock" v-model="new_password" name="new_password" label="Password" id="new_password" type="password"></v-text-field>
-                      <v-text-field prepend-icon="fas fa-lock" v-model="confirm_password" :rules="[() => confirm_password === new_password || 'Password don\'t match']" name="confirm_password" label="Confirm password" id="confirm_password" type="password"></v-text-field>
+                      <v-text-field
+                        prepend-icon="fas fa-key"
+                        v-model="token"
+                        name="token"
+                        :label="$t('user.auth.code')"
+                        id="token"
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        prepend-icon="fas fa-lock"
+                        v-model="new_password"
+                        name="new_password"
+                        :label="$t('user.auth.new_pass')"
+                        id="new_password"
+                        type="password"
+                      ></v-text-field>
+                      <v-text-field
+                        prepend-icon="fas fa-lock"
+                        v-model="confirm_password"
+                        :rules="[() => confirm_password === new_password || 'Password don\'t match']"
+                        name="confirm_password"
+                        :label="$t('user.auth.confirm_pass')"
+                        id="confirm_password"
+                        type="password"
+                      ></v-text-field>
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn flat class="primary--text" to="/signin">Login</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn class="raven primary--text" @click.native="reset">
-                      Submit
+                      {{ $t('user.auth.submit') }}
                       <v-icon dark right>fas fa-external-link-alt</v-icon>
                     </v-btn>
                   </v-card-actions>
@@ -112,7 +139,10 @@ export default {
         .then(response => {
           this.step = 2;
           event_bus.$emit("waiting", false);
-          event_bus.$emit("toast", { message: "password successfully restored", type: "success" });
+          event_bus.$emit("toast", {
+            message: "password successfully restored",
+            type: "success"
+          });
           this.$router.push("/signin");
         })
         .catch(error => {

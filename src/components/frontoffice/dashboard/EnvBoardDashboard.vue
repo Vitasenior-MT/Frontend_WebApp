@@ -24,7 +24,7 @@
                 <p>
                   <v-tooltip v-if="avg >-1" top slot="badge">
                     <span slot="activator">&cong;</span>
-                    <span>average</span>
+                    <span>{{ $t('dashboard.average') }}</span>
                   </v-tooltip>
                   <label
                     class="font-weight-thin"

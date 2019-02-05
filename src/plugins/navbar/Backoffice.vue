@@ -1,12 +1,62 @@
 <template>
-  <v-list id="backoffice"  class="office_menu">
-    <router-link v-for='(link,index) in links.backoffice' :key='link.name + index' :to='link.path'>
-      <v-list-tile class="office_options office_notchoosen ash--text">
+  <v-list id="backoffice" class="office_menu">
+    <router-link to="/backoffice/vitabox/list">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(0)">
         <v-list-tile-action>
-          <v-icon v-if="link.icon">{{link.icon}}</v-icon>
+          <v-icon>fas fa-tv</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
-          <v-list-tile-title v-text="link.name"></v-list-tile-title>
+          <v-list-tile-title>Vitaboxes</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/user">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(1)">
+        <v-list-tile-action>
+          <v-icon>fas fa-users</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.users')}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/boardmodel">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(2)">
+        <v-list-tile-action>
+          <v-icon>fas fa-broadcast-tower</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.board_models')}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/sensormodel">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(3)">
+        <v-list-tile-action>
+          <v-icon>fas fa-microchip</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.sensor_models')}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/profilemodel">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(4)">
+        <v-list-tile-action>
+          <v-icon>fas fa-heartbeat</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.profile_models')}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/utils">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(5)">
+        <v-list-tile-action>
+          <v-icon>fas fa-question</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.utils')}}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </router-link>
@@ -22,24 +72,14 @@ export default {
     };
   },
   mounted() {
-    this.links.backoffice.map((item, index) => {
-      if (item.path === this.$route.path) this.select(index);
-    });
-  },
-  watch: {
-    $route: function(route) {
-      this.links.backoffice.map((item, index) => {
-        if (item.path === route.path) this.select(index);
-      });
-    }
+    this.select(0);
   },
   methods: {
     select(i) {
       if (this.selected !== -1) {
         document.getElementsByClassName("office_options")[
           this.selected
-        ].className =
-          "office_options office_notchoosen ash--text";
+        ].className = "office_options office_notchoosen ash--text";
       }
       document.getElementsByClassName("office_options")[i].className =
         "office_options";

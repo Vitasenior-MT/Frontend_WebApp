@@ -7,7 +7,9 @@
             <v-card-title>
               <div style="width:100%;position:relative;">
                 <p class="text-xs-center mb-0">
-                  <label class="primary_l--text headline font-weight-medium">Patient -</label>
+                  <label
+                    class="primary_l--text headline font-weight-medium"
+                  >{{$t('frontoffice.patient.patient')}} -</label>
                   <label class="headline font-weight-thin">{{ $store.state.patient.name}}</label>
                 </p>
                 <p class="grey--text text-xs-center mb-0 body-2">{{ $store.state.patient.id}}</p>
@@ -18,67 +20,99 @@
         </v-layout>
       </v-flex>
     </v-layout>
-    <v-layout row wrap class="pb-1">
-      <v-flex md12 lg4 class="pa-0">
-        <v-layout fill-height>
+    <v-layout row wrap class="pt-1">
+      <v-flex md12 lg4>
+        <v-layout fill-height class="pl-1">
           <v-card dark width="100%" height="100%" class="text-xs-center" flat>
-            <v-avatar size="150px">
+            <v-menu offset-y open-on-hover id="edit_menu">
+              <v-btn slot="activator" icon dark>
+                <v-icon color="primary">fas fa-edit</v-icon>
+              </v-btn>
+              <div class="text-xs-right">
+                <edit-info></edit-info>
+                <v-tooltip left v-if="$store.state.vitabox.sponsor">
+                  <v-btn @click="chg_photo_dialog=true" icon small slot="activator">
+                    <v-icon color="white">fas fa-user-circle</v-icon>
+                  </v-btn>
+                  <span>{{$t('frontoffice.patient.edit_photo')}}</span>
+                </v-tooltip>
+              </div>
+            </v-menu>
+
+            <v-avatar size="150px" class="mt-3">
               <img v-if="patient_photo" :src="patient_photo">
               <img v-else src="@/assets/logo.png">
             </v-avatar>
-            <br>
-            <v-btn v-if="$store.state.vitabox.sponsor" @click="chg_photo_dialog=true">alter</v-btn>
-            <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
-            <v-icon v-if="$store.state.patient.gender == 'female'" class="pink--text">fas fa-venus</v-icon>
-            <v-icon
-              v-if="$store.state.patient.gender == 'undefined'"
-              class="pink--text"
-            >fas fa-times-circle</v-icon>
-            <v-list dark>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title class="text-xs-center primary--text">Weight</v-list-tile-sub-title>
-                  <v-list-tile-title
-                    class="text-xs-center"
-                  >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title class="text-xs-center primary--text">Height</v-list-tile-sub-title>
-                  <v-list-tile-title
-                    class="text-xs-center"
-                  >{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title class="text-xs-center primary--text">Age</v-list-tile-sub-title>
-                  <v-list-tile-title
-                    class="text-xs-center"
-                  >{{ this.calculate_age($store.state.patient.birthdate) }}</v-list-tile-title>
-                </v-list-tile-content>
-                <v-list-tile-content>
-                  <v-list-tile-sub-title class="text-xs-center primary--text">Birthdate</v-list-tile-sub-title>
-                  <v-list-tile-title class="text-xs-center">{{ $store.state.patient.birthdate }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <table class="text-xs-left px-4 pt-4" style="width:100%">
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.gender')}}</td>
+                <td>
+                  <v-icon
+                    medium
+                    v-if="$store.state.patient.gender == 'male'"
+                    class="cyan--text"
+                  >fas fa-mars</v-icon>
+                  <v-icon
+                    medium
+                    v-if="$store.state.patient.gender == 'female'"
+                    class="pink--text"
+                  >fas fa-venus</v-icon>
+                  <v-icon
+                    medium
+                    v-if="$store.state.patient.gender == 'undefined'"
+                    class="pink--text"
+                  >fas fa-times-circle</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.weight')}}</td>
+                <td
+                  class="subheading"
+                >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.height')}}</td>
+                <td
+                  class="subheading"
+                >{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.age')}}</td>
+                <td class="subheading">{{ this.calculate_age($store.state.patient.birthdate) }}</td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.birthdate')}}</td>
+                <td class="subheading">{{ $store.state.patient.birthdate }}</td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.cc')}}</td>
+                <td class="subheading">{{ $store.state.patient.cc }}</td>
+              </tr>
+              <tr>
+                <td class="primary--text">{{$t('frontoffice.patient.nif')}}</td>
+                <td class="subheading">{{ $store.state.patient.nif }}</td>
+              </tr>
+            </table>
           </v-card>
         </v-layout>
       </v-flex>
       <v-flex md12 lg8>
-        <v-card dark flat height="100%">
+        <v-card dark flat height="100%" class="ml-1">
           <v-tabs centered color="primary" dark icons-and-text>
             <v-tabs-slider color="white"></v-tabs-slider>
-            <v-tab href="#tab-1">Profiles
+            <v-tab href="#tab-1">
+              {{$t('frontoffice.patient.profiles')}}
               <v-icon>fas fa-clipboard</v-icon>
             </v-tab>
-            <v-tab href="#tab-2">Doctors
+            <v-tab href="#tab-2">
+              {{$t('frontoffice.patient.doctors')}}
               <v-icon>fas fa-user-md</v-icon>
             </v-tab>
-            <v-tab href="#tab-3">Boards
+            <v-tab href="#tab-3">
+              {{$t('frontoffice.patient.boards')}}
               <v-icon>fas fa-microchip</v-icon>
             </v-tab>
-            <v-tab-item v-for="i in 3" :id="'tab-' + i" :key="i">
+            <v-tab-item v-for="i in 3" :value="'tab-' + i" :key="i">
               <v-data-table
                 v-if="i == 1"
                 :headers="headersProfiles"
@@ -148,14 +182,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-flex class="pb-2">
-      <v-btn dark class="ml-0" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left</v-icon>
-        <span class="pl-1">Go Back</span>
-      </v-btn>
-    </v-flex>
 
-    <v-dialog max-width="400" v-model="chg_photo_dialog">
+    <v-dialog max-width="600" v-model="chg_photo_dialog">
       <change-photo :to_patient="true" @changed="changePhoto" @close="chg_photo_dialog=false"></change-photo>
     </v-dialog>
   </v-content>
@@ -165,6 +193,7 @@
 import { event_bus } from "@/plugins/bus.js";
 import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
 import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
+import EditInfo from "@/components/frontoffice/patient/PatientEditInfo.vue";
 import RemoveBoard from "@/components/frontoffice/patient/RemoveBoard.vue";
 import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
 import ChgPhoto from "@/components/user/utils/ChgPhoto.vue";
@@ -183,48 +212,35 @@ export default {
       measures: [],
       chg_photo_dialog: false,
       headersProfiles: [
-        { text: "Measure", value: "measure", sortable: true },
-        { text: "Min", sortable: false },
-        { text: "Max", sortable: false }
+        {
+          text: this.$t("frontoffice.patient.measure"),
+          value: "measure",
+          sortable: true
+        },
+        { text: this.$t("frontoffice.patient.min"), sortable: false },
+        { text: this.$t("frontoffice.patient.max"), sortable: false }
       ],
       headersDoctors: [
-        { text: "Doctor", value: "name", sortable: true },
+        {
+          text: this.$t("frontoffice.patient.name"),
+          value: "name",
+          sortable: true
+        },
         { text: "Email", sortable: false },
-        { text: "Since", sortable: false }
+        { text: this.$t("frontoffice.patient.since"), sortable: false }
       ],
       headersBoards: [
-        { text: "Board", value: "Boardmodel.name", sortable: true },
-        { text: "Since", sortable: false },
-        { text: "Schedule", sortable: false },
-        { text: "Remove", sortable: false }
+        {
+          text: this.$t("frontoffice.patient.board"),
+          value: "Boardmodel.name",
+          sortable: true
+        },
+        { text: this.$t("frontoffice.patient.since"), sortable: false },
+        { text: this.$t("frontoffice.patient.schedule"), sortable: false },
+        { text: this.$t("frontoffice.patient.remove"), sortable: false }
       ],
-      editedIndex: -1,
-      editedItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      },
-      defaultItem: {
-        id: null,
-        measure: "",
-        tag: "",
-        min: 0,
-        max: 0
-      },
       patient_photo: null
     };
-  },
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
-  },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
   },
   mounted() {
     this.getMeasures();
@@ -260,7 +276,8 @@ export default {
     "add-doctor": SetDoctor,
     "remove-board": RemoveBoard,
     "send-notification": NotificationSend,
-    "change-photo": ChgPhoto
+    "change-photo": ChgPhoto,
+    "edit-info": EditInfo
   }
 };
 </script>
@@ -270,5 +287,15 @@ export default {
   position: absolute;
   top: 0;
   right: 5px;
+}
+
+#edit_menu {
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+
+.v-menu__content {
+  min-width: 0 !important;
 }
 </style>

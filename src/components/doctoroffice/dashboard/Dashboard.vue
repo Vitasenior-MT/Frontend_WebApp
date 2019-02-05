@@ -2,7 +2,7 @@
   <v-content v-if="this.$store.state.patient">
     <v-container class="pa-0">
       <v-card color="transparent" dark flat class="pb-1">
-        <v-list two-line id="patientBanner">
+        <v-list two-line>
           <v-list-tile>
             <v-list-tile-avatar size="70">
               <img src="@/assets/logo.png">
@@ -23,14 +23,14 @@
 
       <v-layout row wrap>
         <v-flex lg7 class="mb-1">
-          <patient-dashboard :selectedPatient="this.$store.state.patient"></patient-dashboard>
+          <patient-dashboard></patient-dashboard>
         </v-flex>
 
         <v-flex lg5>
           <v-card dark class="mb-1 py-2">
             <v-layout row wrap dark class="pl-3 pr-2">
               <v-flex xs3 offset-md1 offset-lg0 lg2>
-                <label class="body-1 primary--text">Gender</label>
+                <label class="body-1 primary--text">{{$t('frontoffice.patient.gender')}}</label>
                 <br>
                 <v-icon v-if="$store.state.patient.gender == 'male'" class="cyan--text">fas fa-mars</v-icon>
                 <v-icon
@@ -43,7 +43,7 @@
                 >fas fa-times-circle</v-icon>
               </v-flex>
               <v-flex xs9 md4 lg5>
-                <label class="body-1 primary--text">Age</label>
+                <label class="body-1 primary--text">{{$t('frontoffice.patient.age')}}</label>
                 <br>
                 <label class="subheading">
                   {{ this.calculate_age($store.state.patient.birthdate) }}
@@ -53,14 +53,14 @@
                 </label>
               </v-flex>
               <v-flex xs3 md2>
-                <label class="body-1 primary--text">Weight</label>
+                <label class="body-1 primary--text">{{$t('frontoffice.patient.weight')}}</label>
                 <br>
                 <label
                   class="subheading"
                 >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight + " kg":'NaN' }}</label>
               </v-flex>
               <v-flex xs3 md2>
-                <label class="body-1 primary--text">Height</label>
+                <label class="body-1 primary--text">{{$t('frontoffice.patient.height')}}</label>
                 <br>
                 <label
                   class="subheading"
@@ -74,16 +74,18 @@
 
           <v-tabs centered dark icons-and-text>
             <v-tabs-slider color="primary"></v-tabs-slider>
-            <v-tab href="#tab-1">Profiles
+            <v-tab href="#tab-1">
+              {{$t('frontoffice.patient.profiles')}}
               <v-icon>fas fa-clipboard</v-icon>
             </v-tab>
-            <v-tab href="#tab-2">Exams
+            <v-tab href="#tab-2">
+              {{$t('frontoffice.patient.exams')}}
               <v-icon>fas fa-calendar-alt</v-icon>
             </v-tab>
-            <v-tab-item id="tab-1">
+            <v-tab-item value="tab-1">
               <profile-list></profile-list>
             </v-tab-item>
-            <v-tab-item id="tab-2">
+            <v-tab-item value="tab-2">
               <exam-list></exam-list>
             </v-tab-item>
           </v-tabs>
@@ -122,10 +124,4 @@ export default {
 </script>
 
 <style>
-#patientBanner {
-  -moz-box-shadow: inset 0 0 10px #000000;
-  -webkit-box-shadow: inset 0 0 10px #000000;
-  box-shadow: inset 0 0 5px #000000;
-  position: relative;
-}
 </style>

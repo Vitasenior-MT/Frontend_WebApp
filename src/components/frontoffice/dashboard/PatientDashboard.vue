@@ -13,7 +13,7 @@
     </v-card>
 
     <v-layout row wrap class="pt-1">
-      <v-flex md7 v-if="selectedPatientId">
+      <v-flex md6 v-if="selectedPatientId">
         <v-card @click.native="goToPatientProfile()" dark class="mb-1 mr-1">
           <v-list two-line class="dark-hover">
             <v-list-tile>
@@ -34,7 +34,7 @@
               <v-list-tile-action class="no-min-width">
                 <v-tooltip bottom>
                   <v-icon slot="activator" color="blue lighten-1">fa fa-chevron-right</v-icon>
-                  <span>Patient Details</span>
+                  <span>{{ $t('dashboard.patient_details') }}</span>
                 </v-tooltip>
               </v-list-tile-action>
             </v-list-tile>
@@ -42,7 +42,7 @@
         </v-card>
       </v-flex>
 
-      <v-flex md5>
+      <v-flex md6>
         <v-card v-if="selectedDevice" @click.native="goToBoardDetails()" class="mr-1">
           <v-list two-line class="light-hover">
             <v-list-tile>
@@ -59,7 +59,7 @@
                 <v-list-tile-sub-title>
                   <v-tooltip bottom class="hidden-sm-and-down">
                     <v-icon slot="activator" small>fas fa-calendar-alt</v-icon>
-                    <span>Última actualização</span>
+                    <span>{{ $t('dashboard.last_update') }}</span>
                   </v-tooltip>
                   <span>{{selectedDevice.sensor.last_commit ?formatDate(selectedDevice.sensor.last_commit):"NaN"}}</span>
                 </v-list-tile-sub-title>
@@ -67,7 +67,7 @@
               <v-list-tile-action>
                 <v-tooltip bottom>
                   <v-icon slot="activator" color="blue darken-1">fas fa-chevron-right</v-icon>
-                  <span>Sensor Details</span>
+                  <span>{{ $t('dashboard.sensor_details') }}</span>
                 </v-tooltip>
               </v-list-tile-action>
             </v-list-tile>
@@ -85,7 +85,7 @@
         <v-card class="mr-1 mb-1">
           <v-list
             light
-            :class="device.selected?'selectedBorder py-0 light-hover':'py-0 light-hover'"
+            :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
             style="height:60px;"
           >
             <v-list-tile
@@ -99,8 +99,8 @@
               <v-list-tile-content>
                 <v-list-tile-title
                   class="font-weight-bold"
-                >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
-                <v-list-tile-sub-title class="primary--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+                >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                <v-list-tile-sub-title class="ash--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -159,9 +159,9 @@ export default {
           this.devices.push({
             board: board,
             sensor: sensor,
-            profile: this.$store.state.patient.Profiles.filter(
+            profile: this.$store.state.patient.Profiles.find(
               x => x.tag === sensor.Sensormodel.tag
-            )[0],
+            ),
             selected: false,
             values: []
           });
@@ -288,13 +288,6 @@ export default {
 .v-item-group.v-bottom-nav {
   bottom: auto;
   transform: none;
-}
-
-.selectedBorder {
-  border: 2px solid #424242;
-  -moz-box-shadow: 2px 4px 8px #424242;
-  -webkit-box-shadow: 2px 4px 8px #424242;
-  box-shadow: 2px 4px 8px #424242;
 }
 
 .theme--light.v-bottom-nav .v-btn:not(.v-btn--active) span {

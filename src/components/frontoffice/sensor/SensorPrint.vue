@@ -4,18 +4,18 @@
       <v-btn slot="activator" @click="dialog_print_preview=true" color="teal" icon dark>
         <v-icon>fas fa-file-medical-alt</v-icon>
       </v-btn>
-      <span>print preview</span>
+      <span>{{$t('dashboard.print_preview')}}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_print_preview" width="680">
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-          <span class="headline primary_d--text">Print preview</span>
+          <span class="headline primary_d--text">{{$t('dashboard.print_preview')}}</span>
           <v-spacer></v-spacer>
           <v-tooltip bottom>
             <v-btn slot="activator" icon @click="exportPDF">
               <v-icon color="info">fas fa-print</v-icon>
             </v-btn>
-            <span>print</span>
+            <span>{{$t('dashboard.print')}}</span>
           </v-tooltip>
           <v-btn icon @click="()=>dialog_print_preview=false">
             <v-icon color="error">fas fa-times</v-icon>
@@ -64,13 +64,13 @@
                       <v-avatar>
                         <v-icon small color="deep-orange darken-2">fas fa-circle</v-icon>
                       </v-avatar>
-                      {{"maximum acceptable (" + Math.round(this.range.max) + ")"}}
+                      {{ $t('dashboard.maximum_acceptable') + " (" + Math.round(this.range.max) + ")"}}
                     </v-chip>
                     <v-chip small label style="width:100%" class="ma-0">
                       <v-avatar>
                         <v-icon small color="blue darken-3">fas fa-circle</v-icon>
                       </v-avatar>
-                      {{"minimum acceptable (" + Math.round(this.range.min) + ")"}}
+                      {{ $t('dashboard.minimum_acceptable') + " (" + Math.round(this.range.min) + ")"}}
                     </v-chip>
                   </div>
                   <div id="graphBoard">
@@ -102,8 +102,8 @@ export default {
       chart: null,
       table_headers: [
         { text: "", sortable: false, align: "left" },
-        { text: "Date", sortable: false, align: "left" },
-        { text: "Value", sortable: false, align: "left" }
+        { text: this.$t("dashboard.date"), sortable: false, align: "left" },
+        { text: this.$t("dashboard.value"), sortable: false, align: "left" }
       ]
     };
   },

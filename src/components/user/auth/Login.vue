@@ -5,14 +5,14 @@
         <v-flex id="auth_card">
           <v-card id="login">
             <v-card-title id="login_title">
-              <p class="title mb-0">Login</p>
+              <p class="title mb-0">{{ $t('user.auth.login') }}</p>
             </v-card-title>
             <v-card-text id="login_box">
               <v-text-field
                 prepend-icon="fas fa-user"
                 v-model="email"
                 name="email"
-                label="Email"
+                :label="$t('user.auth.email')"
                 id="email"
                 type="text"
               ></v-text-field>
@@ -20,16 +20,17 @@
                 prepend-icon="fas fa-lock"
                 v-model="password"
                 name="password"
-                label="Password"
+                :label="$t('user.auth.pass')"
                 id="password"
                 type="password"
               ></v-text-field>
-              <v-btn small block flat class="primary--text" to="/forgot">forgot password</v-btn>
+              <v-btn small block flat class="primary--text" to="/forgot">{{ $t('user.auth.forgot_label') }}</v-btn>
             </v-card-text>
             <v-card-actions class="bottom_action">
-              <v-btn flat class="primary--text" to="/signup">register</v-btn>
+              <v-btn flat class="primary--text" to="/signup">{{ $t('user.auth.register') }}</v-btn>
               <v-spacer></v-spacer>
-              <v-btn class="raven primary--text" @click.native="login">Login
+              <v-btn class="raven primary--text" @click.native="login">
+                {{ $t('user.auth.login') }}
                 <v-icon dark right>fas fa-sign-in-alt</v-icon>
               </v-btn>
             </v-card-actions>
@@ -69,17 +70,7 @@ export default {
         .then(response => {
           if (response.data.token) {
             event_bus.$data.token = response.data.token;
-            this.$store.commit("setUserData", {
-              id: response.data.id,
-              token: response.data.token,
-              name: response.data.name,
-              email: response.data.email,
-              photo: response.data.photo,
-              is_admin: response.data.is_admin,
-              is_doctor: response.data.is_doctor,
-              warnings: response.data.warnings,
-              errors: response.data.errors
-            });
+            this.$store.commit("setUserData", response.data);
             event_bus.$emit("login");
             event_bus.$emit("toast", {
               message: "Successfully logged",

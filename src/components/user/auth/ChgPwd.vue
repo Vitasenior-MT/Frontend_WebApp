@@ -1,28 +1,50 @@
 <template>
-  <v-content id="chg_pwd" fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-card  width="500">
-        <v-card-text>
-          <v-form>
-              <v-text-field v-model="old_password" name="oldpwd" label="Old password" id="oldpwd" type="password"></v-text-field>
-              <v-text-field v-model="new_password" name="newpwd" label="New password" id="newpwd" type="password" :rules="[() => new_password !== old_password || 'The new password must be different from old']"></v-text-field>
-              <v-text-field v-model="confirmed_password" name="confpwd" label="Confirm new password" id="confpwd" type="password" :rules="[() => new_password === confirmed_password || 'The password don\'t match']"></v-text-field>
-          </v-form>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="save">Submit</v-btn>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-layout>
-  </v-content>
+  <v-card>
+    <v-card-title>
+      <span class="headline">{{$t('user.auth.alter_pass')}}</span>
+      <v-spacer></v-spacer>
+      <v-btn icon @click.native="close">
+        <v-icon color="error">fas fa-times</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-card-text>
+      <v-form>
+        <v-text-field
+          v-model="old_password"
+          name="oldpwd"
+          :label="$t('user.auth.old_pass')"
+          id="oldpwd"
+          type="password"
+        ></v-text-field>
+        <v-text-field
+          v-model="new_password"
+          name="newpwd"
+          :label="$t('user.auth.new_pass')"
+          id="newpwd"
+          type="password"
+          :rules="[() => new_password !== old_password || 'The new password must be different from old']"
+        ></v-text-field>
+        <v-text-field
+          v-model="confirmed_password"
+          name="confpwd"
+          :label="$t('user.auth.confirm_pass')"
+          id="confpwd"
+          type="password"
+          :rules="[() => new_password === confirmed_password || 'The password don\'t match']"
+        ></v-text-field>
+      </v-form>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary_d" flat @click.native="save">{{$t('user.auth.submit')}}</v-btn>
+      </v-card-actions>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "chg_pwd",
   data: () => {
     return {
       old_password: "",
@@ -32,6 +54,9 @@ export default {
   },
   created: () => {},
   methods: {
+    close() {
+      this.$emit("close");
+    },
     save() {
       if (this.new_password !== this.old_password) {
         if (this.new_password === this.confirmed_password) {
@@ -80,5 +105,4 @@ export default {
 </script>
 
 <style>
-
 </style>

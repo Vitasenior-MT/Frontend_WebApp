@@ -4,12 +4,12 @@
       <v-btn slot="activator" icon @click.native="()=>dialog_vitabox_map=true">
         <v-icon color="cyan">fas fa-map</v-icon>
       </v-btn>
-      <span>view map</span>
+      <span>{{ $t('frontoffice.vitabox.view_map') }}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_vitabox_map">
       <v-card>
         <v-card-title>
-          <span class="headline">Vitabox location</span>
+          <span class="headline">{{ $t('frontoffice.vitabox.location') }}</span>
           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_vitabox_map=false">
             <v-icon color="error">fas fa-times</v-icon>

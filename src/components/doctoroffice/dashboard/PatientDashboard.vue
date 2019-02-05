@@ -1,151 +1,146 @@
 <template>
   <div class="pr-1">
-    <v-card>
-      <v-list>
+    <v-card v-if="selectedDevice" @click.native="goToBoardDetails()" class="mr-1">
+      <v-list two-line class="light-hover">
         <v-list-tile>
           <v-list-tile-avatar tile size="45">
-            <img
-              :src="require('@/assets/'+this.selectedSensorGraph.board.Boardmodel.tag+'_icon.svg')"
-            >
+            <img :src="require('@/assets/'+selectedDevice.board.Boardmodel.tag+'_icon.svg')">
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title class="primary--text">
-              {{ this.selectedSensorGraph.board.Boardmodel.name }}:
+              {{ selectedDevice.board.Boardmodel.name }}:
               <label
                 class="font-weight-bold"
-              >{{ this.selectedSensorGraph.sensor.Sensormodel.measure.toUpperCase() }}</label>
+              >{{ selectedDevice.sensor.Sensormodel.measure.toUpperCase() }}</label>
             </v-list-tile-title>
             <v-list-tile-sub-title>
               <v-tooltip bottom class="hidden-sm-and-down">
                 <v-icon slot="activator" small>fas fa-calendar-alt</v-icon>
-                <span>Última actualização</span>
+                <span>{{$t('dashboard.last_update')}}</span>
               </v-tooltip>
-              <span
-              >{{selectedSensorGraph.sensor.last_commit ?formatDate(selectedSensorGraph.sensor.last_commit):"NaN"}}</span>
+              <span>{{selectedDevice.sensor.last_commit ?formatDate(selectedDevice.sensor.last_commit):"NaN"}}</span>
             </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-tooltip bottom>
-              <v-btn
-                icon
-                slot="activator"
-                @click.native="goToBoardDetails(selectedSensorGraph.board, selectedSensorGraph.sensor, selectedPatient)"
-              >
-                <v-icon color="blue darken-2">fas fa-info-circle</v-icon>
-              </v-btn>
-              <span>Sensor Details</span>
+              <v-icon slot="activator" color="blue darken-1">fas fa-chevron-right</v-icon>
+              <span>{{$t('dashboard.sensor_details')}}</span>
             </v-tooltip>
           </v-list-tile-action>
         </v-list-tile>
       </v-list>
     </v-card>
-    <v-card class="bioGraphCard my-1 hidden-sm-and-down" light flat>
-      <div v-if="records" id="bioGraph" class="pa-1">
-        <canvas id="graphCanvas" ref="graphCanvas"></canvas>
-      </div>
+
+    <v-card height="230" class="hidden-sm-and-down mr-1 mt-1" light flat>
+      <sensor-graph :records="devices.filter(y => y.selected)" :id="'1'"></sensor-graph>
     </v-card>
-    <v-layout row wrap>
-      <v-flex xs6 md3 lg4 xl3 v-for="item in boardSensors" :key="item.id">
-        <v-list light class="py-0 patientBoardSelector" style="height:60px;">
-          <v-list-tile
-            class="px-0 py-1"
-            :color="verifyValue(item.sensor)"
-            @click.native="showGraph(item)"
+
+    <v-layout wrap row class="pt-1">
+      <v-flex xs12 sm4 md3 xl2 v-for="device in devices" :key="device.id">
+        <v-card class="mr-1 mb-1">
+          <v-list
+            light
+            :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
+            style="height:60px;"
           >
-            <v-list-tile-avatar size="30" tile class="bioGraphAvatarCard">
-              <img
-                class="bioLogo"
-                :src="require('@/assets/'+item.board.Boardmodel.tag+'_icon.svg')"
-              >
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title
-                class="font-weight-bold"
-              >{{ item.sensor.last_values ? item.sensor.last_values[0]+item.sensor.Sensormodel.unit : 'none' }}</v-list-tile-title>
-              <v-list-tile-sub-title class="primary--text">{{ item.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+            <v-list-tile
+              class="px-0 py-2"
+              :color="verifyValue(device.profile)"
+              @click.native="selectDevice(device)"
+            >
+              <v-list-tile-avatar size="30" tile>
+                <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title
+                  class="font-weight-bold"
+                >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                <v-list-tile-sub-title class="primary--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
       </v-flex>
     </v-layout>
   </div>
 </template>
 
 <script>
-import Chart from "chart.js";
 import { event_bus } from "@/plugins/bus.js";
+import SensorGraph from "@/components/frontoffice/sensor/SensorGraph.vue";
 
 export default {
   name: "patientDashboard",
-  props: {
-    selectedPatient: Object
-  },
   data: () => {
     return {
-      selectedSensorGraph: null,
-      patientBoards: [],
-      boardSensors: [],
-      chart: null,
-      records: [],
-      range: null
+      selectedDevice: null,
+      devices: []
     };
   },
-  created() {
-    this.$store.commit("setPatientData", this.selectedPatient);
+  mounted() {
     this.getPatientBoards();
   },
-  mounted() {
-    if (this.selectedSensorGraph != null) {
-      this.initGraph();
+  computed: {
+    selectedPatient() {
+      return this.$store.state.patient;
     }
   },
   watch: {
     selectedPatient(val) {
-      this.getPatientBoards();
-      if (this.selectedSensorGraph != null) {
-        this.getValues();
-      }
-    },
-    selectedSensorGraph(val) {
-      this.range = this.selectedPatient.Profiles.filter(
-        x => x.tag === val.sensor.Sensormodel.tag
-      )[0];
+      if (val) this.getPatientBoards();
     }
   },
   methods: {
     getPatientBoards() {
-      this.boardSensors = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
-          this.boardSensors.push({
+          this.devices.push({
             board: board,
-            sensor: sensor
+            sensor: sensor,
+            profile: this.selectedPatient.Profiles.find(
+              x => x.tag === sensor.Sensormodel.tag
+            ),
+            selected: false,
+            values: []
           });
         });
       });
-      this.selectedSensorGraph = this.boardSensors[0];
-    },
-    showGraph(sensor) {
-      let element = document.getElementById("bioGraph");
-      element.classList.remove("fadeIn");
-      void element.offsetWidth;
-      element.classList.add("fadeIn");
-      this.selectedSensorGraph = sensor;
-      this.records = [];
+      this.selectedDevice = this.devices[0];
       this.getValues();
+    },
+    selectDevice(item) {
+      this.selectedDevice = item;
+      let count = this.devices.filter(y => y.selected).length;
+      let found = this.devices.map(x => {
+        if (x.sensor.id === item.sensor.id) {
+          if (!(!x.selected && count === 3)) {
+            if (x.values.length < 1) this.getValues();
+            else x.selected = !x.selected;
+          } else {
+            event_bus.$emit("toast", {
+              message: "limit of selected sensors exceeded",
+              type: "error"
+            });
+          }
+        }
+      });
     },
     getValues() {
       event_bus.$data.http
         .get(
           "/record/sensor/" +
-            this.selectedSensorGraph.sensor.id +
+            this.selectedDevice.sensor.id +
             "/patient/" +
             this.selectedPatient.id +
             "/page/1"
         )
         .then(response => {
-          this.records = response.data.records.sort(this.compare);
-          this.designGraph();
+          this.devices.map(x => {
+            if (x.sensor.id === this.selectedDevice.sensor.id) {
+              x.values = response.data.records.sort(this.compare);
+              x.selected = !x.selected;
+            }
+          });
         })
         .catch(error => {
           if (error.response) {
@@ -161,41 +156,28 @@ export default {
           }
         });
     },
-    initGraph() {
-      this.chart = new Chart(this.$refs.graphCanvas, {
-        type: "line",
-        options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: false }] },
-          responsive: true,
-          maintainAspectRatio: false
+    goToBoardDetails() {
+      this.$router.push({
+        name: "FOSensorDetail",
+        params: {
+          sensor: this.selectedDevice.sensor,
+          board: this.selectedDevice.board
         }
       });
-      this.getValues();
     },
-    designGraph() {
-      let length = this.records.length;
-      this.chart.data.labels = this.records.map(x => {
-        return this.formatDate(x.datetime);
-      });
-
-      let colors = this.records.map(x =>
-        x.value < this.range.min || x.value > this.range.max
-          ? "rgba(206,33, 33,.8)"
-          : "rgba(71, 183, 132,.8)"
-      );
-
-      this.chart.data.datasets = [
-        {
-          data: this.records.map(x => {
-            return x.value;
-          }),
-          pointBackgroundColor: colors,
-          pointBorderColor: colors,
-          borderWidth: 3
-        }
-      ];
-      this.chart.update();
+    verifyValue(profile) {
+      if (
+        profile.last_values &&
+        profile.max > profile.last_values[0] &&
+        profile.min < profile.last_values[0]
+      )
+        return "green accent-4";
+      else return "red accent-4";
+    },
+    compare(a, b) {
+      if (a.datetime < b.datetime) return -1;
+      if (a.datetime > b.datetime) return 1;
+      return 0;
     },
     formatDate(date) {
       let monthNames = [
@@ -226,69 +208,42 @@ export default {
         " " +
         d.getFullYear()
       );
-    },
-    compare(a, b) {
-      if (a.datetime < b.datetime) return -1;
-      if (a.datetime > b.datetime) return 1;
-      return 0;
-    },
-    goToBoardDetails(boardData, sensorData, patientData) {
-      this.$store.commit("setPatientData", patientData);
-      this.$router.push({
-        name: "FOSensorDetail",
-        params: { sensor: sensorData, board: boardData }
-      });
-    },
-    verifyValue(sensor) {
-      let profile = this.selectedPatient.Profiles.filter(
-        x => x.tag === sensor.Sensormodel.tag
-      )[0];
-      if (
-        sensor.last_values &&
-        profile.max > sensor.last_values[0] &&
-        profile.min < sensor.last_values[0]
-      )
-        return "green accent-4";
-      else return "red accent-4";
     }
+  },
+  components: {
+    "sensor-graph": SensorGraph
   }
 };
 </script>
 
 <style>
-.bioAvatar {
-  padding-top: 10%;
-  padding-left: 10px;
+.selectedBorder {
+  border: 2px solid #424242;
+  -moz-box-shadow: 2px 4px 8px #424242;
+  -webkit-box-shadow: 2px 4px 8px #424242;
+  box-shadow: 2px 4px 8px #424242;
 }
 
-.bioLogo {
-  height: 40px;
-  width: 40px;
+.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) span {
+  font-weight: normal !important;
+}
+.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) img {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  width: 36px !important;
+  height: 36px !important;
+}
+.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) .v-icon {
+  font-size: 36px !important;
 }
 
-.bioGraphCard {
-  padding-right: 10px;
-  height: 100%;
+.theme--light.v-bottom-nav .v-btn span {
+  font-weight: bold;
 }
-
-#bioGraph {
-  height: 240px;
-  position: relative;
+.theme--light.v-bottom-nav .v-btn img {
+  margin-bottom: 4px;
 }
-
-.bioGraphAvatarCard {
-  min-width: 40px;
-}
-
-.patientBoardSelector {
-  -moz-box-shadow: inset 0 0 10px #fff;
-  -webkit-box-shadow: inset 0 0 10px #fff;
-  background-color: #dfdfdf !important;
-  box-shadow: inset 0 0 5px #fff;
-}
-
-.patientBoardSelector:hover {
-  cursor: pointer;
-  background-color: #cfcfcf !important;
+.theme--light.v-bottom-nav .v-btn .v-icon {
+  font-size: 45px;
 }
 </style>

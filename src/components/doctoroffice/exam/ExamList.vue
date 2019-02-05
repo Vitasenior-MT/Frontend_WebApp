@@ -23,13 +23,15 @@
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
-          <td class="text-xs-left">{{ props.item.frequency?props.item.frequency:"undefined" }}</td>
+          <td
+            class="text-xs-left"
+          >{{ props.item.frequency?props.item.frequency:$t("frontoffice.patient.undefined") }}</td>
           <td class="text-xs-right">
             <v-tooltip bottom>
               <v-btn slot="activator" icon class="mx-0" @click="editExam(props.item)">
                 <v-icon color="teal">fas fa-edit</v-icon>
               </v-btn>
-              <span>{{props.item.frequency?'edit schedule':'schedule exame'}}</span>
+              <span>{{props.item.frequency? $t('frontoffice.patient.edit_schedule') : $t('frontoffice.patient.schedule_exame')}}</span>
             </v-tooltip>
           </td>
         </template>
@@ -61,17 +63,17 @@ export default {
       selected_exam: null,
       headers: [
         {
-          text: "Board",
+          text: this.$t("frontoffice.patient.board"),
           value: "Boardmodel.name",
           sortable: true
         },
         {
-          text: "Periodicity",
+          text: this.$t("frontoffice.patient.frequency"),
           value: "frequecy",
           sortable: false
         },
         {
-          text: "Actions",
+          text: this.$t("frontoffice.patient.actions"),
           value: "actions",
           sortable: false
         }

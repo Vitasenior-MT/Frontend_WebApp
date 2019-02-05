@@ -11,26 +11,35 @@
       >
         <v-icon>fas fa-minus-circle</v-icon>
       </v-btn>
-      <span>remove patient</span>
+      <span>{{ $t("frontoffice.patient.remove_tooltip") }}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_remove_patient" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline error--text">Remove patient from vitabox</span>
+          <span class="headline error--text">{{ $t("frontoffice.patient.remove_title") }}</span>
           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_remove_patient=false">
             <v-icon color="error">fas fa-times</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text v-if="patient">
-          Removing the patient will cause the
-          <b>loss of record history</b>.
-          <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
+          {{ $t("frontoffice.patient.remove_text") }}
+          <v-checkbox
+            :label="$t('frontoffice.patient.remove_confirm')"
+            v-model="checked"
+            color="raven"
+          ></v-checkbox>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="!checked" block disabled>PROCEED</v-btn>
-          <v-btn dark v-else color="error darken-1" block @click.native="removeItem">PROCEED</v-btn>
+          <v-btn v-if="!checked" block disabled>{{ $t("frontoffice.patient.submit") }}</v-btn>
+          <v-btn
+            dark
+            v-else
+            color="error darken-1"
+            block
+            @click.native="removeItem"
+          >{{ $t("frontoffice.patient.submit") }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -1,7 +1,7 @@
 <template>
   <v-card id="define_profile">
     <v-card-title>
-      <span class="headline primary_d--text">Define Profile</span>
+      <span class="headline primary_d--text">{{ $t('frontoffice.patient.define_profile') }}</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>
@@ -13,7 +13,7 @@
           :rules="[() => selected !== null || 'Profile model is required']"
           :items="models"
           item-text="name"
-          label="Profile"
+          :label="$t('frontoffice.patient.select_profile')"
           v-model="selected"
           single-line
           append-icon="fas fa-angle-down"
@@ -23,7 +23,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="ash" dark @click.native="save">Save</v-btn>
+      <v-btn color="ash" dark @click.native="save">{{$t('frontoffice.patient.save')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

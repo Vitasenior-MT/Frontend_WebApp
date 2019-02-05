@@ -6,19 +6,18 @@
     <v-dialog v-model="dialog_remove_board" max-width="500px">
       <v-card>
         <v-card-title>
+          <span class="headline error--text">{{$t('frontoffice.patient.remove')}} {{board.Boardmodel.name}}</span>
            <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_remove_board=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
-          <br />
-          <span class="headline error--text">Remove {{board.Boardmodel.name}} from {{this.$store.state.patient.name}}</span>
         </v-card-title>
         <v-card-text  v-if="board">
-          Removing the board will cause the <b>loss of record history</b>.
-          <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
+          {{$t('frontoffice.patient.remove_board')}}
+          <v-checkbox :label="$t('frontoffice.patient.remove_confirm')" v-model="checked" color="raven"></v-checkbox>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="!checked" block disabled>PROCEED</v-btn>
-          <v-btn dark v-else color="error darken-1" block @click.native="removeItem">PROCEED</v-btn>
+          <v-btn v-if="!checked" block disabled>{{$t('frontoffice.patient.submit')}}</v-btn>
+          <v-btn dark v-else color="error darken-1" block @click.native="removeItem">{{$t('frontoffice.patient.submit')}}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

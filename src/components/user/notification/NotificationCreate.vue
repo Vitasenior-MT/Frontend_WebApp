@@ -4,14 +4,14 @@
       <v-btn slot="activator" class="mx-1" icon @click.native="()=>dialog_send_notification=true">
         <v-icon color="teal">fas fa-paper-plane</v-icon>
       </v-btn>
-      <span>send notification</span>
+      <span>{{$t('user.notification.send_tooltip')}}</span>
     </v-tooltip>
     <v-dialog v-model="dialog_send_notification" width="800" :lazy="true">
       <v-card v-if="entity">
         <v-card-title>
           <span
             class="headline primary_d--text"
-          >Send message to {{to_patient?entity.name:entity.address}}</span>
+          >{{ $t('user.notification.send_title',{ entity: to_patient?entity.name:entity.address }) }}</span>
           <v-spacer></v-spacer>
           <v-btn icon @click.native="()=>dialog_send_notification=false">
             <v-icon color="error">fas fa-times</v-icon>
@@ -22,12 +22,12 @@
             :rules="[() => message.length > 1 || 'message is required']"
             name="message"
             v-model="message"
-            label="Message"
+            :label="$t('user.notification.message')"
           ></v-textarea>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark color="ash" @click.native="save">Save</v-btn>
+          <v-btn dark color="ash" @click.native="save">{{$t('user.notification.send_button')}}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

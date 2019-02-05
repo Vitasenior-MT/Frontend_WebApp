@@ -1,22 +1,28 @@
 <template>
-  <v-card id="edit_profile">
+  <v-card id="edit_profile" v-if="item">
     <v-card-title>
-      <span class="headline primary_d--text">Edit profile: {{item.measure}}</span>
+      <span
+        class="headline primary_d--text"
+      >{{$t('frontoffice.patient.edit_profile')}}: {{item.measure}}</span>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="close">
         <v-icon color="error">fas fa-times</v-icon>
       </v-btn>
     </v-card-title>
-    <v-card-text v-if="item">
+    <v-card-text>
       <v-container grid-list-md>
         <v-layout wrap>
           <v-flex xs12 sm6>
-            <v-text-field label="Minimum acceptable" v-model="item.min" type="number"></v-text-field>
+            <v-text-field
+              :label="$t('frontoffice.patient.minimum_acceptable')"
+              v-model="item.min"
+              type="number"
+            ></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>
             <v-text-field
               :rules="[() => parseFloat(item.min) < parseFloat(item.max) || 'Maximum must be greater than Minimum']"
-              label="Maximum acceptable"
+              :label="$t('frontoffice.patient.maximum_acceptable')"
               v-model="item.max"
               type="number"
             ></v-text-field>
@@ -26,7 +32,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="ash" dark @click.native="save">Save</v-btn>
+      <v-btn color="ash" dark @click.native="save">{{$t('frontoffice.patient.save')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

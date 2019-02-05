@@ -1,7 +1,8 @@
 <template>
   <div id="doctoroffice">
     <div class="primary">
-      <v-btn dark depressed class="my-0 primary--text" block to="/doctoroffice/requests">Requests
+      <v-btn dark depressed class="my-0 primary--text" block to="/doctoroffice/requests">
+        {{$t('navbar.patient_requests')}}
         <v-spacer></v-spacer>
         <v-icon v-if="count>0" right small dark>fas fa-bell</v-icon>
       </v-btn>
@@ -17,7 +18,7 @@
         hide-no-data
         hide-selected
         item-text="name"
-        placeholder="Start typing to Search"
+        :placeholder="$t('navbar.patient_search')"
         prepend-icon="fas fa-search"
         append-icon="fas fa-angle-down"
         return-object

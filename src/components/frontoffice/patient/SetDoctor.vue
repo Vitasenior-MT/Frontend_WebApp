@@ -4,7 +4,7 @@
       <div slot="header">
         <v-btn color="primary">
           <v-icon class="pr-2">fas fa-plus</v-icon>
-          <label>add doctor</label>
+          <label>{{$t('frontoffice.patient.add_doctor')}}</label>
         </v-btn>
       </div>
 
@@ -15,13 +15,19 @@
               prepend-icon="fas fa-user-md"
               v-model="email"
               name="email"
-              label="Doctor email"
+              :label="$t('frontoffice.patient.doctor_email')"
               id="email"
               type="text"
               :rules="[() => ((email.length>5 && email.indexOf('@') > -1) || email.length==0) || 'Invalid email']"
             ></v-text-field>
             <v-flex sm4 md3>
-              <v-btn block class="mt-3" dark color="ash" @click.native="save">Save</v-btn>
+              <v-btn
+                block
+                class="mt-3"
+                dark
+                color="ash"
+                @click.native="save"
+              >{{$t('frontoffice.patient.save')}}</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
