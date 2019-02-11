@@ -36,9 +36,7 @@
           </v-layout>
           <v-card-actions class="pa-0">
             <v-spacer></v-spacer>
-            <label
-              class="subheading"
-            >{{sensors[0].sensor.Sensormodel.measure}} ({{ sensors[0].sensor.Sensormodel.unit }})</label>
+            <label class="subheading">{{metric}}</label>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
@@ -55,7 +53,7 @@
               <v-card
                 @click.native="goToBoardDetails(item.sensor, item.board)"
                 class="darken-2 sensorSelector text-xs-center"
-                :color="getColor(item.sensor.last_values?item.sensor.last_values[item.sensor.last_values.length-1]:-1, item.sensor)"
+                :color="getColor(item.sensor.last_values?item.sensor.last_values[0]:false, item.sensor)"
               >
                 <v-card-text primary class="px-1">
                   <p
@@ -95,6 +93,7 @@ export default {
       "resize",
       () => (this.large = window.innerWidth >= 1264)
     );
+    if (this.sensors.length > 0) this.updateAvg();
   },
   beforeDestroy: function() {
     window.removeEventListener(
@@ -104,35 +103,48 @@ export default {
   },
   watch: {
     sensors(x) {
-      if (x.length > 0) {
-        let sum = 0,
-          count = 0;
-        this.sensors.forEach(x => {
-          if (x.sensor.last_values && x.sensor.last_values.length > 0) {
-            sum += x.sensor.last_values[0];
-            count++;
-          }
-        });
-        if (count === 0) this.avg = -1;
-        else this.avg = Math.round(sum / count);
-        this.metric =
-          this.sensors[0].sensor.Sensormodel.measure +
-          " (" +
-          this.sensors[0].sensor.Sensormodel.unit +
-          ")";
-      }
+      if (x.length > 0) this.updateAvg();
     }
   },
   methods: {
+    updateAvg() {
+      let sum = 0,
+        count = 0;
+      this.sensors.forEach(x => {
+        if (x.sensor.last_values && x.sensor.last_values.length > 0) {
+          sum += x.sensor.last_values[0];
+          count++;
+        }
+      });
+      if (count === 0) this.avg = -1;
+      else this.avg = Math.round(sum / count);
+      this.metric =
+        this.sensors[0].sensor.Sensormodel.measure +
+        " (" +
+        this.sensors[0].sensor.Sensormodel.unit +
+        ")";
+    },
     goToBoardDetails(sensor, board) {
       this.$router.push({
         name: "FOSensorDetail",
-        params: { sensor: sensor, board: board }
+        params: {
+          devices: [
+            {
+              sensor: sensor,
+              board: board,
+              profile: {
+                min: sensor.Sensormodel.min_acceptable,
+                max: sensor.Sensormodel.max_acceptable
+              }
+            }
+          ]
+        }
       });
     },
     getColor(value, sensor) {
-      return value <= sensor.Sensormodel.min_acceptable ||
-        value >= sensor.Sensormodel.max_acceptable
+      return typeof value != "number" ||
+        value > parseFloat(sensor.Sensormodel.max_acceptable) ||
+        value < parseFloat(sensor.Sensormodel.min_acceptable)
         ? "red"
         : "green";
     }

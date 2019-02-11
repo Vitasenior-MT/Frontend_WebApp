@@ -1,29 +1,41 @@
 <template>
   <v-content style="height:100%" class="gridSensor">
-    <v-card v-if="sensor" dark class="my-1 pa-3">
+    <v-card v-if="devices[0].board.Boardmodel.type=='environmental'" dark class="my-1 pa-3">
       <v-card-title primary-title>
         <v-layout row>
           <v-flex xs4 sm3 md3 style="position:relative">
             <img
-              :src="board.Boardmodel.type=='environmental'?require('@/assets/'+sensor.Sensormodel.tag+'_icon.svg'):require('@/assets/'+board.Boardmodel.tag+'_icon.svg')"
+              :src="require('@/assets/'+devices[0].sensor.Sensormodel.tag+'_icon.svg')"
               class="envIcon"
             >
           </v-flex>
           <v-flex xs8 sm9 md9 class="primary_l--text main-title">
             <v-card-title primary-title>
               <div>
-                <div class="headline mb-0">{{ sensor.Sensormodel.measure }}</div>
+                <div class="headline mb-0">{{ devices[0].sensor.Sensormodel.measure }}</div>
                 <div
                   class="subheading"
-                >{{ board.description?board.Boardmodel.name+" - "+board.description:board.Boardmodel.name }}</div>
+                >{{ devices[0].board.description ? devices[0].board.Boardmodel.name+" - "+devices[0].board.description : devices[0].board.Boardmodel.name }}</div>
               </div>
             </v-card-title>
           </v-flex>
         </v-layout>
       </v-card-title>
     </v-card>
-
-    <v-card v-if="sensor">
+    <v-card v-else dark class="my-1 pa-3">
+      <v-card-title primary-title>
+        <div class="primary_l--text main-title">
+          <div class="headline mb-0">{{ $store.state.patient.name }}</div>
+          <div class="subheading">|
+            <label
+              v-for="device in devices"
+              :key="device.sensor.id"
+            >{{device.sensor.Sensormodel.measure}} |</label>
+          </div>
+        </div>
+      </v-card-title>
+    </v-card>
+    <v-card v-if="devices">
       <v-card-title>
         <v-layout row class="mx-4 pt-2">
           <v-flex sm6 md3>
@@ -108,13 +120,7 @@
           <v-flex md1>
             <div class="pt-2">
               <v-tooltip bottom>
-                <v-btn
-                  slot="activator"
-                  color="primary"
-                  @click.native="getValuesByDate()"
-                  icon
-                  small
-                >
+                <v-btn slot="activator" color="primary" @click.native="getDate()" icon small>
                   <v-icon>fas fa-angle-right</v-icon>
                 </v-btn>
                 <span>{{$t('frontoffice.board.submit')}}</span>
@@ -122,12 +128,12 @@
             </div>
           </v-flex>
           <v-flex dark xs10 md3 offset-md1>
-            <div class="pt-2">
+            <div class="pt-2" v-if="devices[0].board.Boardmodel.type=='environmental'">
               <v-icon small>fas fa-calendar-alt</v-icon>
               <span class="pl-1 pt-4">
                 {{$t('dashboard.last_update')}}:
                 <br>
-                {{ new Date(sensor.last_commit).toLocaleDateString("pt-pt", {
+                {{ new Date(devices[0].sensor.last_commit).toLocaleDateString("pt-pt", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -138,40 +144,25 @@
               </span>
             </div>
           </v-flex>
-          <v-flex xs2 md1>
-            <print-preview :records="records" :sensor="sensor" :range="range"></print-preview>
+          <v-flex xs2 md1 v-if="records.length>0" class="hidden-md-and-down">
+            <print-preview :records="records"></print-preview>
           </v-flex>
         </v-layout>
       </v-card-title>
 
       <v-card-text>
-        <div v-if="range" class="pl-5 pb-2">
-          <v-chip small label>
-            <v-avatar>
-              <v-icon small color="blue darken-3">fas fa-circle</v-icon>
-            </v-avatar>
-            {{ $t('dashboard.minimum_acceptable') + " (" + Math.round(this.range.min) + ")"}}
-          </v-chip>
-          <v-chip small label>
-            <v-avatar>
-              <v-icon small color="deep-orange darken-2">fas fa-circle</v-icon>
-            </v-avatar>
-            {{ $t('dashboard.maximum_acceptable') + " (" + Math.round(this.range.max) + ")"}}
-          </v-chip>
-        </div>
-
-        <div class="sensorGraph">
-          <canvas id="graphCanvas" ref="graphCanvas"></canvas>
-        </div>
+        <v-card height="250" light flat>
+          <sensor-graph :records="records" :id="'1'"></sensor-graph>
+        </v-card>
 
         <v-layout v-if="records" row wrap>
           <v-flex class="py-0">
             <v-btn
-              v-if="records.length>24"
+              v-if="records.filter(x=>x.values.length>24).length>0"
               block
               color="primary"
               flat
-              @click.native="getValuesByPage(1)"
+              @click.native="getPage(1)"
             >
               <v-icon>fas fa-angle-double-left</v-icon>
             </v-btn>
@@ -180,7 +171,7 @@
             </v-btn>
           </v-flex>
           <v-flex class="py-0">
-            <v-btn v-if="page>1" color="primary" block flat @click.native="getValuesByPage(-1)">
+            <v-btn v-if="page>1" color="primary" block flat @click.native="getPage(-1)">
               <v-icon>fas fa-angle-double-right</v-icon>
             </v-btn>
             <v-btn v-else block flat disabled>
@@ -196,12 +187,12 @@
 <script>
 import { event_bus } from "@/plugins/bus.js";
 import PrintPreview from "@/components/frontoffice/sensor/SensorPrint.vue";
+import SensorGraph from "@/components/frontoffice/sensor/SensorGraph.vue";
 
 export default {
   name: "sensorDetail",
   props: {
-    sensor: Object,
-    board: Object
+    devices: Array
   },
   data: () => {
     return {
@@ -218,125 +209,29 @@ export default {
       datetime2: null,
       chart: null,
       records: [],
-      page: 1,
-      range: null
+      page: 1
     };
   },
   mounted() {
-    if (this.sensor && this.board) {
-      this.initGraph();
-      this.range =
-        this.board.Boardmodel.type !== "environmental"
-          ? this.$store.state.patient.Profiles.filter(
-              x => x.tag === this.sensor.Sensormodel.tag
-            )[0]
-          : {
-              min: this.sensor.Sensormodel.min_acceptable,
-              max: this.sensor.Sensormodel.max_acceptable
-            };
-    }
-  },
-  watch: {
-    sensor(val) {
-      this.getValuesByPage(0);
+    if (this.devices && this.devices.length > 0) {
+      if (this.devices[0].values && this.devices[0].values.length > 0) {
+        this.records = this.devices;
+      } else this.getPage(0);
     }
   },
   methods: {
-    initGraph() {
-      this.chart = new Chart(this.$refs.graphCanvas, {
-        type: "line",
-        options: {
-          legend: { display: false },
-          scales: { xAxes: [{ display: true }] },
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      });
-      this.getValuesByPage(0);
-    },
-    designGraph() {
-      let length = this.records.length;
-      this.chart.data.labels = this.records.map(x => {
-        return this.formatDate(x.datetime);
-      });
-      let colors = this.records.map(x =>
-        x.value < this.range.min || x.value > this.range.max
-          ? "rgba(206,33, 33,.8)"
-          : "rgba(71, 183, 132,.8)"
-      );
-
-      this.chart.data.datasets = [
-        {
-          data: this.records.map(x => x.value),
-          pointBackgroundColor: colors,
-          pointBorderColor: colors,
-          borderWidth: 3,
-          fill: true
-        },
-        {
-          data: Array.from({ length }, i => this.range.min),
-          borderWidth: 2,
-          fill: false,
-          borderColor: "#1565C0",
-          pointRadius: 0
-        },
-        {
-          data: Array.from({ length }, i => this.range.max),
-          borderWidth: 2,
-          fill: false,
-          borderColor: "#E64A19",
-          pointRadius: 0
-        }
-      ];
-      this.chart.update();
-    },
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        " - " +
-        d.getDate() +
-        " " +
-        monthNames[d.getMonth()] +
-        "'" +
-        d
-          .getFullYear()
-          .toString()
-          .substring(2)
-      );
-    },
-    getValuesByPage(page) {
-      let url =
-        this.board.Boardmodel.type === "environmental"
-          ? "/record/sensor/" + this.sensor.id + "/page/" + (this.page + page)
-          : "/record/sensor/" +
-            this.sensor.id +
-            "/patient/" +
-            this.$store.state.patient.id +
-            "/page/" +
-            (this.page + page);
-      event_bus.$data.http
-        .get(url)
-        .then(response => {
-          this.records = response.data.records.sort(this.compare);
+    getPage(page) {
+      event_bus.$emit("waiting", true);
+      this.records = [];
+      Promise.all(
+        this.devices.map(x =>
+          this.getValuesByPage(this.page + page, x.board, x.sensor)
+        )
+      )
+        .then(records => {
           this.page += page;
-          this.designGraph();
+          this.records = records;
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -350,40 +245,50 @@ export default {
               type: "error"
             });
           }
+          event_bus.$emit("waiting", false);
         });
     },
-    compare(a, b) {
-      if (a.datetime < b.datetime) return -1;
-      if (a.datetime > b.datetime) return 1;
-      return 0;
+    getValuesByPage(page, board, sensor) {
+      return new Promise((resolve, reject) => {
+        let url =
+          board.Boardmodel.type === "environmental"
+            ? "/record/sensor/" + sensor.id + "/page/" + page
+            : "/record/sensor/" +
+              sensor.id +
+              "/patient/" +
+              this.$store.state.patient.id +
+              "/page/" +
+              page;
+        event_bus.$data.http
+          .get(url)
+          .then(response => {
+            resolve({
+              board: board,
+              sensor: sensor,
+              profile:
+                board.Boardmodel.type === "environmental"
+                  ? {
+                      min: sensor.Sensormodel.min_acceptable,
+                      max: sensor.Sensormodel.max_acceptable
+                    }
+                  : this.$store.state.patient.Profiles.find(
+                      x => x.tag === sensor.Sensormodel.tag
+                    ),
+              values: response.data.records.sort(this.compare)
+            });
+          })
+          .catch(error => reject(error));
+      });
     },
-    getValuesByDate() {
-      // console.log(
-      //   "start: " + this.dateMin + "T" + this.timeMin,
-      //   "end: " + this.dateMax + "T" + this.timeMax
-      // );
-      let url =
-        this.board.Boardmodel.type === "environmental"
-          ? "/record/sensor/" +
-            this.sensor.id +
-            "/start/" +
-            (this.dateMin + "T" + this.timeMin) +
-            "/end/" +
-            (this.dateMax + "T" + this.timeMax)
-          : "/record/sensor/" +
-            this.sensor.id +
-            "/patient/" +
-            this.$store.state.patient.id +
-            "/start/" +
-            (this.dateMin + "T" + this.timeMin) +
-            "/end/" +
-            (this.dateMax + "T" + this.timeMax);
-
-      event_bus.$data.http
-        .get(url)
-        .then(response => {
-          this.records = response.data.records.sort(this.compare);
-          this.designGraph();
+    getDate() {
+      event_bus.$emit("waiting", true);
+      this.records = [];
+      Promise.all(
+        this.devices.map(x => this.getValuesByDate(x.board, x.sensor))
+      )
+        .then(records => {
+          this.records = records;
+          event_bus.$emit("waiting", false);
         })
         .catch(error => {
           if (error.response) {
@@ -397,7 +302,42 @@ export default {
               type: "error"
             });
           }
+          event_bus.$emit("waiting", false);
         });
+    },
+    getValuesByDate(board, sensor) {
+      return new Promise((resolve, reject) => {
+        // console.log( "start: " + this.dateMin + "T" + this.timeMin, "end: " + this.dateMax + "T" + this.timeMax );
+        let url =
+          board.Boardmodel.type === "environmental"
+            ? "/record/sensor/" +
+              sensor.id +
+              "/start/" +
+              (this.dateMin + "T" + this.timeMin) +
+              "/end/" +
+              (this.dateMax + "T" + this.timeMax)
+            : "/record/sensor/" +
+              sensor.id +
+              "/patient/" +
+              this.$store.state.patient.id +
+              "/start/" +
+              (this.dateMin + "T" + this.timeMin) +
+              "/end/" +
+              (this.dateMax + "T" + this.timeMax);
+        event_bus.$data.http
+          .get(url)
+          .then(response => {
+            resolve({
+              board: board,
+              sensor: sensor,
+              profile: this.$store.state.patient.Profiles.find(
+                x => x.tag === sensor.Sensormodel.tag
+              ),
+              values: response.data.records.sort(this.compare)
+            });
+          })
+          .catch(error => reject(error));
+      });
     },
     saveTime1(date, time) {
       this.flag1 = false;
@@ -429,10 +369,16 @@ export default {
         "/" +
         currentdate.getDate()
       );
+    },
+    compare(a, b) {
+      if (a.datetime < b.datetime) return -1;
+      if (a.datetime > b.datetime) return 1;
+      return 0;
     }
   },
   components: {
-    "print-preview": PrintPreview
+    "print-preview": PrintPreview,
+    "sensor-graph": SensorGraph
   }
 };
 </script>

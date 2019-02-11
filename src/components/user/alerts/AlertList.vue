@@ -10,7 +10,12 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <div style="position:relative;">
-          <label class="align-vertical-center">{{ $t('user.notification.new_warnings') }}: <span class="subheading font-weight-bold">{{new_warnings}}</span></label>
+          <label class="align-vertical-center">
+            {{ $t('user.notification.new_warnings') }}:
+            <span
+              class="subheading font-weight-bold"
+            >{{new_warnings}}</span>
+          </label>
         </div>
       </v-toolbar-items>
     </v-toolbar>
@@ -28,15 +33,24 @@
       <v-tab ripple href="#tab-pat">{{ $t('user.notification.patients') }}</v-tab>
 
       <v-tab-item value="tab-env">
-        <alert-environment-list></alert-environment-list>
+        <alert-environment-list  @graph="obj=>showGraph(obj)"></alert-environment-list>
       </v-tab-item>
       <v-tab-item value="tab-pat">
-        <alert-patient-list></alert-patient-list>
+        <alert-patient-list @graph="obj=>{showGraph(obj)}"></alert-patient-list>
       </v-tab-item>
     </v-tabs>
     <div v-else>
-      <alert-patient-list></alert-patient-list>
+      <alert-patient-list v-on:graph="obj=>showGraph(obj)"></alert-patient-list>
     </div>
+
+    <v-dialog v-model="graph_dialog" lazy width="800">
+      <warning-graph
+        @close="graph_dialog = false"
+        :patient_id="patient_id"
+        :sensor_id="sensor_id"
+        :warning_date="warning_date"
+      ></warning-graph>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -44,12 +58,17 @@
 import { event_bus } from "@/plugins/bus.js";
 import AlertEnvironmentList from "@/components/user/alerts/AlertEnvironmentList";
 import AlertPatientList from "@/components/user/alerts/AlertPatientList";
+import WarningGraph from "@/components/frontoffice/sensor/SensorWarning.vue";
 
 export default {
   data() {
     return {
       active_tab: "tab-pat",
-      new_warnings: 0
+      new_warnings: 0,
+      sensor_id: "",
+      patient_id: "",
+      warning_date: null,
+      graph_dialog: false
     };
   },
   mounted() {
@@ -73,9 +92,18 @@ export default {
         }
       });
   },
+  methods: {
+    showGraph(obj) {
+      this.patient_id = obj.patient_id ? obj.patient_id : null;
+      this.warning_date = obj.warning_date;
+      this.sensor_id = obj.sensor_id;
+      this.graph_dialog = true;
+    }
+  },
   components: {
     "alert-patient-list": AlertPatientList,
-    "alert-environment-list": AlertEnvironmentList
+    "alert-environment-list": AlertEnvironmentList,
+    "warning-graph": WarningGraph
   }
 };
 </script>

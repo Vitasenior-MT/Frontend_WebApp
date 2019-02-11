@@ -62,16 +62,6 @@
             ></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>
-            <v-text-field label="Minimum to graph" v-model="item.min_acceptable"></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm6>
-            <v-text-field
-              :rules="[() => item.min_acceptable < item.max_acceptable || 'Maximum acceptable must be greater than Minimum acceptable']"
-              label="Maximum acceptable"
-              v-model="item.max_acceptable"
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs12 sm6>
             <v-text-field label="Minimum to graph" v-model="item.min_graph"></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>

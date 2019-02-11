@@ -69,7 +69,8 @@ const messages = {
         warnings: 'Warnings',
         new_warnings: 'new warnings',
         environment: 'Environment',
-        patients: 'Patients'
+        patients: 'Patients',
+        graph: 'see graph'
       }
     },
     dashboard: {
@@ -85,7 +86,11 @@ const messages = {
       print_preview: 'Print preview',
       print: 'print',
       date: 'Date',
-      value: 'Value'
+      value: 'Value',
+      last_values:'values from the last {days} days',
+      no_sensors:'No environmental sensors registered',
+      no_patients:'No patients registered',
+      no_boards:'No equipment associated with the patient'
     },
     frontoffice: {
       vitabox: {
@@ -181,8 +186,8 @@ const messages = {
         defined_profile: 'Defined profile',
         alter_profile: 'Alter Profile',
         edit_profile: 'edit profile',
-        update_info_tooltip:'update personal information',
-        update_info_title:'Update patient data'
+        update_info_tooltip: 'update personal information',
+        update_info_title: 'Update patient data'
       },
       board: {
         indentification: 'Indentification',
@@ -284,6 +289,7 @@ const messages = {
         new_warnings: 'novos avisos',
         environment: 'Ambiente',
         patients: 'Pacientes',
+        graph: 'ver gráfico'
       }
     },
     dashboard: {
@@ -299,7 +305,11 @@ const messages = {
       print_preview: 'Previsão de impressão',
       print: 'imprimir',
       date: 'Data',
-      value: 'Valor'
+      value: 'Valor',
+      last_values:'Valores dos últimos {days} dias',
+      no_sensors:'Nenhum sensor ambiental registado',
+      no_patients:'Nenhum paciente registado',
+      no_boards:'Nenhum equipamento associado ao paciente'
     },
     frontoffice: {
       vitabox: {
@@ -394,8 +404,8 @@ const messages = {
         maximum_acceptable: 'valor máximo aceitável',
         defined_profile: 'Perfil clínico atribuído',
         alter_profile: 'Alterar Perfil',
-        update_info_tooltip:'atualizar informação pessoal',
-        update_info_title:'Actualizar dados pessoais'
+        update_info_tooltip: 'atualizar informação pessoal',
+        update_info_title: 'Actualizar dados pessoais'
       },
       board: {
         indentification: 'Identificação',

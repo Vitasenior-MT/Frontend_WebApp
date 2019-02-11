@@ -16,12 +16,12 @@
     <v-layout wrap>
       <v-flex sm6 md4 xl3 v-for="(item, index) in warnings" :key="index">
         <v-card class="ma-1" dark :color="item.color + ' darken-1'">
-          <v-card-title class="pb-2" @click="goToSensorWarning(item)">
+          <v-card-title class="pb-2">
             <v-layout row>
               <v-flex xs2>
                 <img :src="require('@/assets/'+item.tag+'_icon.svg')" style="width:40px !important">
               </v-flex>
-              <v-flex xs10>
+              <v-flex xs9>
                 <div class="pl-2">
                   <span class="title font-weight-light">{{item.entity}}</span>
                   <br>
@@ -41,6 +41,14 @@
                     class="ash_l--text"
                   >{{ item.seen_vitabox?new Date(item.seen_vitabox).toLocaleDateString("pt-pt", options):"not seen" }}</label>
                 </div>
+              </v-flex>
+              <v-flex xs1>
+                <v-tooltip left>
+                  <v-btn small icon slot="activator" @click="goToSensorWarning(item)">
+                    <v-icon>fas fa-chart-line</v-icon>
+                  </v-btn>
+                  <span>{{ $t('user.notification.graph') }}</span>
+                </v-tooltip>
               </v-flex>
             </v-layout>
           </v-card-title>
@@ -129,13 +137,10 @@ export default {
         });
     },
     goToSensorWarning(warning) {
-      this.$router.push({
-        name: "FOSensorWarning",
-        params: {
-          sensor_id: warning.sensor_id,
-          patient_id: warning.patient_id,
-          warning_date: new Date(warning.datetime)
-        }
+      this.$emit("graph", {
+        sensor_id: warning.sensor_id,
+        patient_id: warning.patient_id,
+        warning_date: new Date(warning.datetime)
       });
     }
   }

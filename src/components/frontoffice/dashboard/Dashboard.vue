@@ -26,8 +26,13 @@
     <v-divider class="my-1 mr-1"></v-divider>
 
     <v-layout row wrap>
-      <v-flex lg2>
-        <v-layout wrap fill-height>
+      <v-flex xs12 v-if="patients.length==0">
+        <v-card color="error" class="mr-1 mb-1">
+          <v-card-title>{{$t('dashboard.no_patients')}}</v-card-title>
+        </v-card>
+      </v-flex>
+      <v-flex :class="has_sensors?'flex lg2':'flex xs12'">
+        <v-layout wrap fill-height v-if="has_sensors" class="mb-1">
           <v-flex xs6 sm3 lg12 v-if="tempSensors.every(checkNulls) > 0">
             <envBoardDashboard :sensors="tempSensors" :type="'temp'"></envBoardDashboard>
           </v-flex>
@@ -41,9 +46,12 @@
             <envBoardDashboard :sensors="dioxiSensors" :type="'diox'"></envBoardDashboard>
           </v-flex>
         </v-layout>
+        <v-card v-else color="error" class="mr-1 mb-1">
+          <v-card-title>{{$t('dashboard.no_sensors')}}</v-card-title>
+        </v-card>
       </v-flex>
-      <v-flex lg10>
-        <patientDashboard v-if="patients && patients.length>0" :patients="patients"></patientDashboard>
+      <v-flex v-if="patients.length>0" :class="has_sensors?'flex lg10':'flex xs12'">
+        <patientDashboard class="mb-1" :patients="patients"></patientDashboard>
       </v-flex>
     </v-layout>
     <br>
@@ -64,7 +72,8 @@ export default {
       monoSensors: [],
       dioxiSensors: [],
       drawer: true,
-      mini: true
+      mini: true,
+      has_sensors: false
     };
   },
   computed: {
@@ -115,6 +124,7 @@ export default {
           let boardSensors = response.data.boards.filter(
             board => board.Boardmodel.type === "environmental"
           );
+          this.has_sensors = boardSensors.length > 0;
           this.tempSensors = boardSensors.map(board => {
             return {
               board: board,

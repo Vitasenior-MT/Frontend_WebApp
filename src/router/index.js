@@ -18,7 +18,6 @@ import FODashboard from '@/components/frontoffice/dashboard/Dashboard'
 import FOVitaboxDetail from '@/components/frontoffice/vitabox/VitaboxDetail'
 import FOVitaboxRegister from '@/components/frontoffice/vitabox/VitaboxRegister'
 import FOSensorDetail from '@/components/frontoffice/sensor/SensorDetail'
-import FOSensorWarning from '@/components/frontoffice/sensor/SensorWarning'
 import FOPatientDetail from '@/components/frontoffice/patient/PatientDetail'
 
 // Doctoroffice
@@ -100,12 +99,6 @@ export default new Router({
       path: '/frontoffice/sensor/detail',
       name: 'FOSensorDetail',
       component: FOSensorDetail,
-      props: true
-    },
-    {
-      path: '/frontoffice/sensor/warning',
-      name: 'FOSensorWarning',
-      component: FOSensorWarning,
       props: true
     },
     {

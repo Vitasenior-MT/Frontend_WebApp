@@ -53,6 +53,9 @@ export default {
         layout: { padding: { left: 5 } }
       }
     });
+    if (this.records.length > 0) {
+      this.designGraph();
+    }
   },
   methods: {
     designGraph() {

@@ -1,30 +1,30 @@
 <template>
   <div>
     <v-card class="mr-1">
-      <v-bottom-nav :active.sync="selectedPatientId" value height="77">
-        <v-btn v-for="item in patients" :key="item.id" :value="item.id">
-          <span>{{item.name}}</span>
-          <v-avatar size="45">
-            <img v-if="item.photo" :src="getPhotoLink(item.photo)">
+      <div id="patient_selector">
+        <v-btn v-for="(patient, index) in patients" :key="patient.id" @click="selectPatient(index)">
+          <span>{{patient.name}}</span>
+          <v-avatar size="47">
+            <img v-if="patient.photo" :src="getPhotoLink(patient.photo)">
             <v-icon v-else>fas fa-user-circle</v-icon>
           </v-avatar>
         </v-btn>
-      </v-bottom-nav>
+      </div>
     </v-card>
 
-    <v-layout row wrap class="pt-1">
-      <v-flex md6 v-if="selectedPatientId">
+    <v-layout row wrap class="pt-1" fill-height>
+      <v-flex md6 v-if="this.$store.state.patient">
         <v-card @click.native="goToPatientProfile()" dark class="mb-1 mr-1">
           <v-list two-line class="dark-hover">
             <v-list-tile>
               <v-list-tile-avatar size="50" class="no-min-width">
                 <img
-                  v-if="selectedPatientId && $store.state.patient.photo"
-                  :src="getPhotoLink($store.state.patient.photo)"
+                  v-if="this.$store.state.patient.photo"
+                  :src="getPhotoLink(this.$store.state.patient.photo)"
                 >
                 <v-icon large v-else>fas fa-user-circle</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content class="pl-1">
+              <v-list-tile-content class="pl-2">
                 <v-list-tile-title
                   class="headline primary_l--text"
                   style="height:auto;"
@@ -42,7 +42,7 @@
         </v-card>
       </v-flex>
 
-      <v-flex md6>
+      <v-flex md6 class="mb-1">
         <v-card v-if="selectedDevice" @click.native="goToBoardDetails()" class="mr-1">
           <v-list two-line class="light-hover">
             <v-list-tile>
@@ -73,40 +73,45 @@
             </v-list-tile>
           </v-list>
         </v-card>
-      </v-flex>
-    </v-layout>
-
-    <v-card height="250" class="hidden-sm-and-down mr-1" light flat>
-      <sensor-graph :records="devices.filter(y => y.selected)" :id="'1'"></sensor-graph>
-    </v-card>
-
-    <v-layout wrap row class="pt-1">
-      <v-flex xs12 sm4 md3 xl2 v-for="device in devices" :key="device.id">
-        <v-card class="mr-1 mb-1">
-          <v-list
-            light
-            :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
-            style="height:60px;"
-          >
-            <v-list-tile
-              class="px-0 py-2"
-              :color="verifyValue(device.profile)"
-              @click.native="selectDevice(device)"
-            >
-              <v-list-tile-avatar size="30" tile>
-                <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title
-                  class="font-weight-bold"
-                >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
-                <v-list-tile-sub-title class="ash--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
+        <v-card v-else color="error" class="mr-1" height="100%">
+          <v-card-title>{{$t('dashboard.no_boards')}}</v-card-title>
         </v-card>
       </v-flex>
     </v-layout>
+
+    <div v-if="devices.length>0">
+      <v-card height="250" class="hidden-sm-and-down mr-1" light flat>
+        <sensor-graph :records="devices.filter(y => y.selected)" :id="'1'"></sensor-graph>
+      </v-card>
+
+      <v-layout wrap row class="pt-1">
+        <v-flex xs12 sm4 md3 xl2 v-for="device in devices" :key="device.id">
+          <v-card class="mr-1 mb-1">
+            <v-list
+              light
+              :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
+              style="height:60px;"
+            >
+              <v-list-tile
+                class="px-0 py-2"
+                :color="verifyValue(device.profile)"
+                @click.native="selectDevice(device)"
+              >
+                <v-list-tile-avatar size="30" tile>
+                  <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title
+                    class="font-weight-bold"
+                  >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                  <v-list-tile-sub-title class="ash--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
   </div>
 </template>
 
@@ -128,29 +133,26 @@ export default {
   },
   watch: {
     patients() {
-      this.selectPatient();
-    },
-    selectedPatientId(id) {
-      if (id) {
-        this.$store.commit(
-          "setPatientData",
-          this.patients.find(x => x.id === id)
-        );
-        this.devices = [];
-        this.getPatientBoards();
-      }
+      this.selectPatient(0);
     }
   },
   mounted() {
-    this.selectPatient();
+    this.selectPatient(0);
   },
   methods: {
-    selectPatient() {
+    selectPatient(index) {
       if (this.patients && this.patients.length > 0) {
-        this.selectedPatientId = this.patients[0].id;
+        var btns = document
+          .getElementById("patient_selector")
+          .querySelectorAll("BUTTON");
+        btns.forEach(x => (x.className = "v-btn theme--light"));
+        btns[index].className = "v-btn v-btn--active";
+
+        this.$store.commit("setPatientData", this.patients[index]);
+        this.devices = [];
+        this.getPatientBoards();
       } else {
         this.$store.commit("setPatientData", null);
-        this.selectedPatientId = null;
       }
     },
     getPatientBoards() {
@@ -167,16 +169,15 @@ export default {
           });
         });
       });
-      this.selectedDevice = this.devices[0];
-      this.getValues();
+      this.selectDevice(this.devices[0]);
     },
     selectDevice(item) {
       this.selectedDevice = item;
       let count = this.devices.filter(y => y.selected).length;
-      let found = this.devices.map(x => {
+      this.devices.map((x, i) => {
         if (x.sensor.id === item.sensor.id) {
           if (!(!x.selected && count === 3)) {
-            if (x.values.length < 1) this.getValues();
+            if (x.values.length < 1) this.getValues(i);
             else x.selected = !x.selected;
           } else {
             event_bus.$emit("toast", {
@@ -187,22 +188,18 @@ export default {
         }
       });
     },
-    getValues() {
+    getValues(index) {
       event_bus.$data.http
         .get(
           "/record/sensor/" +
             this.selectedDevice.sensor.id +
             "/patient/" +
-            this.selectedPatientId +
+            this.$store.state.patient.id +
             "/page/1"
         )
         .then(response => {
-          this.devices.map(x => {
-            if (x.sensor.id === this.selectedDevice.sensor.id) {
-              x.values = response.data.records.sort(this.compare);
-              x.selected = !x.selected;
-            }
-          });
+          this.devices[index].values = response.data.records.sort(this.compare);
+          this.devices[index].selected = !this.devices[index].selected;
         })
         .catch(error => {
           if (error.response) {
@@ -222,8 +219,7 @@ export default {
       this.$router.push({
         name: "FOSensorDetail",
         params: {
-          sensor: this.selectedDevice.sensor,
-          board: this.selectedDevice.board
+          devices: this.devices.filter(y => y.selected)
         }
       });
     },
@@ -285,31 +281,55 @@ export default {
 </script>
 
 <style>
-.v-item-group.v-bottom-nav {
-  bottom: auto;
-  transform: none;
+#patient_selector {
+  height: 77px;
+  box-shadow: 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  display: flex;
+  left: 0;
+  justify-content: center;
+  width: 100%;
 }
 
-.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) span {
-  font-weight: normal !important;
+#patient_selector button {
+  background: transparent !important;
+  box-shadow: none !important;
+  height: 100%;
+  margin: 0;
+  max-width: 168px;
+  min-width: 80px;
+  padding: 8px 12px 10px;
+  width: 100%;
+  text-transform: none;
 }
-.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) img {
+
+#patient_selector .v-btn--active::before {
+  background-color: #fff !important;
+}
+#patient_selector button .v-btn__content {
+  flex-direction: column-reverse;
+}
+
+#patient_selector button:not(.v-btn--active) img {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
   width: 36px !important;
   height: 36px !important;
 }
-.theme--light.v-bottom-nav .v-btn:not(.v-btn--active) .v-icon {
+#patient_selector button:not(.v-btn--active) span {
+  font-weight: normal;
+}
+#patient_selector button:not(.v-btn--active) .v-icon {
   font-size: 36px !important;
+  color: #4f4f4f !important;
 }
 
-.theme--light.v-bottom-nav .v-btn span {
+#patient_selector button span {
   font-weight: bold;
 }
-.theme--light.v-bottom-nav .v-btn img {
+#patient_selector button img {
   margin-bottom: 4px;
 }
-.theme--light.v-bottom-nav .v-btn .v-icon {
+#patient_selector button .v-icon {
   font-size: 45px;
 }
 </style>
