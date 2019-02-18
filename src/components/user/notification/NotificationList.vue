@@ -69,6 +69,11 @@
         </v-flex>
       </v-layout>
     </v-list>
+
+    <v-btn dark class="ml-0" @click="$router.go(-1)">
+      <v-icon>fas fa-long-arrow-alt-left</v-icon>
+      <span class="pl-1">{{$t('dashboard.back')}}</span>
+    </v-btn>
   </v-content>
 </template>
 

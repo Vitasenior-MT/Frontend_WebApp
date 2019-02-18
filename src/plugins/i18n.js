@@ -13,6 +13,7 @@ const messages = {
       videocall: 'Videocall',
       change_pass: 'Change password',
       change_photo: 'Change photo',
+      change_language: 'Change language',
       logout: 'Logout',
       settings: 'Settings',
       register_vitabox: 'Register Vitabox',
@@ -55,7 +56,11 @@ const messages = {
         browse_file: 'browse file',
         upload: 'upload',
         update_own_photo: 'Update your Photo',
-        update_patient_photo: "Update {patient}'s Photo"
+        update_patient_photo: "Update {patient}'s Photo",
+        browse_file: 'browse file',
+        portuguese: "Portuguese",
+        english: "English",
+        alter_language: "Alter system language"
       },
       notification: {
         send_tooltip: "send notification",
@@ -70,13 +75,14 @@ const messages = {
         new_warnings: 'new warnings',
         environment: 'Environment',
         patients: 'Patients',
-        graph: 'see graph'
+        graph: 'see graph',
+        no_warnings: 'No warnings'
       }
     },
     dashboard: {
       vitabox_details: "Vitabox Details",
       average: 'average',
-      sensor_details: 'Sensor Details',
+      sensor_details: 'Detailed search to selected sensors',
       patient_details: 'Patient Details',
       last_update: 'Last update',
       start_date: 'Pick Start Date',
@@ -87,10 +93,12 @@ const messages = {
       print: 'print',
       date: 'Date',
       value: 'Value',
-      last_values:'values from the last {days} days',
-      no_sensors:'No environmental sensors registered',
-      no_patients:'No patients registered',
-      no_boards:'No equipment associated with the patient'
+      last_values: 'values from the last {days} days',
+      no_sensors: 'No environmental sensors registered',
+      no_patients: 'No patients registered',
+      no_boards: 'No equipment associated with the patient',
+      days: 'days',
+      back: 'Go Back'
     },
     frontoffice: {
       vitabox: {
@@ -232,6 +240,7 @@ const messages = {
       videocall: 'Video chamada',
       change_pass: 'Alterar palavra-chave',
       change_photo: 'Alterar fotografia',
+      change_language: 'Alterar linguagem',
       logout: 'Sair',
       settings: 'Definições',
       register_vitabox: 'Registar Vitabox',
@@ -275,6 +284,10 @@ const messages = {
         upload: 'upload',
         update_own_photo: 'Actualize a sua fotografia',
         update_patient_photo: "Actualize a foto de {patient}",
+        browse_file: 'procurar ficheiro',
+        portuguese: "Português",
+        english: "Inglês",
+        alter_language: "Alterar linguagem do sistema"
       },
       notification: {
         send_tooltip: "enviar notificação",
@@ -289,13 +302,14 @@ const messages = {
         new_warnings: 'novos avisos',
         environment: 'Ambiente',
         patients: 'Pacientes',
-        graph: 'ver gráfico'
+        graph: 'ver gráfico',
+        no_warnings: 'Sem avisos para mostrar'
       }
     },
     dashboard: {
       vitabox_details: "Detalhes da Vitabox ",
       average: 'média',
-      sensor_details: 'Detalhes do Sensor',
+      sensor_details: 'Pesquisa detalhada dos sensores selecionados',
       patient_details: 'Detalhes do Paciente',
       last_update: 'Data de último valor',
       start_date: 'Data de início',
@@ -306,10 +320,12 @@ const messages = {
       print: 'imprimir',
       date: 'Data',
       value: 'Valor',
-      last_values:'Valores dos últimos {days} dias',
-      no_sensors:'Nenhum sensor ambiental registado',
-      no_patients:'Nenhum paciente registado',
-      no_boards:'Nenhum equipamento associado ao paciente'
+      last_values: 'Valores dos últimos {days} dias',
+      no_sensors: 'Nenhum sensor ambiental registado',
+      no_patients: 'Nenhum paciente registado',
+      no_boards: 'Nenhum equipamento associado ao paciente',
+      days: 'dias',
+      back: 'Voltar'
     },
     frontoffice: {
       vitabox: {

@@ -23,11 +23,7 @@
 
       <v-layout row wrap>
         <v-flex lg7 class="mb-1">
-          <patient-dashboard></patient-dashboard>
-        </v-flex>
-
-        <v-flex lg5>
-          <v-card dark class="mb-1 py-2">
+          <v-card dark class="mb-1 py-2 mr-1">
             <v-layout row wrap dark class="pl-3 pr-2">
               <v-flex xs3 offset-md1 offset-lg0 lg2>
                 <label class="body-1 primary--text">{{$t('frontoffice.patient.gender')}}</label>
@@ -71,7 +67,10 @@
               </v-flex>
             </v-layout>
           </v-card>
+          <patient-dashboard></patient-dashboard>
+        </v-flex>
 
+        <v-flex lg5>
           <v-tabs centered dark icons-and-text>
             <v-tabs-slider color="primary"></v-tabs-slider>
             <v-tab href="#tab-1">

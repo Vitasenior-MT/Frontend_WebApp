@@ -30,10 +30,11 @@
               <v-card height="250" light flat>
                 <sensor-graph :records="records" :id="'p1'"></sensor-graph>
               </v-card>
+              <br>
               <v-layout row wrap v-if="has_equal_date">
                 <v-flex xs3>
                   <v-data-table
-                    :headers="table_headers[0]"
+                    :headers="table_headers"
                     :items="records[0].values.slice(-20)"
                     hide-actions
                     sort-icon="fas fa-sort-down"
@@ -44,9 +45,19 @@
                     </template>
                   </v-data-table>
                 </v-flex>
-                <v-flex xs3 v-for="(record, i) in records" :key="record.sensor.id">
+                <v-flex
+                  xs3
+                  v-for="(record, i) in records"
+                  :key="record.sensor.id"
+                  style="border-left: 1px solid #777;"
+                >
+                  <v-alert
+                    :value="true"
+                    :color="colors[i]"
+                    class="my-0"
+                  >{{record.sensor.Sensormodel.measure}}</v-alert>
                   <v-data-table
-                    :headers="table_headers[i+1]"
+                    hide-headers
                     :items="record.values.slice(-20)"
                     hide-actions
                     sort-icon="fas fa-sort-down"
@@ -62,7 +73,17 @@
                 </v-flex>
               </v-layout>
               <v-layout v-else>
-                <v-flex xs4 v-for="(record, i) in records" :key="record.sensor.id">
+                <v-flex
+                  xs4
+                  v-for="(record, i) in records"
+                  :key="record.sensor.id"
+                  style="border-left: 1px solid #777;"
+                >
+                  <v-alert
+                    :value="true"
+                    :color="colors[i]"
+                    class="my-0"
+                  >{{record.sensor.Sensormodel.measure}}</v-alert>
                   <v-data-table
                     :headers="table_headers[i]"
                     :items="record.values.slice(-20)"
@@ -102,33 +123,26 @@ export default {
       dialog_print_preview: false,
       chart: null,
       table_headers: [],
-      has_equal_date: false
+      has_equal_date: false,
+      colors: ["#0288D1", "#3F51B5", "#9C27B0"]
     };
   },
   mounted() {
-    if (this.records.length > 1) {
+    if (this.records.length > 0) {
       this.has_equal_date =
+        this.records.length > 1 &&
         this.formatDate(this.records[0].values[0].datetime) ===
-        this.formatDate(this.records[1].values[0].datetime);
+          this.formatDate(this.records[1].values[0].datetime);
       if (this.has_equal_date) {
         this.table_headers = [
-          [{ text: this.$t("dashboard.date"), sortable: false, align: "left" }]
+          { text: this.$t("dashboard.date"), sortable: false, align: "left" }
         ];
-        this.records.forEach(x => {
-          this.table_headers.push([
-            {
-              text: x.sensor.Sensormodel.measure,
-              sortable: false,
-              align: "left"
-            }
-          ]);
-        });
       } else {
         this.records.forEach(x => {
           this.table_headers.push([
             { text: this.$t("dashboard.date"), sortable: false, align: "left" },
             {
-              text: x.sensor.Sensormodel.measure,
+              text: this.$t("dashboard.value"),
               sortable: false,
               align: "left"
             }
@@ -182,7 +196,14 @@ export default {
           var img = canvas.toDataURL();
           var pdf = new jsPDF("p", "mm");
 
-          pdf.addImage(img, "PNG", 0, 0, 210, 210);
+          pdf.addImage(
+            img,
+            "PNG",
+            0,
+            0,
+            210,
+            (canvas.height * 210) / canvas.width
+          );
           pdf.save("table.pdf");
         })
         .catch(err => console.error(err.message));
@@ -195,9 +216,9 @@ export default {
 </script>
 
 <style>
-#printBoard{
-  height: 1000px;
-  padding: 40px!important;
+#printBoard {
+  min-height: 1000px;
+  padding: 40px !important;
 }
 .table-board tbody td,
 .table-board thead td,

@@ -13,7 +13,12 @@
     </v-card>
 
     <v-layout row wrap class="pt-1" fill-height>
-      <v-flex md6 v-if="this.$store.state.patient">
+      <div
+        :class="devices.length>0?'flex xs10 md11':'flex xs12'"
+        xs10
+        md11
+        v-if="this.$store.state.patient"
+      >
         <v-card @click.native="goToPatientProfile()" dark class="mb-1 mr-1">
           <v-list two-line class="dark-hover">
             <v-list-tile>
@@ -40,40 +45,23 @@
             </v-list-tile>
           </v-list>
         </v-card>
-      </v-flex>
+      </div>
 
-      <v-flex md6 class="mb-1">
-        <v-card v-if="selectedDevice" @click.native="goToBoardDetails()" class="mr-1">
-          <v-list two-line class="light-hover">
-            <v-list-tile>
-              <v-list-tile-avatar tile size="45">
-                <img :src="require('@/assets/'+selectedDevice.board.Boardmodel.tag+'_icon.svg')">
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title class="primary--text">
-                  {{ selectedDevice.board.Boardmodel.name }}:
-                  <label
-                    class="font-weight-bold"
-                  >{{ selectedDevice.sensor.Sensormodel.measure.toUpperCase() }}</label>
-                </v-list-tile-title>
-                <v-list-tile-sub-title>
-                  <v-tooltip bottom class="hidden-sm-and-down">
-                    <v-icon slot="activator" small>fas fa-calendar-alt</v-icon>
-                    <span>{{ $t('dashboard.last_update') }}</span>
-                  </v-tooltip>
-                  <span>{{selectedDevice.sensor.last_commit ?formatDate(selectedDevice.sensor.last_commit):"NaN"}}</span>
-                </v-list-tile-sub-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-tooltip bottom>
-                  <v-icon slot="activator" color="blue darken-1">fas fa-chevron-right</v-icon>
-                  <span>{{ $t('dashboard.sensor_details') }}</span>
-                </v-tooltip>
-              </v-list-tile-action>
-            </v-list-tile>
-          </v-list>
-        </v-card>
-        <v-card v-else color="error" class="mr-1" height="100%">
+      <v-flex v-if="devices.length>0" sx2 md1 class="mb-1">
+        <v-tooltip bottom style="height:100%;">
+          <v-card
+            slot="activator"
+            @click.native="goToBoardDetails()"
+            class="mr-1 text-xs-center"
+            style="height:100%;align-items: center;"
+          >
+            <v-icon class="align-vertical-center" large color="primary">fas fa-info-circle</v-icon>
+          </v-card>
+          <span>{{ $t('dashboard.sensor_details') }}</span>
+        </v-tooltip>
+      </v-flex>
+      <v-flex v-else xs12>
+        <v-card color="error" class="mr-1" height="100%">
           <v-card-title>{{$t('dashboard.no_boards')}}</v-card-title>
         </v-card>
       </v-flex>
@@ -85,7 +73,7 @@
       </v-card>
 
       <v-layout wrap row class="pt-1">
-        <v-flex xs12 sm4 md3 xl2 v-for="device in devices" :key="device.id">
+        <v-flex xs12 sm6 md4 xl3 v-for="device in devices" :key="device.id">
           <v-card class="mr-1 mb-1">
             <v-list
               light
@@ -106,6 +94,9 @@
                   >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
                   <v-list-tile-sub-title class="ash--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
                 </v-list-tile-content>
+                <v-list-tile-action v-if="device.sensor.last_commit" class="raven--text">
+                  <v-list-tile-action-text>{{countTime(device.sensor.last_commit)}}</v-list-tile-action-text>
+                </v-list-tile-action>
               </v-list-tile>
             </v-list>
           </v-card>
@@ -126,7 +117,6 @@ export default {
   },
   data: () => {
     return {
-      selectedDevice: null,
       devices: [],
       selectedPatientId: null
     };
@@ -172,12 +162,11 @@ export default {
       this.selectDevice(this.devices[0]);
     },
     selectDevice(item) {
-      this.selectedDevice = item;
       let count = this.devices.filter(y => y.selected).length;
       this.devices.map((x, i) => {
         if (x.sensor.id === item.sensor.id) {
           if (!(!x.selected && count === 3)) {
-            if (x.values.length < 1) this.getValues(i);
+            if (x.values.length < 1) this.getValues(item, i);
             else x.selected = !x.selected;
           } else {
             event_bus.$emit("toast", {
@@ -188,11 +177,11 @@ export default {
         }
       });
     },
-    getValues(index) {
+    getValues(selectedDevice, index) {
       event_bus.$data.http
         .get(
           "/record/sensor/" +
-            this.selectedDevice.sensor.id +
+            selectedDevice.sensor.id +
             "/patient/" +
             this.$store.state.patient.id +
             "/page/1"
@@ -243,35 +232,12 @@ export default {
       if (a.datetime > b.datetime) return 1;
       return 0;
     },
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds() +
-        " - " +
-        d.getDate() +
-        " " +
-        monthNames[d.getMonth()] +
-        " " +
-        d.getFullYear()
-      );
+    countTime(date) {
+      let diff = Math.floor((Date.now() - new Date(date)) / 3600000);
+      if (diff < 24)
+        if (diff > 1) return diff + "h";
+        else return "< 1h";
+      else return Math.floor(diff / 24) + " " + this.$t("dashboard.days");
     }
   },
   components: {
@@ -331,5 +297,10 @@ export default {
 }
 #patient_selector button .v-icon {
   font-size: 45px;
+}
+
+.v-list__tile__action,
+.v-list__tile__avatar {
+  min-width: 0;
 }
 </style>

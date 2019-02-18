@@ -33,7 +33,7 @@
       <v-tab ripple href="#tab-pat">{{ $t('user.notification.patients') }}</v-tab>
 
       <v-tab-item value="tab-env">
-        <alert-environment-list  @graph="obj=>showGraph(obj)"></alert-environment-list>
+        <alert-environment-list @graph="obj=>showGraph(obj)"></alert-environment-list>
       </v-tab-item>
       <v-tab-item value="tab-pat">
         <alert-patient-list @graph="obj=>{showGraph(obj)}"></alert-patient-list>
@@ -51,6 +51,11 @@
         :warning_date="warning_date"
       ></warning-graph>
     </v-dialog>
+
+    <v-btn dark class="ml-0" @click="$router.go(-1)">
+      <v-icon>fas fa-long-arrow-alt-left</v-icon>
+      <span class="pl-1">{{$t('dashboard.back')}}</span>
+    </v-btn>
   </v-content>
 </template>
 
@@ -115,5 +120,9 @@ export default {
 
 .alert-text {
   height: 76px;
+}
+
+.v-tabs__item--active {
+  font-weight: bold;
 }
 </style>

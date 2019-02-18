@@ -79,6 +79,15 @@
           </v-list-tile-content>
         </v-list-tile>
 
+        <v-list-tile @click="chg_lang_dialog=true">
+          <v-list-tile-avatar>
+            <v-icon color="white">fas fa-globe</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>{{$t('navbar.change_language')}}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <v-list-tile @click="logout">
           <v-list-tile-avatar>
             <v-icon color="white">fas fa-sign-out-alt</v-icon>
@@ -91,10 +100,13 @@
     </v-menu>
 
     <v-dialog max-width="400" v-model="chg_pass_dialog">
-      <change-pass :to_patient="false" @close="chg_pass_dialog=false"></change-pass>
+      <change-pass @close="chg_pass_dialog=false"></change-pass>
     </v-dialog>
     <v-dialog max-width="400" v-model="chg_photo_dialog">
       <change-photo :to_patient="false" @changed="changePhoto" @close="chg_photo_dialog=false"></change-photo>
+    </v-dialog>
+    <v-dialog max-width="400" v-model="chg_lang_dialog">
+      <change-lang @close="chg_lang_dialog=false"></change-lang>
     </v-dialog>
 
     <!-- <v-dialog v-model="videocall_dialog" dark max-width="900">
@@ -112,6 +124,7 @@ import socketio from "socket.io-client";
 import { event_bus } from "@/plugins/bus.js";
 import Videocall from "./Videocall.vue";
 import ChgPhoto from "@/components/user/utils/ChgPhoto.vue";
+import ChgLanguage from "@/components/user/utils/ChgLanguage.vue";
 import ChgPwd from "@/components/user/auth/ChgPwd.vue";
 import { setInterval, clearInterval } from "timers";
 
@@ -123,6 +136,7 @@ export default {
       videocall_dialog: false,
       chg_pass_dialog: false,
       chg_photo_dialog: false,
+      chg_lang_dialog: false,
       show: false,
       connected: false,
       value: 0,
@@ -137,7 +151,7 @@ export default {
       : null;
     this.socket = socketio(
       process.env.NODE_ENV === "production"
-        ? "https://vitasenior-ws-test.eu-gb.mybluemix.net/socketio"
+        ? "https://vitasenior-ws.eu-gb.mybluemix.net/socketio"
         : "http://192.168.161.197:8008/socketio",
       {
         query: { token: this.$store.state.user.token },
@@ -239,13 +253,13 @@ export default {
   components: {
     "video-call": Videocall,
     "change-photo": ChgPhoto,
-    "change-pass": ChgPwd
+    "change-pass": ChgPwd,
+    "change-lang": ChgLanguage
   }
 };
 </script>
 
 <style>
-
 #profile-menu-icon {
   transition: all 1s ease-in-out;
 }

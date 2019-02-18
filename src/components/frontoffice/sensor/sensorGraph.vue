@@ -15,7 +15,7 @@ export default {
   data: () => {
     return {
       chart: null,
-      colors: ["#1E88E5", "#3F51B5", "#673AB7"]
+      colors: ["#0288D1", "#3F51B5","#9C27B0"]
     };
   },
   watch: {

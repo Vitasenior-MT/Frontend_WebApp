@@ -1,65 +1,56 @@
 <template>
   <div class="pr-1">
-    <v-card v-if="selectedDevice" @click.native="goToBoardDetails()" class="mr-1">
-      <v-list two-line class="light-hover">
-        <v-list-tile>
-          <v-list-tile-avatar tile size="45">
-            <img :src="require('@/assets/'+selectedDevice.board.Boardmodel.tag+'_icon.svg')">
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title class="primary--text">
-              {{ selectedDevice.board.Boardmodel.name }}:
-              <label
-                class="font-weight-bold"
-              >{{ selectedDevice.sensor.Sensormodel.measure.toUpperCase() }}</label>
-            </v-list-tile-title>
-            <v-list-tile-sub-title>
-              <v-tooltip bottom class="hidden-sm-and-down">
-                <v-icon slot="activator" small>fas fa-calendar-alt</v-icon>
-                <span>{{$t('dashboard.last_update')}}</span>
-              </v-tooltip>
-              <span>{{selectedDevice.sensor.last_commit ?formatDate(selectedDevice.sensor.last_commit):"NaN"}}</span>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-          <v-list-tile-action>
-            <v-tooltip bottom>
-              <v-icon slot="activator" color="blue darken-1">fas fa-chevron-right</v-icon>
-              <span>{{$t('dashboard.sensor_details')}}</span>
-            </v-tooltip>
-          </v-list-tile-action>
-        </v-list-tile>
-      </v-list>
-    </v-card>
-
-    <v-card height="230" class="hidden-sm-and-down mr-1 mt-1" light flat>
+    <v-card height="230" class="hidden-sm-and-down" light flat>
       <sensor-graph :records="devices.filter(y => y.selected)" :id="'1'"></sensor-graph>
     </v-card>
 
     <v-layout wrap row class="pt-1">
-      <v-flex xs12 sm4 md3 xl2 v-for="device in devices" :key="device.id">
-        <v-card class="mr-1 mb-1">
-          <v-list
-            light
-            :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
-            style="height:60px;"
+      <v-flex xs10 sm11>
+        <v-layout wrap row>
+          <v-flex xs12 sm6 md4 lg6 xl4 v-for="device in devices" :key="device.id">
+            <v-card class="mr-1 mb-1">
+              <v-list
+                light
+                :class="device.selected?'py-0 primary-hover':'py-0 light-hover'"
+                style="height:60px;"
+              >
+                <v-list-tile
+                  class="px-0 py-2"
+                  :color="verifyValue(device.profile)"
+                  @click.native="selectDevice(device)"
+                >
+                  <v-list-tile-avatar size="30" tile>
+                    <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title
+                      class="font-weight-bold"
+                    >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                    <v-list-tile-sub-title
+                      class="primary--text"
+                    >{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action v-if="device.sensor.last_commit" class="raven--text">
+                    <v-list-tile-action-text>{{countTime(device.sensor.last_commit)}}</v-list-tile-action-text>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex xs2 sm1 class="pb-1">
+        <v-tooltip v-if="devices.length>0" bottom style="height:100%;">
+          <v-card
+            slot="activator"
+            @click.native="goToBoardDetails()"
+            class="text-xs-center"
+            style="height:100%;align-items: center;"
           >
-            <v-list-tile
-              class="px-0 py-2"
-              :color="verifyValue(device.profile)"
-              @click.native="selectDevice(device)"
-            >
-              <v-list-tile-avatar size="30" tile>
-                <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title
-                  class="font-weight-bold"
-                >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
-                <v-list-tile-sub-title class="primary--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card>
+            <v-icon class="align-vertical-center" large color="primary">fas fa-chevron-right</v-icon>
+          </v-card>
+          <span>{{ $t('dashboard.sensor_details') }}</span>
+        </v-tooltip>
       </v-flex>
     </v-layout>
   </div>
@@ -92,6 +83,7 @@ export default {
   },
   methods: {
     getPatientBoards() {
+      this.devices = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
           this.devices.push({
@@ -160,8 +152,7 @@ export default {
       this.$router.push({
         name: "FOSensorDetail",
         params: {
-          sensor: this.selectedDevice.sensor,
-          board: this.selectedDevice.board
+          devices: this.devices.filter(y => y.selected)
         }
       });
     },
@@ -179,35 +170,12 @@ export default {
       if (a.datetime > b.datetime) return 1;
       return 0;
     },
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds() +
-        " - " +
-        d.getDate() +
-        " " +
-        monthNames[d.getMonth()] +
-        " " +
-        d.getFullYear()
-      );
+    countTime(date) {
+      let diff = Math.floor((Date.now() - new Date(date)) / 3600000);
+      if (diff < 24)
+        if (diff > 1) return diff + "h";
+        else return "< 1h";
+      else return Math.floor(diff / 24) + " " + this.$t("dashboard.days");
     }
   },
   components: {

@@ -26,7 +26,8 @@
       <v-card-title primary-title>
         <div class="primary_l--text main-title">
           <div class="headline mb-0">{{ $store.state.patient.name }}</div>
-          <div class="subheading">|
+          <div class="subheading">
+            |
             <label
               v-for="device in devices"
               :key="device.sensor.id"
@@ -181,6 +182,11 @@
         </v-layout>
       </v-card-text>
     </v-card>
+
+    <v-btn dark class="ml-0" @click="$router.go(-1)">
+      <v-icon>fas fa-long-arrow-alt-left</v-icon>
+      <span class="pl-1">{{$t('dashboard.back')}}</span>
+    </v-btn>
   </v-content>
 </template>
 
@@ -324,6 +330,7 @@ export default {
               (this.dateMin + "T" + this.timeMin) +
               "/end/" +
               (this.dateMax + "T" + this.timeMax);
+
         event_bus.$data.http
           .get(url)
           .then(response => {

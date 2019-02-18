@@ -113,6 +113,9 @@ export default {
       });
     },
     getSensor() {
+      this.chart.data.datasets = [];
+      this.chart.update();
+
       event_bus.$data.http
         .get("/sensor/" + this.sensor_id)
         .then(response => {
@@ -169,7 +172,9 @@ export default {
     designGraph() {
       let length = this.records.length;
       this.chart.data.labels = this.records.map(x => {
-        return this.formatDate(x.datetime);
+        let d1 = new Date(x.datetime).toISOString().split("T");
+        let d2 = d1[1].split(":");
+        return d1[0] + " " + d2[0] + ":" + d2[1];
       });
       let colors = this.records.map(x =>
         x.value < this.range.min || x.value > this.range.max
@@ -202,45 +207,14 @@ export default {
       ];
       this.chart.update();
     },
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        " - " +
-        d.getDate() +
-        " " +
-        monthNames[d.getMonth()] +
-        "'" +
-        d
-          .getFullYear()
-          .toString()
-          .substring(2)
-      );
-    },
     compare(a, b) {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
     },
     getValuesByDate() {
-      let first_date = new Date(),
-        last_date = new Date(),
+      let first_date = new Date(this.warning_date),
+        last_date = new Date(this.warning_date),
         url = "";
 
       if (this.patient_id) {
@@ -266,6 +240,7 @@ export default {
           "/end/" +
           last_date.toISOString();
       }
+
       event_bus.$data.http
         .get(url)
         .then(response => {

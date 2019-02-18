@@ -27,7 +27,7 @@
         <label for="file">{{$t('user.utils.browse_file')}}</label>
       </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary" @click="uploadImage">{{$t('user.utils.upload')}}</v-btn>
+      <v-btn color="primary_d" flat @click.native="uploadImage">{{$t('user.auth.submit')}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

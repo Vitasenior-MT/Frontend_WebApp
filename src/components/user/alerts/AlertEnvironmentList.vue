@@ -15,7 +15,13 @@
     </v-toolbar>
     <v-layout wrap>
       <v-flex sm6 md4 xl3 v-for="(item, index) in warnings" :key="index">
-        <v-card class="ma-1" dark :color="item.color + ' darken-1'">
+        <v-card
+          class="ma-1"
+          dark
+          :color="item.color + ' darken-1'"
+          @click="goToSensorWarning(item)"
+          style="cursor:pointer;"
+        >
           <v-card-title class="pb-2">
             <v-layout row>
               <v-flex xs2>
@@ -44,9 +50,7 @@
               </v-flex>
               <v-flex xs1>
                 <v-tooltip left>
-                  <v-btn small icon slot="activator" @click="goToSensorWarning(item)">
-                    <v-icon>fas fa-chart-line</v-icon>
-                  </v-btn>
+                  <v-icon small slot="activator">fas fa-chart-line</v-icon>
                   <span>{{ $t('user.notification.graph') }}</span>
                 </v-tooltip>
               </v-flex>
@@ -60,6 +64,7 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-alert :value="warnings.length<1" type="success" icon="fas fa-check-circle">{{$t('user.notification.no_warnings')}}</v-alert>
   </div>
 </template>
 

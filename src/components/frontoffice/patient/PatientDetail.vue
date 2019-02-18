@@ -183,6 +183,11 @@
       </v-flex>
     </v-layout>
 
+    <v-btn dark class="ml-0" @click="$router.go(-1)">
+      <v-icon>fas fa-long-arrow-alt-left</v-icon>
+      <span class="pl-1">{{$t('dashboard.back')}}</span>
+    </v-btn>
+
     <v-dialog max-width="600" v-model="chg_photo_dialog">
       <change-photo :to_patient="true" @changed="changePhoto" @close="chg_photo_dialog=false"></change-photo>
     </v-dialog>

@@ -1,7 +1,7 @@
 <template>
   <content id="profile_list">
     <v-card dark flat height="100%">
-      <v-card-title>
+      <v-card-title class="pt-2 pb-0">
         <div>
           <span class="primary_d--text">{{$t('frontoffice.patient.defined_profile')}}</span>
           <div class="headline">{{$store.state.patient.profile}}</div>
@@ -21,7 +21,7 @@
         sort-icon="fas fa-angle-down"
         next-icon="fas fa-angle-right"
         prev-icon="fas fa-angle-left"
-        :rows-per-page-items="[10]"
+        :rows-per-page-items="[5]"
         dark
       >
         <template slot="items" slot-scope="props">

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import axios from "axios";
 import store from '@/plugins/store.js'
+import i18n from '@/plugins/i18n.js'
 
 export const event_bus = new Vue({
   data: {
@@ -8,7 +9,7 @@ export const event_bus = new Vue({
     peer: null,
     token: store.state.user.token,
     url: process.env.NODE_ENV === "production" ?
-      "https://vitasenior-api-test.eu-gb.mybluemix.net" :
+      "https://vitasenior-api.eu-gb.mybluemix.net" :
       "http://192.168.161.94:8080"
   },
   created() {
@@ -27,11 +28,11 @@ export const event_bus = new Vue({
           "Authorization": token,
           "Content-Type": "application/json",
           "Accept-Version": "1.0.0",
-          "Accept-Language": "pt"
+          "Accept-Language": i18n.locale
         } : {
             "Content-Type": "application/json",
             "Accept-Version": "1.0.0",
-            "Accept-Language": "pt"
+            "Accept-Language":  i18n.locale
           }
       });
     }

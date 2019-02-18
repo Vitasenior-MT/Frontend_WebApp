@@ -57,7 +57,14 @@
       </v-layout>
     </v-card>
     <div id="google-map-register"></div>
-    <v-btn dark color="ash" @click="register">{{$t('frontoffice.vitabox.register')}}</v-btn>
+    <div class="d-inline-flex">
+      <v-btn dark class="ml-0" @click="$router.go(-1)">
+        <v-icon>fas fa-long-arrow-alt-left</v-icon>
+        <span class="pl-1">{{$t('dashboard.back')}}</span>
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn dark color="ash" @click="register">{{$t('frontoffice.vitabox.register')}}</v-btn>
+    </div>
   </v-content>
 </template>
 

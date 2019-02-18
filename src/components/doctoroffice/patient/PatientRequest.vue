@@ -28,7 +28,11 @@
         </v-list-tile>
       </template>
     </v-list>
-    <v-alert v-else :value="true" color="gray">{{ $t('doctor.no_request') }}</v-alert>
+    <v-alert
+      :value="requests.length<1"
+      type="info"
+      icon="fas fa-info-circle"
+    >{{$t('doctor.no_request')}}</v-alert>
   </v-content>
 </template>
 
