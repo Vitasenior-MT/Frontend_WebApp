@@ -24,7 +24,14 @@
       <v-flex md12 lg4>
         <v-layout fill-height class="pl-1">
           <v-card dark width="100%" height="100%" class="text-xs-center" flat>
-            <v-menu offset-y left dark open-on-hover id="edit_menu">
+            <v-menu
+              v-if="$store.state.vitabox.sponsor"
+              offset-y
+              left
+              dark
+              open-on-hover
+              id="edit_menu"
+            >
               <v-icon slot="activator" dark color="primary" class="mt-2 mr-2">fas fa-edit</v-icon>
               <div class="text-xs-right">
                 <v-tooltip left>
@@ -34,7 +41,7 @@
                   <span>{{ $t("frontoffice.patient.update_info_tooltip") }}</span>
                 </v-tooltip>
                 <br>
-                <v-tooltip left v-if="$store.state.vitabox.sponsor">
+                <v-tooltip left>
                   <v-btn @click="chg_photo_dialog=true" icon small slot="activator">
                     <v-icon color="white">fas fa-user-circle</v-icon>
                   </v-btn>
@@ -178,7 +185,9 @@
                   <td
                     class="text-xs-left"
                   >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                  <td class="justify-center layout px-0"></td>
+                  <td>
+                    <remove-doctor v-if="$store.state.vitabox.sponsor" :board="props.item"></remove-doctor>
+                  </td>
                 </template>
               </v-data-table>
               <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>
@@ -235,6 +244,7 @@ import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
 import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 import EditInfo from "@/components/frontoffice/patient/PatientEditInfo.vue";
 import RemoveBoard from "@/components/frontoffice/patient/RemoveBoard.vue";
+import RemoveDoctor from "@/components/frontoffice/patient/RemoveDoctor.vue";
 import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
 import ChgPhoto from "@/components/user/utils/ChgPhoto.vue";
 
@@ -316,6 +326,7 @@ export default {
     "add-board": SetBoard,
     "add-doctor": SetDoctor,
     "remove-board": RemoveBoard,
+    "remove-doctor": RemoveDoctor,
     "send-notification": NotificationSend,
     "change-photo": ChgPhoto,
     "edit-info": EditInfo

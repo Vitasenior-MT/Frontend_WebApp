@@ -105,6 +105,9 @@ const mutations = {
   removeBoardPatient(state, board) {
     state.patient.Boards.splice(state.patient.Boards.indexOf(board), 1)
   },
+  removeDoctorPatient(state, doctor) {
+    state.patient.Doctor.splice(state.patient.Doctors.indexOf(doctor), 1)
+  },
   switchUserRole(state) {
     state.user.as_doctor = state.user.is_doctor ? !state.user.as_doctor : false;
     state.user.as_admin = state.user.is_admin ? !state.user.as_admin : false;
@@ -155,6 +158,9 @@ const actions = {
   removeBoardPatientData: ({
     commit
   }) => commit('removeBoardPatient'),
+  removeDoctorPatient: ({
+    commit
+  }) => commit('removeDoctorPatient'),
   switchUserRole: ({
     commit
   }) => commit('switchUserRole'),
