@@ -31,7 +31,7 @@
             <label
               v-for="device in devices"
               :key="device.sensor.id"
-            >{{device.sensor.Sensormodel.measure}} |</label>
+            >{{device.sensor.Sensormodel.measure}} | </label>
           </div>
         </div>
       </v-card-title>

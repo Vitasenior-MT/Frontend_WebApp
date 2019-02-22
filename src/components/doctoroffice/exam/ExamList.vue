@@ -18,7 +18,7 @@
         sort-icon="fas fa-angle-down"
         next-icon="fas fa-angle-right"
         prev-icon="fas fa-angle-left"
-        :rows-per-page-items="[5]"
+        :rows-per-page-items="[7]"
         dark
       >
         <template slot="items" slot-scope="props">

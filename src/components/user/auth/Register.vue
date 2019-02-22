@@ -74,15 +74,58 @@
       </v-layout>
     </v-container>
 
-    <v-dialog v-model="register_dialog" width="500">
+    <v-dialog v-model="register_dialog" width="600">
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>Privacy Policy</v-card-title>
-        <v-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</v-card-text>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >{{ $t('user.auth.privacy_title') }}</v-card-title>
+        <v-card-text>
+          <div class="px-2" id="privacy_policy">By using our products, YOU:
+            <ul>
+              <li>represent and warrant being a Consumer;</li>
+              <li>accept to be bound by these Terms of Service;</li>
+              <li>acknowledge having been informed by Vitasenior-MT of all rights granted to YOU.</li>
+            </ul>
+            <br>It is important for YOU to read this document, as it is legally binding between YOU and Vitasenior-MT regarding your purchase and use of the Products.
+            <br>
+            <br>
+            <h3>Personal Data Collection</h3>
+            <br>Vitasenior-MT hereby informs its Patients and websites Users, (collectively, “Users”), that any personal data supplied shall be recorded to automated files, for which Vitasenior-MT is the Controller and is located at Polytechnic Institute of Tomar´s address at Quinta do Contador, Estrada da Serra, 2300-313 Tomar, Portugal.
+            <br>
+            <br>The Processors are the following: a) IBM, located at England, for storing all data and executing the web services; b) Microsoft, for the purpose of email confirmation a password recovery. All personal data are encrypted before being stored at the databases.
+            <br>
+            <br>
+            <b>Data Responsability</b>
+            <br>By filling any form in Vitasenior-MT's website ou Using the equipment throught the Vitabox, Users consent to the processing of their personal data. When You upload, submit, store, send or receive Content to or through our Cloud Site, You give to Vitasenior-MT a worldwide license to use, host, store, reproduce, modify, create derivative works (i.e., so that Your Content works better with our Data Services), communicate, publish, publicly perform, publicly display and distribute such Content in a nonpersonally identifiable manner. To protect Your Content, keep your password to the Cloud Site confidential. Every Vitabox the YOU register in the Cloud Site makes You responsible for all the Content that may be collected throught it.
+            <br>
+            <br>
+            <b>Access</b>
+            <br>Our Data Services allow You to share the Vitabox Content, which remains Your property and You are solely responsible for it.
+            <br>
+            <br>
+            <b>Data Services</b>
+            <br>Any Content shall be sent encrypted to the Cloud Site. To these effects Vitasenior-MT warrants that any Content sent by using a Vitabox shall be encrypted.
+            <br>
+            <br>
+            <b>Rectification and Erasure</b>
+            <br>YOU have the right to rectify and erase all the data of the Vitabox to which YOU are responsible.
+            <br>
+            <br>
+            <v-divider></v-divider>
+            <v-checkbox v-model="policy_accept" :label="$t('user.auth.accept')"></v-checkbox>
+          </div>
+        </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" flat @click="register_dialog = false">{{ $t('user.auth.close') }}</v-btn>
-          <v-btn color="primary" flat @click="registerUser">{{ $t('user.auth.accept') }}</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="!policy_accept"
+            flat
+            @click="registerUser"
+          >{{ $t('user.auth.submit') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -113,7 +156,8 @@ export default {
       password: "",
       reppassword: "",
       register_dialog: false,
-      confirm_email_dialog: false
+      confirm_email_dialog: false,
+      policy_accept: false
     };
   },
   mounted() {
@@ -196,5 +240,10 @@ export default {
 }
 #auth_card {
   max-width: 400px;
+}
+
+#privacy_policy {
+  max-height: 500px;
+  overflow-y: scroll;
 }
 </style>

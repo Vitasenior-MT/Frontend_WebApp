@@ -97,8 +97,8 @@ export default {
           });
         });
       });
-      this.selectedDevice = this.devices[0];
-      this.getValues();
+      this.selectedDevice = this.devices.length > 0 ? this.devices[0] : null;
+      if (this.selectedDevice) this.getValues();
     },
     selectDevice(item) {
       this.selectedDevice = item;

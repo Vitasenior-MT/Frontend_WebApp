@@ -58,7 +58,7 @@
                 <v-card-text primary class="px-1">
                   <p
                     class="mb-1 title"
-                  >{{ item.sensor.last_values ? item.sensor.last_values[0]:'none' }}</p>
+                  >{{ item.sensor.last_values ? item.sensor.last_values[0]:$t('dashboard.none') }}</p>
                   {{ item.board.description }}
                 </v-card-text>
               </v-card>

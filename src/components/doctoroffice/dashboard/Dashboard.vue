@@ -53,17 +53,32 @@
                 <br>
                 <label
                   class="subheading"
-                >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight + " kg":'NaN' }}</label>
+                >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight + " kg": $t('dashboard.none') }}</label>
               </v-flex>
               <v-flex xs3 md2>
                 <label class="body-1 primary--text">{{$t('frontoffice.patient.height')}}</label>
                 <br>
                 <label
                   class="subheading"
-                >{{ this.$store.state.patient.height ? this.$store.state.patient.height + " m":'NaN' }}</label>
+                >{{ this.$store.state.patient.height ? this.$store.state.patient.height + " m": $t('dashboard.none') }}</label>
               </v-flex>
               <v-flex xs6 md1>
                 <edit-patient class="text-xs-right" :patient="this.$store.state.patient"></edit-patient>
+              </v-flex>
+              <v-flex xs10 md11>
+                <label class="body-1 primary--text">{{$t('frontoffice.patient.info')}}</label>
+                <br>
+                <p
+                  class="subheading mb1"
+                >{{ this.$store.state.patient.info ? this.$store.state.patient.info : $t('dashboard.none') }}</p>
+              </v-flex>
+              <v-flex xs2 md1>
+                <v-tooltip left>
+                  <v-btn slot="activator" icon dark @click="medication_dialog=true">
+                    <v-icon color="info">fas fa-tablets</v-icon>
+                  </v-btn>
+                  <span>{{$t('frontoffice.patient.medication')}}</span>
+                </v-tooltip>
               </v-flex>
             </v-layout>
           </v-card>
@@ -91,6 +106,32 @@
         </v-flex>
       </v-layout>
     </v-container>
+
+    <v-dialog v-model="medication_dialog" width="500">
+      <v-card>
+        <v-card-title>
+          <span class="headline primary_d--text">{{$t('frontoffice.patient.medication')}}</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click.native="()=>medication_dialog=false">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <div
+            v-if="this.$store.state.patient.medication && this.$store.state.patient.medication.length>0"
+          >
+            <ul>
+              <li
+                v-for="medicine in $store.state.patient.medication"
+                :key="medicine"
+                class="subheading mb-1"
+              >{{ medicine }}</li>
+            </ul>
+          </div>
+          <p v-else class="subheading mb-1">{{$t('dashboard.none')}}</p>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -109,6 +150,11 @@ export default {
     "patient-dashboard": PatientDashboard,
     "edit-patient": PatientEdit,
     "send-notification": NotificationSend
+  },
+  data: () => {
+    return {
+      medication_dialog: false
+    };
   },
   methods: {
     calculate_age(dob) {

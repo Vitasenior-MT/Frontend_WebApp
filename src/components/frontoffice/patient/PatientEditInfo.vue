@@ -1,103 +1,95 @@
 <template>
-  <div id="disable_patient">
-    <v-tooltip left>
-      <v-btn slot="activator" icon small @click.native="()=>dialog_update_patient=true">
-        <v-icon color="white">fas fa-clipboard-list</v-icon>
+  <v-card v-if="patient">
+    <v-card-title>
+      <span class="headline warning--text">{{ $t("frontoffice.patient.update_info_title") }}</span>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="close">
+        <v-icon color="error">fas fa-times</v-icon>
       </v-btn>
-      <span>{{ $t("frontoffice.patient.update_info_tooltip") }}</span>
-    </v-tooltip>
-
-    <v-dialog v-model="dialog_update_patient" max-width="500px">
-      <v-card v-if="patient">
-        <v-card-title>
-          <span class="headline warning--text">{{ $t("frontoffice.patient.update_info_title") }}</span>
-          <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_update_patient=false">
-            <v-icon color="error">fas fa-times</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-text-field
-                :rules="[() => (patient.name.length > 3 || patient.name.length == 0) || 'Patient name is required']"
-                :label="$t('frontoffice.patient.name')"
-                v-model="patient.name"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-select
-                :items="genderOptions"
-                item-text="name"
-                item-value="type"
-                :rules="[() => (patient.gender.length > 3 || patient.gender.length == 0) || 'Patient gender is required']"
-                :label="$t('frontoffice.patient.gender')"
-                v-model="patient.gender"
-                single-line
-                append-icon="fas fa-angle-down"
-              ></v-select>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-menu
-                ref="menu"
-                lazy
-                :close-on-content-click="false"
-                v-model="menu"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                min-width="290px"
-                :return-value.sync="patient.birthdate"
-              >
-                <v-text-field
-                  slot="activator"
-                  :label="$t('frontoffice.patient.birthdate')"
-                  v-model="patient.birthdate"
-                  append-icon="fas fa-calendar-alt"
-                  readonly
-                ></v-text-field>
-                <v-date-picker
-                  ref="picker"
-                  v-model="patient.birthdate"
-                  @change="$refs.menu.save(patient.birthdate)"
-                  min="1910-01-01"
-                  :max="new Date().toISOString().substr(0, 10)"
-                  no-title
-                  next-icon="fas fa-angle-right"
-                  prev-icon="fas fa-angle-left"
-                ></v-date-picker>
-              </v-menu>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field
-                mask="#########"
-                :rules="[() => (patient.nif.length === 9 || patient.nif.length === 0) || 'Invalid Patient NIF']"
-                :label="$t('frontoffice.patient.nif')"
-                v-model="patient.nif"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field
-                :rules="[() => (/^[0-9]{8}([ -]*[0-9][ ]*[A-Z]{2}[0-9])*$/.test(patient.cc) || patient.cc.length == 0) || 'Invalid Patient CC']"
-                :label="$t('frontoffice.patient.cc')"
-                v-model="patient.cc"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            dark
-            color="warning darken-1"
-            block
-            @click.native="save"
-          >{{ $t("frontoffice.patient.submit") }}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+    </v-card-title>
+    <v-card-text>
+      <v-layout wrap>
+        <v-flex xs12>
+          <v-text-field
+            :rules="[() => (patient.name.length > 3 || patient.name.length == 0) || 'Patient name is required']"
+            :label="$t('frontoffice.patient.name')"
+            v-model="patient.name"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 md6>
+          <v-select
+            :items="genderOptions"
+            item-text="name"
+            item-value="type"
+            :rules="[() => (patient.gender.length > 3 || patient.gender.length == 0) || 'Patient gender is required']"
+            :label="$t('frontoffice.patient.gender')"
+            v-model="patient.gender"
+            single-line
+            append-icon="fas fa-angle-down"
+          ></v-select>
+        </v-flex>
+        <v-flex xs12 md6>
+          <v-menu
+            ref="menu"
+            lazy
+            :close-on-content-click="false"
+            v-model="menu"
+            transition="scale-transition"
+            offset-y
+            full-width
+            :nudge-right="40"
+            min-width="290px"
+            :return-value.sync="patient.birthdate"
+          >
+            <v-text-field
+              slot="activator"
+              :label="$t('frontoffice.patient.birthdate')"
+              v-model="patient.birthdate"
+              append-icon="fas fa-calendar-alt"
+              readonly
+            ></v-text-field>
+            <v-date-picker
+              ref="picker"
+              v-model="patient.birthdate"
+              @change="$refs.menu.save(patient.birthdate)"
+              min="1910-01-01"
+              :max="new Date().toISOString().substr(0, 10)"
+              no-title
+              next-icon="fas fa-angle-right"
+              prev-icon="fas fa-angle-left"
+            ></v-date-picker>
+          </v-menu>
+        </v-flex>
+        <v-flex xs12 md6>
+          <v-text-field
+            mask="#########"
+            :rules="[() => (patient.nif.length === 9 || patient.nif.length === 0) || 'Invalid Patient NIF']"
+            :label="$t('frontoffice.patient.nif')"
+            v-model="patient.nif"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 md6>
+          <v-text-field
+            :rules="[() => (/^[0-9]{8}([ -]*[0-9][ ]*[A-Z]{2}[0-9])*$/.test(patient.cc) || patient.cc.length == 0) || 'Invalid Patient CC']"
+            :label="$t('frontoffice.patient.cc')"
+            v-model="patient.cc"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12>
+          <v-text-field :label="$t('frontoffice.patient.info')" v-model="patient.info"></v-text-field>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+        dark
+        color="warning darken-1"
+        block
+        @click.native="save"
+      >{{ $t("frontoffice.patient.submit") }}</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -123,6 +115,9 @@ export default {
   watch: {
     menu(val) {
       val && this.$nextTick(() => (this.$refs.picker.activePicker = "YEAR"));
+    },
+    dialog_update_patient(v) {
+      console.log(v);
     }
   },
   methods: {
@@ -141,7 +136,8 @@ export default {
             name: this.patient.name,
             birthdate: this.patient.birthdate,
             nif: this.patient.nif,
-            cc: this.patient.cc
+            cc: this.patient.cc,
+            info: this.patient.info ? this.patient.info : ""
           })
           .then(response => {
             event_bus.$emit("updatePatients");
@@ -172,6 +168,9 @@ export default {
           type: "error"
         });
       }
+    },
+    close() {
+      this.$emit("close");
     }
   }
 };
