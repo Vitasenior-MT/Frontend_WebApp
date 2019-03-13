@@ -116,6 +116,12 @@ const mutations = {
     state.user.warnings = value;
     state.user.errors = value;
   },
+  editVitabox(state, vitabox) {
+    state.vitabox = vitabox;
+    state.vitaboxes.forEach(x => {
+      if (x.id === vitabox.id) x = vitabox;
+    });
+  }
 }
 
 const actions = {
@@ -166,7 +172,10 @@ const actions = {
   }) => commit('switchUserRole'),
   resetUserWarningsErrors: ({
     commit
-  }) => commit('resetUserWarningsErrors')
+  }) => commit('resetUserWarningsErrors'),
+  editVitabox: ({
+    commit
+  }) => commit('editVitabox')
 }
 
 

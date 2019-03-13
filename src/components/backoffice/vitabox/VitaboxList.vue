@@ -41,7 +41,7 @@
       </v-layout>
 
       <v-layout row wrap v-if="select">
-        <v-flex sm6 md8 lg10>
+        <v-flex sm6 md8 lg9 xl10>
           <table class="pl-1 py-1">
             <tr>
               <th class="text-xs-right">
@@ -96,7 +96,7 @@
           </table>
         </v-flex>
 
-        <v-flex sm6 md4 lg2>
+        <v-flex sm6 md4 lg3 xl2>
           <v-list class="transparent">
             <v-list-tile class="pink white--text" @click="patients_sheet=true">
               <v-list-tile-avatar>

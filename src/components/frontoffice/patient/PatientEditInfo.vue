@@ -137,7 +137,7 @@ export default {
             birthdate: this.patient.birthdate,
             nif: this.patient.nif,
             cc: this.patient.cc,
-            info: this.patient.info ? this.patient.info : ""
+            info: this.patient.info ? this.patient.info : " "
           })
           .then(response => {
             event_bus.$emit("updatePatients");

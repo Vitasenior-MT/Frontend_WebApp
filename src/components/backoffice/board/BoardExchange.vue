@@ -1,17 +1,25 @@
 <template>
   <div id="exchange_board">
-    <v-btn flat icon small @click.native="()=>dialog_exchange_board=true">
-      <v-icon>fas fa-minus-circle</v-icon>
+    <v-btn icon small @click.native="()=>dialog_exchange_board=true" dark color="raven">
+      <v-icon small>fas fa-exchange-alt</v-icon>
     </v-btn>
     <v-dialog v-model="dialog_exchange_board" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline error--text">Exchange board</span>
           <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_exchange_board=false"><v-icon color="error">fas fa-times</v-icon></v-btn>
+          <v-btn icon @click.native="()=>dialog_exchange_board=false">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
         </v-card-title>
-        <v-card-text  v-if="board">
-          <v-text-field :mask="'nn:nn:nn:nn:nn:nn:nn:nn'" :rules="[() => mac_addr.length > 1 || 'Board Mac address is required']" label="New MAC address" v-model="mac_addr" type="text"></v-text-field>
+        <v-card-text v-if="board">
+          <v-text-field
+            :mask="'nn:nn:nn:nn:nn:nn:nn:nn'"
+            :rules="[() => mac_addr.length > 1 || 'Board Mac address is required']"
+            label="New MAC address"
+            v-model="mac_addr"
+            type="text"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -20,7 +28,6 @@
       </v-card>
     </v-dialog>
   </div>
-  
 </template>
 
 <script>
@@ -80,7 +87,9 @@ export default {
         this.dialog_exchange_board = false;
 
         event_bus.$data.http
-          .put("/board/" + this.board.id, { mac_addr: this.mac_addr })
+          .put("/board/" + this.board.id + "/exchange", {
+            mac_addr: this.mac_addr
+          })
           .then(response => {
             this.$emit("exchange", this.mac_addr);
             event_bus.$emit("toast", {

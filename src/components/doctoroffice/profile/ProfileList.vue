@@ -26,8 +26,12 @@
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left column">{{ props.item.measure }}</td>
-          <td class="text-xs-left column">{{ props.item.min }}</td>
-          <td class="text-xs-left column">{{ props.item.max }}</td>
+          <td
+            class="text-xs-center column"
+          >{{ Math.round(props.item.min_diurnal) + '-' + Math.round(props.item.max_diurnal) }}</td>
+          <td
+            class="text-xs-center column"
+          >{{ Math.round(props.item.min_nightly) + '-' + Math.round(props.item.max_nightly) }}</td>
           <td class="text-xs-right column">
             <v-tooltip bottom>
               <v-btn slot="activator" icon class="mx-0" @click="editProfile(props.item)">
@@ -75,15 +79,17 @@ export default {
           class: "column"
         },
         {
-          text: this.$t("frontoffice.patient.min"),
+          text: this.$t("frontoffice.patient.diurnal"),
           value: "min",
           sortable: false,
+          align: "center",
           class: "column"
         },
         {
-          text: this.$t("frontoffice.patient.max"),
+          text: this.$t("frontoffice.patient.nightly"),
           value: "max",
           sortable: false,
+          align: "center",
           class: "column"
         },
         {

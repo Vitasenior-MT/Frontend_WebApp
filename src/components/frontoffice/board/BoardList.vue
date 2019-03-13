@@ -38,6 +38,14 @@
             <span>{{props.item.active?$t('frontoffice.board.active'):$t('frontoffice.board.inactive')}}</span>
           </v-tooltip>
         </td>
+        <td class="text-xs-left">
+          <get-warnings-board v-if="$store.state.vitabox.sponsor" :board="props.item"></get-warnings-board>
+          <v-tooltip v-else bottom>
+            <v-icon slot="activator" small v-if="props.item.get_warnings">fas fa-play</v-icon>
+            <v-icon slot="activator" small v-else>fas fa-pause</v-icon>
+            <span>{{props.item.get_warnings?$t('frontoffice.board.active'):$t('frontoffice.board.inactive')}}</span>
+          </v-tooltip>
+        </td>
         <td class="text-xs-left layout">
           <update-board v-if="$store.state.vitabox.sponsor" :board="props.item"></update-board>
           <remove-board
@@ -57,13 +65,15 @@ import BoardAdd from "@/components/frontoffice/board/BoardAdd.vue";
 import BoardDisable from "@/components/frontoffice/board/BoardDisable.vue";
 import BoardUpdate from "@/components/frontoffice/board/BoardUpdate.vue";
 import BoardRemove from "@/components/frontoffice/board/BoardRemove.vue";
+import BoardWarning from "@/components/frontoffice/board/BoardWarning.vue";
 
 export default {
   components: {
     "add-board": BoardAdd,
     "disable-board": BoardDisable,
     "remove-board": BoardRemove,
-    "update-board": BoardUpdate
+    "update-board": BoardUpdate,
+    "get-warnings-board": BoardWarning
   },
   data() {
     return {
@@ -76,6 +86,7 @@ export default {
         { text: this.$t("frontoffice.board.mac"), sortable: false },
         { text: this.$t("frontoffice.board.last_update"), sortable: false },
         { text: this.$t("frontoffice.board.state"), sortable: false },
+        { text: this.$t("frontoffice.board.warnings"), sortable: false },
         { text: this.$t("frontoffice.board.actions"), sortable: false }
       ],
       boards: [],

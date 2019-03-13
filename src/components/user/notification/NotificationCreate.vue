@@ -1,7 +1,7 @@
 <template>
   <div id="send_message">
     <v-tooltip bottom>
-      <v-btn slot="activator" class="mx-1" icon @click.native="()=>dialog_send_notification=true">
+      <v-btn slot="activator" icon @click.native="()=>dialog_send_notification=true">
         <v-icon color="teal">fas fa-paper-plane</v-icon>
       </v-btn>
       <span>{{$t('user.notification.send_tooltip')}}</span>
@@ -100,7 +100,4 @@ export default {
 </script>
 
 <style>
-#send_message {
-  width: 100%;
-}
 </style>

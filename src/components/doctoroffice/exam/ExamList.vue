@@ -25,13 +25,16 @@
           <td class="text-xs-left">{{ props.item.Boardmodel.name }}</td>
           <td
             class="text-xs-left"
-          >{{ props.item.frequency?props.item.frequency+" h":$t("frontoffice.patient.undefined") }}</td>
+          >{{ (props.item.schedules && props.item.schedules.length>0) ? props.item.schedules.join(" / ") : "-" }}</td>
+          <td
+            class="text-xs-left"
+          >{{ $tc("frontoffice.patient.every_n_days", props.item.frequency ? props.item.frequency : 0, {days:props.item.frequency}) }}</td>
           <td class="text-xs-right">
             <v-tooltip bottom>
               <v-btn slot="activator" icon class="mx-0" @click="editExam(props.item)">
                 <v-icon color="teal">fas fa-edit</v-icon>
               </v-btn>
-              <span>{{props.item.frequency? $t('frontoffice.patient.edit_schedule') : $t('frontoffice.patient.schedule_exame')}}</span>
+              <span>{{props.item.schedules? $t('frontoffice.patient.edit_schedule') : $t('frontoffice.patient.schedule_exame')}}</span>
             </v-tooltip>
           </td>
         </template>
@@ -45,7 +48,7 @@
       </v-data-table>
     </v-card>
 
-    <v-dialog v-model="dialog_edit_exam" max-width="500px">
+    <v-dialog v-model="dialog_edit_exam" max-width="600px">
       <edit-exam @close="()=>dialog_edit_exam=false" :item="selected_exam"></edit-exam>
     </v-dialog>
   </content>
@@ -66,6 +69,11 @@ export default {
           text: this.$t("frontoffice.patient.board"),
           value: "Boardmodel.name",
           sortable: true
+        },
+        {
+          text: this.$t("frontoffice.patient.hours"),
+          value: "schedules",
+          sortable: false
         },
         {
           text: this.$t("frontoffice.patient.frequency"),

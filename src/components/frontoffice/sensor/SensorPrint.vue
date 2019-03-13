@@ -6,7 +6,7 @@
       </v-btn>
       <span>{{$t('dashboard.print_preview')}}</span>
     </v-tooltip>
-    <v-dialog v-model="dialog_print_preview" width="1160">
+    <v-dialog v-model="dialog_print_preview" width="1160" lazy>
       <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
           <span class="headline primary_d--text">{{$t('dashboard.print_preview')}}</span>
@@ -23,86 +23,14 @@
         </v-card-title>
 
         <v-card-text>
-          <div class="elevation-1">
-            <div id="printBoard">
-              <label class="headline">{{this.$store.state.patient.name}}</label>
-              <v-divider></v-divider>
-              <v-card height="250" light flat>
-                <sensor-graph :records="records" :id="'p1'"></sensor-graph>
-              </v-card>
-              <br>
-              <v-layout row wrap v-if="has_equal_date">
-                <v-flex xs3>
-                  <v-data-table
-                    :headers="table_headers"
-                    :items="records[0].values.slice(-20)"
-                    hide-actions
-                    sort-icon="fas fa-sort-down"
-                    class="table-board"
-                  >
-                    <template slot="items" slot-scope="props">
-                      <td class="text-xs-left">{{ formatDate(props.item.datetime) }}</td>
-                    </template>
-                  </v-data-table>
-                </v-flex>
-                <v-flex
-                  xs3
-                  v-for="(record, i) in records"
-                  :key="record.sensor.id"
-                  style="border-left: 1px solid #777;"
-                >
-                  <v-alert
-                    :value="true"
-                    :color="colors[i]"
-                    class="my-0"
-                  >{{record.sensor.Sensormodel.measure}}</v-alert>
-                  <v-data-table
-                    hide-headers
-                    :items="record.values.slice(-20)"
-                    hide-actions
-                    sort-icon="fas fa-sort-down"
-                    class="table-board"
-                  >
-                    <template slot="items" slot-scope="props">
-                      <td
-                        class="text-xs-left"
-                        :class="props.item.value > record.profile.max || props.item.value < record.profile.min ? 'red lighten-3' : 'green lighten-3'"
-                      >{{ props.item.value }}</td>
-                    </template>
-                  </v-data-table>
-                </v-flex>
-              </v-layout>
-              <v-layout v-else>
-                <v-flex
-                  xs4
-                  v-for="(record, i) in records"
-                  :key="record.sensor.id"
-                  style="border-left: 1px solid #777;"
-                >
-                  <v-alert
-                    :value="true"
-                    :color="colors[i]"
-                    class="my-0"
-                  >{{record.sensor.Sensormodel.measure}}</v-alert>
-                  <v-data-table
-                    :headers="table_headers[i]"
-                    :items="record.values.slice(-20)"
-                    hide-actions
-                    sort-icon="fas fa-sort-down"
-                    class="table-board"
-                  >
-                    <template slot="items" slot-scope="props">
-                      <td class="text-xs-left">{{ formatDate(props.item.datetime) }}</td>
-                      <td
-                        class="text-xs-left"
-                        :class="props.item.value > record.profile.max || props.item.value < record.profile.min ? 'red lighten-3' : 'green lighten-3'"
-                      >{{ props.item.value }}</td>
-                    </template>
-                  </v-data-table>
-                </v-flex>
-              </v-layout>
-            </div>
+          <div id="printTitle">
+            <label class="headline">{{$store.state.patient.name}}</label>
+            <v-divider></v-divider>
+            <v-card height="250" light flat>
+              <sensor-graph :records="records" :id="'p1'"></sensor-graph>
+            </v-card>
           </div>
+          <sensor-table :records="records" :to_print="true" @pages="(n)=>pages=n"></sensor-table>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -113,6 +41,7 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import SensorGraph from "@/components/frontoffice/sensor/SensorGraph.vue";
+import SensorTable from "@/components/frontoffice/sensor/SensorTable.vue";
 
 export default {
   props: {
@@ -121,109 +50,68 @@ export default {
   data() {
     return {
       dialog_print_preview: false,
-      chart: null,
-      table_headers: [],
-      has_equal_date: false,
-      colors: ["#0288D1", "#3F51B5", "#9C27B0"]
+      pages: 0
     };
   },
-  mounted() {
-    if (this.records.length > 0) {
-      this.has_equal_date =
-        this.records.length > 1 &&
-        this.formatDate(this.records[0].values[0].datetime) ===
-          this.formatDate(this.records[1].values[0].datetime);
-      if (this.has_equal_date) {
-        this.table_headers = [
-          { text: this.$t("dashboard.date"), sortable: false, align: "left" }
-        ];
-      } else {
-        this.records.forEach(x => {
-          this.table_headers.push([
-            { text: this.$t("dashboard.date"), sortable: false, align: "left" },
-            {
-              text: this.$t("dashboard.value"),
-              sortable: false,
-              align: "left"
-            }
-          ]);
-        });
+  methods: {
+    exportPDF() {
+      if (this.pages > 0) {
+        let i = 1,
+          promises = [
+            html2canvas(
+              document.getElementById("printTitle", { logging: false })
+            )
+          ];
+        for (i = 1; i <= this.pages; i++) {
+          promises.push(
+            html2canvas(document.getElementById("printBoard" + i), {
+              logging: false
+            })
+          );
+        }
+        Promise.all(promises)
+          .then(canvass => {
+            var pdf = new jsPDF("p", "mm");
+
+            canvass.map((canvas, i) => {
+              let img = canvas.toDataURL();
+              if (i > 1) {
+                pdf.addPage();
+                pdf.setPage(i + 1);
+                pdf.addImage(
+                  img,
+                  "PNG",
+                  0,
+                  0,
+                  210,
+                  (canvas.height * 210) / canvas.width
+                );
+              } else {
+                pdf.addImage(
+                  img,
+                  "PNG",
+                  0,
+                  (i * 52500) / canvas.width,
+                  210,
+                  (canvas.height * 210) / canvas.width
+                );
+              }
+            });
+            pdf.save("table.pdf");
+          })
+          .catch(err => console.error(err.message));
       }
     }
   },
-  watch: {
-    records(val) {
-      this.designGraph(val);
-    }
-  },
-  methods: {
-    formatDate(date) {
-      let monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      let d = new Date(date);
-      return (
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        " - " +
-        d.getDate() +
-        " " +
-        monthNames[d.getMonth()] +
-        "'" +
-        d
-          .getFullYear()
-          .toString()
-          .substring(2)
-      );
-    },
-    exportPDF() {
-      html2canvas(document.getElementById("printBoard"))
-        .then(canvas => {
-          console.log(canvas.width, canvas.height);
-
-          var img = canvas.toDataURL();
-          var pdf = new jsPDF("p", "mm");
-
-          pdf.addImage(
-            img,
-            "PNG",
-            0,
-            0,
-            210,
-            (canvas.height * 210) / canvas.width
-          );
-          pdf.save("table.pdf");
-        })
-        .catch(err => console.error(err.message));
-    }
-  },
   components: {
-    "sensor-graph": SensorGraph
+    "sensor-graph": SensorGraph,
+    "sensor-table": SensorTable
   }
 };
 </script>
 
 <style>
-#printBoard {
-  min-height: 1000px;
+#printTitle {
   padding: 40px !important;
-}
-.table-board tbody td,
-.table-board thead td,
-.table-board thead th:not(:first-child) {
-  height: 30px !important;
-  padding: 0 10px !important;
 }
 </style>

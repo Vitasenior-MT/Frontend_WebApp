@@ -32,6 +32,16 @@
                 <disable-board :box="$store.state.vitabox" :board="board"></disable-board>
               </v-list-tile-action>
             </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>
+                <v-list-tile-sub-title class="primary_l--text caption">warnings</v-list-tile-sub-title>
+                <v-list-tile-title v-if="board.get_warnings">enabled</v-list-tile-title>
+                <v-list-tile-title v-else>disabled</v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <warning-board :board="board"></warning-board>
+              </v-list-tile-action>
+            </v-list-tile>
             <v-list-tile><v-list-tile-content>
                 <v-list-tile-sub-title class="primary_l--text caption">last commit</v-list-tile-sub-title>
                 <v-list-tile-title>{{getTime(last_commit)}}</v-list-tile-title>
@@ -81,6 +91,7 @@ import { event_bus } from "@/plugins/bus.js";
 import BoardDisable from "@/components/backoffice/board/BoardDisable.vue";
 import BoardRemove from "@/components/backoffice/board/BoardRemove.vue";
 import BoardExchange from "@/components/backoffice/board/BoardExchange.vue";
+import BoardWarning from "@/components/backoffice/board/BoardWarning.vue";
 
 export default {
   name: "dashboard_board",
@@ -139,7 +150,8 @@ export default {
   components: {
     "disable-board": BoardDisable,
     "remove-board": BoardRemove,
-    "exchange-board": BoardExchange
+    "exchange-board": BoardExchange,
+    "warning-board": BoardWarning
   }
 };
 </script>

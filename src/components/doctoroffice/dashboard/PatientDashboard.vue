@@ -157,13 +157,23 @@ export default {
       });
     },
     verifyValue(profile) {
-      if (
-        profile.last_values &&
-        profile.max > profile.last_values[0] &&
-        profile.min < profile.last_values[0]
-      )
-        return "green accent-4";
-      else return "red accent-4";
+      if (this.now > 9 && this.now < 18) {
+        if (
+          profile.last_values &&
+          profile.max_diurnal > profile.last_values[0] &&
+          profile.min_diurnal < profile.last_values[0]
+        )
+          return "green accent-4";
+        else return "red accent-4";
+      } else {
+        if (
+          profile.last_values &&
+          profile.max_nightly > profile.last_values[0] &&
+          profile.min_nightly < profile.last_values[0]
+        )
+          return "green accent-4";
+        else return "red accent-4";
+      }
     },
     compare(a, b) {
       if (a.datetime < b.datetime) return -1;

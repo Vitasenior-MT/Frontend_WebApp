@@ -1,12 +1,16 @@
 <template>
   <div id="remove_board_from_patient">
-    <v-btn flat icon small color="error" @click.native="()=>dialog_remove_doctor=true">
-      <v-icon>fas fa-minus-circle</v-icon>
-    </v-btn>
+    <v-tooltip bottom>
+      <v-btn slot="activator" flat icon small color="error" @click.native="()=>dialog_remove_doctor=true">
+        <v-icon>fas fa-minus-circle</v-icon>
+      </v-btn>
+      <span>{{ $t("frontoffice.patient.remove_doctor_tootlip") }}</span>
+    </v-tooltip>
     <v-dialog v-model="dialog_remove_doctor" max-width="500px">
       <v-card>
         <v-card-title>
           <span
+            v-if="doctor"
             class="headline error--text"
           >{{$t('frontoffice.patient.remove')}} {{doctor.name}}</span>
           <v-spacer></v-spacer>
@@ -15,7 +19,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text v-if="doctor">
-          {{$t('frontoffice.patient.remove_doctor')}}
+          {{$t('frontoffice.patient.remove_doctor_text')}}
           <v-checkbox
             :label="$t('frontoffice.patient.remove_confirm')"
             v-model="checked"

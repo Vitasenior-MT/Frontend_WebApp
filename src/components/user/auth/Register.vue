@@ -222,7 +222,15 @@ export default {
 #register_box {
   height: 251px;
 }
-@media only screen and (orientation: portrait) {
+#auth {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../../../assets/fotoLar.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+}
+/* @media only screen and (orientation: portrait) {
   #auth {
     background-image: url("../../../assets/2.jpg");
     background-repeat: no-repeat;
@@ -232,12 +240,12 @@ export default {
 }
 @media only screen and (orientation: landscape) {
   #auth {
-    background-image: url("../../../assets/1.jpg");
+    background-image: url("../../../assets/fotoLar.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
   }
-}
+} */
 #auth_card {
   max-width: 400px;
 }

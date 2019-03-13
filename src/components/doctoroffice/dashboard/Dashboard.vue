@@ -72,7 +72,7 @@
                   class="subheading mb1"
                 >{{ this.$store.state.patient.info ? this.$store.state.patient.info : $t('dashboard.none') }}</p>
               </v-flex>
-              <v-flex xs2 md1>
+              <v-flex xs2 md1 class="text-xs-right">
                 <v-tooltip left>
                   <v-btn slot="activator" icon dark @click="medication_dialog=true">
                     <v-icon color="info">fas fa-tablets</v-icon>

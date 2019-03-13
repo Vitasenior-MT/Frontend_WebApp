@@ -51,7 +51,8 @@
                 </v-btn>
               </v-flex>
               <v-flex xs12>
-                <v-text-field :label="$t('frontoffice.patient.info')" v-model="patient.info"></v-text-field>
+                <v-textarea :label="$t('frontoffice.patient.info')" v-model="patient.info"></v-textarea>
+                <!-- <v-text-field :label="$t('frontoffice.patient.info')" v-model="patient.info"></v-text-field> -->
               </v-flex>
             </v-layout>
           </v-container>

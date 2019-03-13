@@ -31,7 +31,7 @@
             <label
               v-for="device in devices"
               :key="device.sensor.id"
-            >{{device.sensor.Sensormodel.measure}} | </label>
+            >{{device.sensor.Sensormodel.measure}} |</label>
           </div>
         </div>
       </v-card-title>
@@ -180,6 +180,7 @@
             </v-btn>
           </v-flex>
         </v-layout>
+        <sensor-table :records="records" :to_print="false"></sensor-table>
       </v-card-text>
     </v-card>
 
@@ -194,6 +195,7 @@
 import { event_bus } from "@/plugins/bus.js";
 import PrintPreview from "@/components/frontoffice/sensor/SensorPrint.vue";
 import SensorGraph from "@/components/frontoffice/sensor/SensorGraph.vue";
+import SensorTable from "@/components/frontoffice/sensor/SensorTable.vue";
 
 export default {
   name: "sensorDetail",
@@ -271,15 +273,7 @@ export default {
             resolve({
               board: board,
               sensor: sensor,
-              profile:
-                board.Boardmodel.type === "environmental"
-                  ? {
-                      min: sensor.Sensormodel.min_acceptable,
-                      max: sensor.Sensormodel.max_acceptable
-                    }
-                  : this.$store.state.patient.Profiles.find(
-                      x => x.tag === sensor.Sensormodel.tag
-                    ),
+              profile: this.setRange(board, sensor),
               values: response.data.records.sort(this.compare)
             });
           })
@@ -337,9 +331,7 @@ export default {
             resolve({
               board: board,
               sensor: sensor,
-              profile: this.$store.state.patient.Profiles.find(
-                x => x.tag === sensor.Sensormodel.tag
-              ),
+              profile: this.setRange(board, sensor),
               values: response.data.records.sort(this.compare)
             });
           })
@@ -381,11 +373,30 @@ export default {
       if (a.datetime < b.datetime) return -1;
       if (a.datetime > b.datetime) return 1;
       return 0;
+    },
+    setRange(board, sensor) {
+      if (board.Boardmodel.type === "environmental")
+        return {
+          min: sensor.Sensormodel.min_acceptable,
+          max: sensor.Sensormodel.max_acceptable
+        };
+      else {
+        let now = new Date().getHours(),
+          profile = this.$store.state.patient.Profiles.filter(
+            x => x.tag === sensor.Sensormodel.tag
+          )[0];
+        if (now > 9 && now < 18) {
+          return { min: profile.min_diurnal, max: profile.max_diurnal };
+        } else {
+          return { min: profile.min_nightly, max: profile.max_nightly };
+        }
+      }
     }
   },
   components: {
     "print-preview": PrintPreview,
-    "sensor-graph": SensorGraph
+    "sensor-graph": SensorGraph,
+    "sensor-table": SensorTable
   }
 };
 </script>

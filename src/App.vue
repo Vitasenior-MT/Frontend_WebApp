@@ -31,6 +31,11 @@ export default {
     };
   },
   mounted() {
+    let browserLang = navigator.language || navigator.userLanguage;
+    this.$i18n.locale = ["en", "pt"].includes(browserLang.substring(0, 2))
+      ? browserLang.substring(0, 2)
+      : "en";
+
     event_bus.$emit("waiting", true);
     event_bus.$data.http
       .get("/check")
@@ -118,9 +123,10 @@ i {
 }
 
 #navpanel {
-  padding-top: 90px;
-  padding-right: 25px;
-  padding-left: 25px;
+  padding-top: 70px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 40px;
   height: 100%;
   background-image: linear-gradient(
     to right top,

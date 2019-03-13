@@ -85,7 +85,7 @@
                 :color="verifyValue(device.profile)"
                 @click.native="selectDevice(device)"
               >
-                <v-list-tile-avatar size="30" tile>
+                <v-list-tile-avatar size="30" tile class="env_avatar">
                   <img :src="require('@/assets/'+device.board.Boardmodel.tag+'_icon.svg')">
                 </v-list-tile-avatar>
                 <v-list-tile-content>
@@ -118,7 +118,8 @@ export default {
   data: () => {
     return {
       devices: [],
-      selectedPatientId: null
+      selectedPatientId: null,
+      now: new Date().getHours()
     };
   },
   watch: {
@@ -148,12 +149,25 @@ export default {
     getPatientBoards() {
       this.$store.state.patient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
+          let profile_to_send = null,
+            profile = this.$store.state.patient.Profiles.find(
+              x => x.tag === sensor.Sensormodel.tag
+            );
+          if (this.now > 9 && this.now < 18) {
+            profile_to_send = {
+              min: profile.min_diurnal,
+              max: profile.max_diurnal
+            };
+          } else {
+            profile_to_send = {
+              min: profile.min_nightly,
+              max: profile.max_nightly
+            };
+          }
           this.devices.push({
             board: board,
             sensor: sensor,
-            profile: this.$store.state.patient.Profiles.find(
-              x => x.tag === sensor.Sensormodel.tag
-            ),
+            profile: profile_to_send,
             selected: false,
             values: []
           });
@@ -216,13 +230,23 @@ export default {
       this.$router.push("/frontoffice/patient/detail");
     },
     verifyValue(profile) {
-      if (
-        profile.last_values &&
-        profile.max > profile.last_values[0] &&
-        profile.min < profile.last_values[0]
-      )
-        return "green accent-4";
-      else return "red accent-4";
+      if (this.now > 9 && this.now < 18) {
+        if (
+          profile.last_values &&
+          profile.max_diurnal > profile.last_values[0] &&
+          profile.min_diurnal < profile.last_values[0]
+        )
+          return "green accent-4";
+        else return "red accent-4";
+      } else {
+        if (
+          profile.last_values &&
+          profile.max_nightly > profile.last_values[0] &&
+          profile.min_nightly < profile.last_values[0]
+        )
+          return "green accent-4";
+        else return "red accent-4";
+      }
     },
     getPhotoLink(photo) {
       return event_bus.$data.url + "/file/" + photo;
@@ -297,10 +321,5 @@ export default {
 }
 #patient_selector button .v-icon {
   font-size: 45px;
-}
-
-.v-list__tile__action,
-.v-list__tile__avatar {
-  min-width: 0;
 }
 </style>

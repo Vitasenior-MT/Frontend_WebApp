@@ -129,7 +129,7 @@
                 <td
                   class="subheading"
                   colspan="2"
-                >{{ $store.state.patient.info ? $store.state.patient.info : $t('dashboard.none') }}</td>
+                >{{ $store.state.patient.info && $store.state.patient.info !== " " ? $store.state.patient.info : $t('dashboard.none') }}</td>
               </tr>
             </table>
           </v-card>
@@ -164,8 +164,12 @@
               >
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.measure }}</td>
-                  <td class="text-xs-left">{{ props.item.min }}</td>
-                  <td class="text-xs-left">{{ props.item.max }}</td>
+                  <td
+                    class="text-xs-center"
+                  >{{ Math.round(props.item.min_diurnal) + '-' + Math.round(props.item.max_diurnal) }}</td>
+                  <td
+                    class="text-xs-center"
+                  >{{ Math.round(props.item.min_nightly) + '-' + Math.round(props.item.max_nightly) }}</td>
                 </template>
               </v-data-table>
               <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
@@ -186,7 +190,7 @@
                     class="text-xs-left"
                   >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
                   <td>
-                    <remove-doctor v-if="$store.state.vitabox.sponsor" :board="props.item"></remove-doctor>
+                    <remove-doctor v-if="$store.state.vitabox.sponsor" :doctor="props.item"></remove-doctor>
                   </td>
                 </template>
               </v-data-table>
@@ -268,8 +272,16 @@ export default {
           value: "measure",
           sortable: true
         },
-        { text: this.$t("frontoffice.patient.min"), sortable: false },
-        { text: this.$t("frontoffice.patient.max"), sortable: false }
+        {
+          text: this.$t("frontoffice.patient.diurnal"),
+          sortable: false,
+          align: "center"
+        },
+        {
+          text: this.$t("frontoffice.patient.nightly"),
+          sortable: false,
+          align: "center"
+        }
       ],
       headersDoctors: [
         {
