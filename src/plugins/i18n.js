@@ -100,7 +100,8 @@ const messages = {
       no_boards: 'No equipment associated with the patient',
       days: 'days',
       back: 'Go Back',
-      none: 'none',
+      none: 'no data',
+      never: 'never'
     },
     frontoffice: {
       vitabox: {
@@ -345,6 +346,7 @@ const messages = {
       days: 'dias',
       back: 'Voltar',
       none: 'sem dados',
+      never: 'nunca'
     },
     frontoffice: {
       vitabox: {

@@ -91,11 +91,11 @@
                 <v-list-tile-content>
                   <v-list-tile-title
                     class="font-weight-bold"
-                  >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                  >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : $t('dashboard.none') }}</v-list-tile-title>
                   <v-list-tile-sub-title class="ash--text">{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
                 </v-list-tile-content>
-                <v-list-tile-action v-if="device.sensor.last_commit" class="raven--text">
-                  <v-list-tile-action-text>{{countTime(device.sensor.last_commit)}}</v-list-tile-action-text>
+                <v-list-tile-action class="raven--text">
+                  <v-list-tile-action-text>{{countTime(device.board.last_commit)}}</v-list-tile-action-text>
                 </v-list-tile-action>
               </v-list-tile>
             </v-list>
@@ -137,7 +137,7 @@ export default {
           .getElementById("patient_selector")
           .querySelectorAll("BUTTON");
         btns.forEach(x => (x.className = "v-btn theme--light"));
-        btns[index].className = "v-btn v-btn--active";
+        btns[index].className = "v-btn theme--light v-btn--active";
 
         this.$store.commit("setPatientData", this.patients[index]);
         this.devices = [];
@@ -156,12 +156,14 @@ export default {
           if (this.now > 9 && this.now < 18) {
             profile_to_send = {
               min: profile.min_diurnal,
-              max: profile.max_diurnal
+              max: profile.max_diurnal,
+              last_values: profile.last_values
             };
           } else {
             profile_to_send = {
               min: profile.min_nightly,
-              max: profile.max_nightly
+              max: profile.max_nightly,
+              last_values: profile.last_values
             };
           }
           this.devices.push({
@@ -230,23 +232,13 @@ export default {
       this.$router.push("/frontoffice/patient/detail");
     },
     verifyValue(profile) {
-      if (this.now > 9 && this.now < 18) {
-        if (
-          profile.last_values &&
-          profile.max_diurnal > profile.last_values[0] &&
-          profile.min_diurnal < profile.last_values[0]
-        )
-          return "green accent-4";
-        else return "red accent-4";
-      } else {
-        if (
-          profile.last_values &&
-          profile.max_nightly > profile.last_values[0] &&
-          profile.min_nightly < profile.last_values[0]
-        )
-          return "green accent-4";
-        else return "red accent-4";
-      }
+      if (
+        profile.last_values &&
+        profile.max > profile.last_values[0] &&
+        profile.min < profile.last_values[0]
+      )
+        return "green accent-4";
+      else return "red accent-4";
     },
     getPhotoLink(photo) {
       return event_bus.$data.url + "/file/" + photo;
@@ -257,11 +249,13 @@ export default {
       return 0;
     },
     countTime(date) {
-      let diff = Math.floor((Date.now() - new Date(date)) / 3600000);
-      if (diff < 24)
-        if (diff > 1) return diff + "h";
-        else return "< 1h";
-      else return Math.floor(diff / 24) + " " + this.$t("dashboard.days");
+      if (date) {
+        let diff = Math.floor((Date.now() - new Date(date)) / 3600000);
+        if (diff < 24)
+          if (diff > 1) return diff + "h";
+          else return "< 1h";
+        else return Math.floor(diff / 24) + " " + this.$t("dashboard.days");
+      } else return "NaN";
     }
   },
   components: {
@@ -272,12 +266,23 @@ export default {
 
 <style>
 #patient_selector {
-  height: 77px;
+  height: 97px;
   box-shadow: 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   display: flex;
   left: 0;
-  justify-content: center;
+
   width: 100%;
+  overflow-x: auto;
+}
+@media only screen and (max-width: 703px) {
+  #patient_selector {
+    justify-content: normal;
+  }
+}
+@media only screen and (min-width: 703px) {
+  #patient_selector {
+    justify-content: center;
+  }
 }
 
 #patient_selector button {
