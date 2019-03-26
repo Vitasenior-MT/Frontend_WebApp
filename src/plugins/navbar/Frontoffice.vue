@@ -50,6 +50,7 @@ export default {
           if (response.data.vitaboxes.length > 0) {
             this.selectedVitabox(response.data.vitaboxes[0]);
           }
+          event_bus.$emit("update_peers");
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

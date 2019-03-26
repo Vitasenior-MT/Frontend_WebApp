@@ -99,20 +99,9 @@ export default {
       message: "initializing...",
       ringing: null,
       warningDialog: null,
-      offlinePeers: null
+      offlinePeers: null,
+      acceptablePeers: null
     };
-  },
-  computed: {
-    acceptablePeers() {
-      if (this.$store.state.user.as_doctor)
-        return this.$store.state.patients.map(patient => {
-          return { id: patient.Vitabox.id, name: patient.name };
-        });
-      else
-        return this.$store.state.vitaboxes.map(vitabox => {
-          return { id: vitabox.id, name: vitabox.address };
-        });
-    }
   },
   mounted() {
     this.peer = Peer(this.$store.state.user.id, {
@@ -125,7 +114,7 @@ export default {
       port: process.env.NODE_ENV === "production" ? "443" : "8808",
       secure: process.env.NODE_ENV === "production" ? true : false
     });
-    if (this.acceptablePeers) this.offlinePeers = this.acceptablePeers;
+    event_bus.$on("update_peers", this.updateAcceptablePeers);
 
     this.listenPeerEvent();
   },
@@ -156,8 +145,21 @@ export default {
     }
     this.peer.destroy();
     this.peer = null;
+    event_bus.$off("update_peers");
   },
   methods: {
+    updateAcceptablePeers() {
+      if (this.$store.state.user.as_doctor) {
+        this.acceptablePeers = this.$store.state.patients.map(patient => {
+          return { id: patient.Vitabox.id, name: patient.name };
+        });
+      } else {
+        this.acceptablePeers = this.$store.state.vitaboxes.map(vitabox => {
+          return { id: vitabox.id, name: vitabox.address };
+        });
+      }
+      if (this.acceptablePeers) this.offlinePeers = this.acceptablePeers;
+    },
     listenPeerEvent() {
       this.peer.on("call", mediaConnection => {
         if (this.status === 2 && this.remotePeerID === mediaConnection.peer) {
@@ -253,8 +255,8 @@ export default {
             break;
           case "accept":
             this.startCamera().then(success => {
+              this.stopCallSound();
               if (success) {
-                this.stopCallSound();
                 this.mediaConnection = this.peer.call(
                   this.remotePeerID,
                   this.streamToSend

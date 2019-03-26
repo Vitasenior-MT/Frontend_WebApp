@@ -125,38 +125,46 @@ export default {
             board => board.Boardmodel.type === "environmental"
           );
           this.has_sensors = boardSensors.length > 0;
-          this.tempSensors = boardSensors.map(board => {
-            return {
-              board: board,
-              sensor: board.Sensors.filter(
-                sensor => sensor.Sensormodel.tag === "temp"
-              )[0]
-            };
-          });
-          this.humiSensors = boardSensors.map(board => {
-            return {
-              board: board,
-              sensor: board.Sensors.filter(
-                sensor => sensor.Sensormodel.tag === "humi"
-              )[0]
-            };
-          });
-          this.monoSensors = boardSensors.map(board => {
-            return {
-              board: board,
-              sensor: board.Sensors.filter(
-                sensor => sensor.Sensormodel.tag === "mono"
-              )[0]
-            };
-          });
-          this.dioxiSensors = boardSensors.map(board => {
-            return {
-              board: board,
-              sensor: board.Sensors.filter(
-                sensor => sensor.Sensormodel.tag === "diox"
-              )[0]
-            };
-          });
+          this.tempSensors = boardSensors
+            .filter(board => board.active)
+            .map(board => {
+              return {
+                board: board,
+                sensor: board.Sensors.filter(
+                  sensor => sensor.Sensormodel.tag === "temp"
+                )[0]
+              };
+            });
+          this.humiSensors = boardSensors
+            .filter(board => board.active)
+            .map(board => {
+              return {
+                board: board,
+                sensor: board.Sensors.filter(
+                  sensor => sensor.Sensormodel.tag === "humi"
+                )[0]
+              };
+            });
+          this.monoSensors = boardSensors
+            .filter(board => board.active)
+            .map(board => {
+              return {
+                board: board,
+                sensor: board.Sensors.filter(
+                  sensor => sensor.Sensormodel.tag === "mono"
+                )[0]
+              };
+            });
+          this.dioxiSensors = boardSensors
+            .filter(board => board.active)
+            .map(board => {
+              return {
+                board: board,
+                sensor: board.Sensors.filter(
+                  sensor => sensor.Sensormodel.tag === "diox"
+                )[0]
+              };
+            });
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

@@ -84,6 +84,7 @@ export default {
           if (response.data.patients.length > 0) {
             this.selectedPatient(response.data.patients[0]);
           }
+          event_bus.$emit("update_peers");
           event_bus.$emit("waiting", false);
         })
         .catch(error => {

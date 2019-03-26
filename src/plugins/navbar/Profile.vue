@@ -152,7 +152,7 @@ export default {
     this.socket = socketio(
       process.env.NODE_ENV === "production"
         ? "https://vitasenior-ws.eu-gb.mybluemix.net/socketio"
-        : "http://192.168.161.197:8008/socketio",
+        : "http://192.168.161.174:8008/socketio",
       {
         query: { token: this.$store.state.user.token },
         reconnection: true

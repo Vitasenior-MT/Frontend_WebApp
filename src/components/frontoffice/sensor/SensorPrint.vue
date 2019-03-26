@@ -2,7 +2,7 @@
   <div class="pt-2">
     <v-tooltip bottom>
       <v-btn slot="activator" @click="dialog_print_preview=true" color="teal" icon dark>
-        <v-icon>fas fa-file-medical-alt</v-icon>
+        <v-icon>fas fa-file-pdf</v-icon>
       </v-btn>
       <span>{{$t('dashboard.print_preview')}}</span>
     </v-tooltip>
@@ -24,8 +24,15 @@
 
         <v-card-text>
           <div id="printTitle">
-            <label class="headline">{{$store.state.patient.name}}</label>
+            <div class="d-inline-flex" style="width:100%;position:relative;">
+              <label class="headline" style="position:absolute; bottom:0;">{{$store.state.patient.name}}</label>
+              <v-spacer></v-spacer>
+                <img style="max-width:250px" src="../../../assets/logo_big.png">
+            </div>
+            
             <v-divider></v-divider>
+            <br>
+            <br>
             <v-card height="250" light flat>
               <sensor-graph :records="records" :id="'p1'"></sensor-graph>
             </v-card>
@@ -112,6 +119,6 @@ export default {
 
 <style>
 #printTitle {
-  padding: 40px !important;
+  padding: 80px 80px 60px 80px !important;
 }
 </style>

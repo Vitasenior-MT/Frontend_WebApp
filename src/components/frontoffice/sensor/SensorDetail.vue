@@ -39,7 +39,7 @@
     <v-card v-if="devices">
       <v-card-title>
         <v-layout row class="mx-4 pt-2">
-          <v-flex sm6 md3>
+          <v-flex sm5 md4>
             <v-menu
               ref="menu1"
               :close-on-content-click="false"
@@ -78,7 +78,7 @@
               ></v-time-picker>
             </v-menu>
           </v-flex>
-          <v-flex sm6 md3>
+          <v-flex sm5 md4>
             <v-menu
               ref="menu2"
               :close-on-content-click="false"
@@ -118,7 +118,7 @@
               ></v-time-picker>
             </v-menu>
           </v-flex>
-          <v-flex md1>
+          <v-flex xs2>
             <div class="pt-2">
               <v-tooltip bottom>
                 <v-btn slot="activator" color="primary" @click.native="getDate()" icon small>
@@ -128,7 +128,7 @@
               </v-tooltip>
             </div>
           </v-flex>
-          <v-flex dark xs10 md3 offset-md1>
+          <v-flex dark md3 offset-md1>
             <div class="pt-2" v-if="devices[0].board.Boardmodel.type=='environmental'">
               <v-icon small>fas fa-calendar-alt</v-icon>
               <span class="pl-1 pt-4">
@@ -145,8 +145,11 @@
               </span>
             </div>
           </v-flex>
-          <v-flex xs2 md1 v-if="records.length>0" class="hidden-md-and-down">
-            <print-preview :records="records"></print-preview>
+          <v-flex xs2 v-if="records.length>0" class="hidden-sm-and-down">
+            <div class="d-inline-flex text-xs-right" style="width:100%;">
+              <print-csv :records="records"></print-csv>
+              <print-preview :records="records"></print-preview>
+            </div>
           </v-flex>
         </v-layout>
       </v-card-title>
@@ -194,6 +197,7 @@
 <script>
 import { event_bus } from "@/plugins/bus.js";
 import PrintPreview from "@/components/frontoffice/sensor/SensorPrint.vue";
+import PrintCSV from "@/components/frontoffice/sensor/SensorCSV.vue";
 import SensorGraph from "@/components/frontoffice/sensor/SensorGraph.vue";
 import SensorTable from "@/components/frontoffice/sensor/SensorTable.vue";
 
@@ -396,7 +400,8 @@ export default {
   components: {
     "print-preview": PrintPreview,
     "sensor-graph": SensorGraph,
-    "sensor-table": SensorTable
+    "sensor-table": SensorTable,
+    "print-csv": PrintCSV
   }
 };
 </script>

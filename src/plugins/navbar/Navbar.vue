@@ -99,12 +99,6 @@ export default {
     },
     switchActivity() {
       this.$store.commit("switchUserRole");
-      event_bus.$emit(
-        "switch_dashboard",
-        this.$store.state.user.as_admin || this.$store.state.user.as_doctor
-          ? false
-          : true
-      );
       if (this.$store.state.user.as_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {

@@ -25,7 +25,7 @@
                   <v-list-tile-content>
                     <v-list-tile-title
                       class="font-weight-bold"
-                    >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                    >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
                     <v-list-tile-sub-title
                       class="primary--text"
                     >{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
@@ -86,12 +86,27 @@ export default {
       this.devices = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
+          let profile_to_send = null,
+            profile = this.selectedPatient.Profiles.find(
+              x => x.tag === sensor.Sensormodel.tag
+            );
+          if (this.now > 9 && this.now < 18) {
+            profile_to_send = {
+              min: profile.min_diurnal,
+              max: profile.max_diurnal,
+              last_values: profile.last_values
+            };
+          } else {
+            profile_to_send = {
+              min: profile.min_nightly,
+              max: profile.max_nightly,
+              last_values: profile.last_values
+            };
+          }
           this.devices.push({
             board: board,
             sensor: sensor,
-            profile: this.selectedPatient.Profiles.find(
-              x => x.tag === sensor.Sensormodel.tag
-            ),
+            profile: profile_to_send,
             selected: false,
             values: []
           });
@@ -157,23 +172,13 @@ export default {
       });
     },
     verifyValue(profile) {
-      if (this.now > 9 && this.now < 18) {
-        if (
-          profile.last_values &&
-          profile.max_diurnal > profile.last_values[0] &&
-          profile.min_diurnal < profile.last_values[0]
-        )
-          return "green accent-4";
-        else return "red accent-4";
-      } else {
-        if (
-          profile.last_values &&
-          profile.max_nightly > profile.last_values[0] &&
-          profile.min_nightly < profile.last_values[0]
-        )
-          return "green accent-4";
-        else return "red accent-4";
-      }
+      if (
+        profile.last_values &&
+        profile.max > profile.last_values[0] &&
+        profile.min < profile.last_values[0]
+      )
+        return "green accent-4";
+      else return "red accent-4";
     },
     compare(a, b) {
       if (a.datetime < b.datetime) return -1;
