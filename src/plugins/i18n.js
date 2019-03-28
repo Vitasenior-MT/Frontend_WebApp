@@ -24,7 +24,8 @@ const messages = {
         board_models: 'Equipment Models',
         sensor_models: 'Sensor Models',
         profile_models: 'Profile Models',
-        utils: 'Equipment Registration'
+        utils: 'Equipment Registration',
+        analytics:"Analytics"
       }
     },
     user: {
@@ -270,7 +271,8 @@ const messages = {
         board_models: 'Modelos do equipamento',
         sensor_models: 'Modelos de transdutores',
         profile_models: 'Padrões de perfis clínicos',
-        utils: 'Registo de equipamento'
+        utils: 'Registo de equipamento',
+        analytics: 'Analítica'
       }
     },
     user: {

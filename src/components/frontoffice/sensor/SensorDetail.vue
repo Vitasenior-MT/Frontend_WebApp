@@ -389,7 +389,7 @@ export default {
           profile = this.$store.state.patient.Profiles.filter(
             x => x.tag === sensor.Sensormodel.tag
           )[0];
-        if (now > 9 && now < 18) {
+        if (now >= 9 && now < 18) {
           return { min: profile.min_diurnal, max: profile.max_diurnal };
         } else {
           return { min: profile.min_nightly, max: profile.max_nightly };

@@ -109,10 +109,11 @@ export default {
       token: this.$store.state.user.token,
       host:
         process.env.NODE_ENV === "production"
-          ? "vitasenior-peer.eu-gb.mybluemix.net"
+          ? "vitasenior-peer-test.eu-gb.mybluemix.net"
           : "192.168.161.119",
       port: process.env.NODE_ENV === "production" ? "443" : "8808",
-      secure: process.env.NODE_ENV === "production" ? true : false
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      debug: 3
     });
     event_bus.$on("update_peers", this.updateAcceptablePeers);
 

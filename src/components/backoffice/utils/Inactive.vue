@@ -122,7 +122,6 @@ export default {
         event_bus.$data.http.get("/inactive/board")
       ])
         .then(res => {
-          console.log(res[1].data.boards);
           this.vitaboxes = res[0].data.vitaboxes;
           this.boards = res[1].data.boards;
           event_bus.$emit("waiting", false);

@@ -41,7 +41,6 @@
         </v-flex>
         <v-flex xs5 class="px-2">
           <v-select
-            autocomplete
             label="Model"
             :items="models"
             item-text="name"
