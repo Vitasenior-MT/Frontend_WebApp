@@ -9,8 +9,8 @@ export const event_bus = new Vue({
     peer: null,
     token: store.state.user.token,
     url: process.env.NODE_ENV === "production" ?
-      "https://vitasenior-api.eu-gb.mybluemix.net" :
-      "http://192.168.161.94:8080"
+      "https://vitasenior-mt.ipt.pt/api" :
+      "http://192.168.1.106:9000/api"
   },
   created() {
     this.initHttp(this.token);

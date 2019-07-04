@@ -110,12 +110,13 @@ export default {
   mounted() {
     this.peer = Peer(this.$store.state.user.id, {
       key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
+      path:"/peer/",
       token: this.$store.state.user.token,
       host:
         process.env.NODE_ENV === "production"
-          ? "vitasenior-peer-test.eu-gb.mybluemix.net"
+          ? "vitasenior-mt.ipt.pt"
           : "192.168.161.206",
-      port: process.env.NODE_ENV === "production" ? "443" : "8808",
+      port: process.env.NODE_ENV === "production" ? "443" : "9040",
       secure: process.env.NODE_ENV === "production" ? true : false
     });
 
