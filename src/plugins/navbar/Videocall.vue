@@ -106,7 +106,6 @@ export default {
   mounted() {
     this.peer = Peer(this.$store.state.user.id, {
       key: "8dnMsRvmGdz3fPG8RYO8muaUfQ2Iy1lE",
-      path:"/peer/",
       token: this.$store.state.user.token,
       host:
         process.env.NODE_ENV === "production"
