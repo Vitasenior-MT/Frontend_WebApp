@@ -1,24 +1,25 @@
 <template>
   <div id="remove_board_from_patient">
     <v-tooltip bottom>
-      <v-btn slot="activator" flat icon small color="error" @click.native="()=>dialog_remove_board=true">
+      <v-btn slot="activator" flat icon small color="error" @click.native="()=>dialog_remove_doctor=true">
         <v-icon>fas fa-minus-circle</v-icon>
       </v-btn>
-      <span>{{ $t("frontoffice.patient.remove_board_tooltip") }}</span>
+      <span>{{ $t("frontoffice.patient.remove_doctor_tootlip") }}</span>
     </v-tooltip>
-    <v-dialog v-model="dialog_remove_board" max-width="500px">
+    <v-dialog v-model="dialog_remove_doctor" max-width="500px">
       <v-card>
         <v-card-title>
           <span
+            v-if="doctor"
             class="headline error--text"
-          >{{$t('frontoffice.patient.remove')}} {{board.Boardmodel.name}}</span>
+          >{{$t('frontoffice.patient.remove')}} {{doctor.name}}</span>
           <v-spacer></v-spacer>
-          <v-btn icon @click.native="()=>dialog_remove_board=false">
+          <v-btn icon @click.native="()=>dialog_remove_doctor=false">
             <v-icon color="error">fas fa-times</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text v-if="board">
-          {{$t('frontoffice.patient.remove_board_text')}}
+        <v-card-text v-if="doctor">
+          {{$t('frontoffice.patient.remove_doctor_text')}}
           <v-checkbox
             :label="$t('frontoffice.patient.remove_confirm')"
             v-model="checked"
@@ -47,30 +48,30 @@ import { event_bus } from "@/plugins/bus.js";
 export default {
   name: "remove_board_from_patient",
   props: {
-    board: Object
+    doctor: Object
   },
   data: () => {
     return {
-      dialog_remove_board: false,
+      dialog_remove_doctor: false,
       checked: false
     };
   },
   methods: {
     removeItem() {
       event_bus.$emit("waiting", true);
-      this.dialog_remove_board = false;
+      this.dialog_remove_doctor = false;
 
       event_bus.$data.http
-        .delete("/board/" + this.board.id + "/patient", {
+        .delete("/patient/" + this.$store.state.patient.id + "/doctor", {
           data: {
-            patient_id: this.$store.state.patient.id
+            doctor_id: doctor.id
           }
         })
         .then(response => {
-          this.$store.commit("removeBoardPatient", this.board);
+          this.$store.commit("removeDoctorPatient", this.doctor);
 
           event_bus.$emit("toast", {
-            message: "board was successfully removed from patient",
+            message: "doctor was successfully removed from patient",
             type: "success"
           });
           event_bus.$emit("waiting", false);

@@ -1,6 +1,15 @@
 <template>
   <div id="success_log">
-    <v-snackbar v-for="option in success_options" :key="option.key" :color="option.type" :timeout="success_log.timeout" v-model="option.model" :style="'margin-top: '+option.top+'px; z-index:'+option.zindex" :top="true" :right="true">
+    <v-snackbar
+      v-for="option in success_options"
+      :key="option.key"
+      :color="option.type"
+      :timeout="success_log.timeout"
+      v-model="option.model"
+      :style="'margin-top: '+option.top+'px; z-index:'+option.zindex"
+      :top="true"
+      :right="true"
+    >
       {{ option.message }}
       <v-btn flat @click.native="close(option)">
         <v-icon class="white--text">fas fa-times</v-icon>
@@ -22,6 +31,9 @@ export default {
   },
   mounted() {
     event_bus.$on("toast", obj => this.send(obj));
+  },
+  beforeDestroy() {
+    event_bus.$off("toast");
   },
   methods: {
     send(obj) {

@@ -1,82 +1,79 @@
 <template>
-  <v-content id="vitabox_create">
-    <br>
-    <v-card class="vitabox_register_form">
-      <v-layout row wrap>
-        <v-flex md4>
-          <v-card-text>
-            <v-text-field
-              :mask="'nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn'"
-              :rules="[() => id.length > 1 || 'Vitabox ID is required']"
-              label="ID"
-              v-model="id"
-              type="text"
-            ></v-text-field>
-            <v-text-field
-              :rules="[() => password.length > 1 || 'Vitabox password is required']"
-              :label="$t('frontoffice.vitabox.pass')"
-              v-model="password"
-              type="password"
-            ></v-text-field>
-          </v-card-text>
-        </v-flex>
-        <v-flex md4>
-          <v-card-text>
-            <v-textarea
-              :rules="[() => address.length > 1 || 'Vitabox address is required']"
-              name="address"
-              v-model="address"
-              :label="$t('frontoffice.vitabox.address')"
-            ></v-textarea>
-          </v-card-text>
-        </v-flex>
-        <v-flex md4>
-          <v-card-text>
-            <v-overflow-btn
-              v-model="district"
-              :items="districts"
-              item-text="name"
-              :label="$t('frontoffice.vitabox.district')"
-              editable
-              single-line
-              append-icon="fas fa-angle-down"
-            ></v-overflow-btn>
-            <v-overflow-btn
-              v-model="locality"
-              :items="district?localities[this.districts.indexOf(district)]:[]"
-              item-text="localities"
-              :label="$t('frontoffice.vitabox.locality')"
-              editable
-              single-line
-              :disabled="district?false:true"
-              append-icon="fas fa-angle-down"
-              class="mt-0"
-            ></v-overflow-btn>
-          </v-card-text>
-        </v-flex>
-      </v-layout>
-    </v-card>
-    <div id="google-map-register"></div>
-    <div class="d-inline-flex">
-      <v-btn dark class="ml-0" @click="$router.go(-1)">
-        <v-icon>fas fa-long-arrow-alt-left</v-icon>
-        <span class="pl-1">{{$t('dashboard.back')}}</span>
+  <div>
+    <v-tooltip bottom>
+      <v-btn slot="activator" icon @click.native="()=>dialog_vitabox_edit=true">
+        <v-icon color="indigo accent-2">fas fa-cogs</v-icon>
       </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn dark color="ash" @click="register">{{$t('frontoffice.vitabox.register')}}</v-btn>
-    </div>
-  </v-content>
+      <span>{{ $t('frontoffice.vitabox.edit_location') }}</span>
+    </v-tooltip>
+    <v-dialog v-model="dialog_vitabox_edit" width="600">
+      <v-card>
+        <v-card-title>
+          <span
+            class="headline warning--text"
+          >{{ $t("frontoffice.vitabox.update_vitabox_location") }}</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="close">
+            <v-icon color="error">fas fa-times</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-layout wrap v-if="vitabox">
+            <v-flex md8>
+              <v-textarea
+                :rules="[() => vitabox.address.length > 1 || 'Vitabox address is required']"
+                name="address"
+                v-model="vitabox.address"
+                :label="$t('frontoffice.vitabox.address')"
+              ></v-textarea>
+            </v-flex>
+            <v-flex md4>
+              <v-overflow-btn
+                v-model="district"
+                :items="districts"
+                item-text="name"
+                :label="$t('frontoffice.vitabox.district')"
+                editable
+                single-line
+                append-icon="fas fa-angle-down"
+              ></v-overflow-btn>
+              <v-overflow-btn
+                v-model="locality"
+                :items="district?localities[this.districts.indexOf(district)]:[]"
+                item-text="localities"
+                :label="$t('frontoffice.vitabox.locality')"
+                editable
+                single-line
+                :disabled="district?false:true"
+                append-icon="fas fa-angle-down"
+                class="mt-0"
+              ></v-overflow-btn>
+            </v-flex>
+          </v-layout>
+          <div id="google-map-edit"></div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            dark
+            color="warning darken-1"
+            block
+            @click.native="save"
+          >{{ $t("frontoffice.patient.submit") }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
 import { event_bus } from "@/plugins/bus.js";
 
 export default {
-  name: "vitabox_create",
   data: () => {
     return {
-      id: "",
-      password: "",
+      dialog_vitabox_edit: false,
+      vitabox: null,
       address: "",
       map: null,
       marker: null,
@@ -423,77 +420,64 @@ export default {
     };
   },
   mounted() {
-    const element = document.getElementById("google-map-register");
-    const options = {
-      zoom: 15,
-      center: new google.maps.LatLng(39.6027245, -8.4039402)
-    };
-    this.map = new google.maps.Map(element, options);
-    google.maps.event.addListener(this.map, "click", event =>
-      this.setMarker(event.latLng)
-    );
+    if (this.$store.state.vitabox) {
+      this.vitabox = this.$store.state.vitabox;
+    }
+  },
+  watch: {
+    vitabox(val) {
+      const element = document.getElementById("google-map-edit");
+      const options = {
+        zoom: 15,
+        center: new google.maps.LatLng(val.latitude, val.longitude)
+      };
+      this.map = new google.maps.Map(element, options);
+      google.maps.event.addListener(this.map, "click", event =>
+        this.setMarker(event.latLng)
+      );
+    }
   },
   methods: {
-    register() {
+    save() {
       if (
-        this.id !== "" &&
-        this.password !== "" &&
-        this.address !== "" &&
         this.district !== "" &&
         this.locality !== "" &&
         this.marker !== null
       ) {
         event_bus.$emit("waiting", true);
-        this.id =
-          this.id.substring(0, 8) +
-          "-" +
-          this.id.substring(8, 12) +
-          "-" +
-          this.id.substring(12, 16) +
-          "-" +
-          this.id.substring(16, 20) +
-          "-" +
-          this.id.substring(20, 32);
 
-        let vitabox = {
-          latitude: this.marker.getPosition().lat(),
-          longitude: this.marker.getPosition().lng(),
-          address: this.address,
-          email: this.$store.state.user.email,
-          password: this.password,
-          sponsor: true,
-          active: false,
-          id: this.id,
-          district: this.district
-            .toLowerCase()
-            .replace(/[éèêÉÈÊ]/g, "e")
-            .replace(/[úùûÚÙÛ]/g, "u")
-            .replace(/[áàãâAÁÀÃÂ]/g, "a")
-            .replace(/[çÇ]/g, "c")
-            .replace(/[íìîÍÌÎ]/g, "i")
-            .replace(/[ñÑ]/g, "n")
-            .replace(/[úùûÚÙÛ]/g, "u")
-            .replace(/[óòõôÓÒÔÕ]/g, "o")
-            .replace(/[ ]/g, "_"),
-          locality: this.locality
-            .toLowerCase()
-            .replace(/[éèêÉÈÊ]/g, "e")
-            .replace(/[úùûÚÙÛ]/g, "u")
-            .replace(/[áàãâAÁÀÃÂ]/g, "a")
-            .replace(/[çÇ]/g, "c")
-            .replace(/[íìîÍÌÎ]/g, "i")
-            .replace(/[ñÑ]/g, "n")
-            .replace(/[úùûÚÙÛ]/g, "u")
-            .replace(/[óòõôÓÒÔÕ]/g, "o")
-            .replace(/[ ]/g, "_")
-        };
+        this.vitabox.latitude = this.marker.getPosition().lat();
+        this.vitabox.longitude = this.marker.getPosition().lng();
+        this.vitabox.district = this.district
+          .toLowerCase()
+          .replace(/[éèêÉÈÊ]/g, "e")
+          .replace(/[úùûÚÙÛ]/g, "u")
+          .replace(/[áàãâAÁÀÃÂ]/g, "a")
+          .replace(/[çÇ]/g, "c")
+          .replace(/[íìîÍÌÎ]/g, "i")
+          .replace(/[ñÑ]/g, "n")
+          .replace(/[úùûÚÙÛ]/g, "u")
+          .replace(/[óòõôÓÒÔÕ]/g, "o")
+          .replace(/[ ]/g, "_");
+        this.vitabox.locality = this.locality
+          .toLowerCase()
+          .replace(/[éèêÉÈÊ]/g, "e")
+          .replace(/[úùûÚÙÛ]/g, "u")
+          .replace(/[áàãâAÁÀÃÂ]/g, "a")
+          .replace(/[çÇ]/g, "c")
+          .replace(/[íìîÍÌÎ]/g, "i")
+          .replace(/[ñÑ]/g, "n")
+          .replace(/[úùûÚÙÛ]/g, "u")
+          .replace(/[óòõôÓÒÔÕ]/g, "o")
+          .replace(/[ ]/g, "_");
+
         event_bus.$data.http
-          .post("/vitabox/" + this.id + "/register", vitabox)
+          .put("/vitabox/" + this.vitabox.id + "/update", this.vitabox)
           .then(response => {
-            vitabox.registered = true;
-            this.$store.commit("addVitaboxToList", vitabox);
+            this.dialog_vitabox_edit = false;
+            this.$store.commit("editVitabox", this.vitabox);
             event_bus.$emit("toast", {
-              message: "vitabox was successfully registered",
+              message: "vitabox was successfully updated",
               type: "success"
             });
             event_bus.$emit("waiting", false);
@@ -527,19 +511,19 @@ export default {
         position: location,
         map: this.map
       });
+    },
+    close() {
+      this.dialog_vitabox_edit = false;
     }
   }
 };
 </script>
 
 <style>
-#google-map-register {
+#google-map-edit {
   width: 100%;
   height: 300px;
   margin: 0 auto;
-  background-color: transparent;
-}
-.vitabox_register_form {
   background-color: transparent;
 }
 </style>

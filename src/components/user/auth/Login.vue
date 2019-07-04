@@ -24,7 +24,13 @@
                 id="password"
                 type="password"
               ></v-text-field>
-              <v-btn small block flat class="primary--text" to="/forgot">{{ $t('user.auth.forgot_label') }}</v-btn>
+              <v-btn
+                small
+                block
+                flat
+                class="primary--text"
+                to="/forgot"
+              >{{ $t('user.auth.forgot_label') }}</v-btn>
             </v-card-text>
             <v-card-actions class="bottom_action">
               <v-btn flat class="primary--text" to="/signup">{{ $t('user.auth.register') }}</v-btn>
@@ -106,22 +112,13 @@ export default {
 #login_box {
   height: 251px;
 }
-
-@media only screen and (orientation: portrait) {
-  #auth {
-    background-image: url("../../../assets/2.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100%;
-  }
-}
-@media only screen and (orientation: landscape) {
-  #auth {
-    background-image: url("../../../assets/1.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100%;
-  }
+#auth {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../../../assets/fotoLar.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 100%;
 }
 #auth_card {
   max-width: 400px;

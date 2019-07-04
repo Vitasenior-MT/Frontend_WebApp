@@ -109,13 +109,13 @@
       <change-lang @close="chg_lang_dialog=false"></change-lang>
     </v-dialog>
 
-    <!-- <v-dialog v-model="videocall_dialog" dark max-width="900">
+    <v-dialog v-model="videocall_dialog" max-width="900">
       <video-call
         :openned="videocall_dialog"
         @close="videocall_dialog=false"
         @open="videocall_dialog=true"
       ></video-call>
-    </v-dialog>-->
+    </v-dialog>
   </div>
 </template>
 

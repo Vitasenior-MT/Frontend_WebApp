@@ -24,13 +24,24 @@
       <v-flex md12 lg4>
         <v-layout fill-height class="pl-1">
           <v-card dark width="100%" height="100%" class="text-xs-center" flat>
-            <v-menu offset-y open-on-hover id="edit_menu">
-              <v-btn slot="activator" icon dark>
-                <v-icon color="primary">fas fa-edit</v-icon>
-              </v-btn>
+            <v-menu
+              v-if="$store.state.vitabox.sponsor"
+              offset-y
+              left
+              dark
+              open-on-hover
+              id="edit_menu"
+            >
+              <v-icon slot="activator" dark color="primary" class="mt-2 mr-2">fas fa-edit</v-icon>
               <div class="text-xs-right">
-                <edit-info></edit-info>
-                <v-tooltip left v-if="$store.state.vitabox.sponsor">
+                <v-tooltip left>
+                  <v-btn slot="activator" icon small @click.native="()=>update_patient_dialog=true">
+                    <v-icon color="white">fas fa-clipboard-list</v-icon>
+                  </v-btn>
+                  <span>{{ $t("frontoffice.patient.update_info_tooltip") }}</span>
+                </v-tooltip>
+                <br>
+                <v-tooltip left>
                   <v-btn @click="chg_photo_dialog=true" icon small slot="activator">
                     <v-icon color="white">fas fa-user-circle</v-icon>
                   </v-btn>
@@ -43,7 +54,7 @@
               <img v-if="patient_photo" :src="patient_photo">
               <img v-else src="@/assets/logo.png">
             </v-avatar>
-            <table class="text-xs-left px-4 pt-4" style="width:100%">
+            <table class="text-xs-left px-4 pt-4 mb-2" style="width:100%">
               <tr>
                 <td class="primary--text">{{$t('frontoffice.patient.gender')}}</td>
                 <td>
@@ -68,13 +79,13 @@
                 <td class="primary--text">{{$t('frontoffice.patient.weight')}}</td>
                 <td
                   class="subheading"
-                >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight:'null' }} kg</td>
+                >{{ this.$store.state.patient.weight ? this.$store.state.patient.weight+'kg': $t('dashboard.none') }}</td>
               </tr>
               <tr>
                 <td class="primary--text">{{$t('frontoffice.patient.height')}}</td>
                 <td
                   class="subheading"
-                >{{ this.$store.state.patient.height ? this.$store.state.patient.height:'null' }} m</td>
+                >{{ this.$store.state.patient.height ? this.$store.state.patient.height+'m': $t('dashboard.none') }}</td>
               </tr>
               <tr>
                 <td class="primary--text">{{$t('frontoffice.patient.age')}}</td>
@@ -91,6 +102,34 @@
               <tr>
                 <td class="primary--text">{{$t('frontoffice.patient.nif')}}</td>
                 <td class="subheading">{{ $store.state.patient.nif }}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="primary--text">{{$t('frontoffice.patient.medication')}}</td>
+              </tr>
+              <tr
+                v-if="$store.state.patient.medication && $store.state.patient.medication.length>0"
+              >
+                <td colspan="2">
+                  <ul>
+                    <li
+                      v-for="medicine in $store.state.patient.medication"
+                      :key="medicine"
+                      class="subheading"
+                    >{{ medicine }}</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr v-else>
+                <td>{{$t('dashboard.none')}}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="primary--text">{{$t('frontoffice.patient.info')}}</td>
+              </tr>
+              <tr>
+                <td
+                  class="subheading"
+                  colspan="2"
+                >{{ $store.state.patient.info && $store.state.patient.info !== " " ? $store.state.patient.info : $t('dashboard.none') }}</td>
               </tr>
             </table>
           </v-card>
@@ -125,8 +164,12 @@
               >
                 <template slot="items" slot-scope="props">
                   <td class="text-xs-left">{{ props.item.measure }}</td>
-                  <td class="text-xs-left">{{ props.item.min }}</td>
-                  <td class="text-xs-left">{{ props.item.max }}</td>
+                  <td
+                    class="text-xs-center"
+                  >{{ Math.round(props.item.min_diurnal) + '-' + Math.round(props.item.max_diurnal) }}</td>
+                  <td
+                    class="text-xs-center"
+                  >{{ Math.round(props.item.min_nightly) + '-' + Math.round(props.item.max_nightly) }}</td>
                 </template>
               </v-data-table>
               <add-doctor v-if="$store.state.vitabox.sponsor && i == 2"></add-doctor>
@@ -146,7 +189,9 @@
                   <td
                     class="text-xs-left"
                   >{{ new Date(props.item.since).toLocaleDateString("pt-pt", options) }}</td>
-                  <td class="justify-center layout px-0"></td>
+                  <td>
+                    <remove-doctor v-if="$store.state.vitabox.sponsor" :doctor="props.item"></remove-doctor>
+                  </td>
                 </template>
               </v-data-table>
               <add-board v-if="$store.state.vitabox.sponsor && i==3"></add-board>
@@ -191,6 +236,9 @@
     <v-dialog max-width="600" v-model="chg_photo_dialog">
       <change-photo :to_patient="true" @changed="changePhoto" @close="chg_photo_dialog=false"></change-photo>
     </v-dialog>
+    <v-dialog max-width="500px" v-model="update_patient_dialog">
+      <edit-info @close="update_patient_dialog=false"></edit-info>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -200,6 +248,7 @@ import SetBoard from "@/components/frontoffice/patient/SetBoard.vue";
 import SetDoctor from "@/components/frontoffice/patient/SetDoctor.vue";
 import EditInfo from "@/components/frontoffice/patient/PatientEditInfo.vue";
 import RemoveBoard from "@/components/frontoffice/patient/RemoveBoard.vue";
+import RemoveDoctor from "@/components/frontoffice/patient/RemoveDoctor.vue";
 import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
 import ChgPhoto from "@/components/user/utils/ChgPhoto.vue";
 
@@ -216,14 +265,23 @@ export default {
       },
       measures: [],
       chg_photo_dialog: false,
+      update_patient_dialog: false,
       headersProfiles: [
         {
           text: this.$t("frontoffice.patient.measure"),
           value: "measure",
           sortable: true
         },
-        { text: this.$t("frontoffice.patient.min"), sortable: false },
-        { text: this.$t("frontoffice.patient.max"), sortable: false }
+        {
+          text: this.$t("frontoffice.patient.diurnal"),
+          sortable: false,
+          align: "center"
+        },
+        {
+          text: this.$t("frontoffice.patient.nightly"),
+          sortable: false,
+          align: "center"
+        }
       ],
       headersDoctors: [
         {
@@ -280,6 +338,7 @@ export default {
     "add-board": SetBoard,
     "add-doctor": SetDoctor,
     "remove-board": RemoveBoard,
+    "remove-doctor": RemoveDoctor,
     "send-notification": NotificationSend,
     "change-photo": ChgPhoto,
     "edit-info": EditInfo

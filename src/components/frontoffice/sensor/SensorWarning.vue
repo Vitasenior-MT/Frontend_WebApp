@@ -262,15 +262,28 @@ export default {
         });
     },
     setRange() {
-      this.range =
-        this.board.Boardmodel.type !== "environmental"
-          ? this.patient.Profiles.filter(
-              x => x.tag === this.sensor.Sensormodel.tag
-            )[0]
-          : {
-              min: this.sensor.Sensormodel.min_acceptable,
-              max: this.sensor.Sensormodel.max_acceptable
-            };
+      if (this.board.Boardmodel.type === "environmental")
+        this.range = {
+          min: this.sensor.Sensormodel.min_acceptable,
+          max: this.sensor.Sensormodel.max_acceptable
+        };
+      else {
+        let now = new Date().getHours(),
+          profile = this.patient.Profiles.filter(
+            x => x.tag === this.sensor.Sensormodel.tag
+          )[0];
+        if (now > 9 && now < 18) {
+          this.range = {
+            min: profile.min_diurnal,
+            max: profile.max_diurnal
+          };
+        } else {
+          this.range = {
+            min: profile.min_nightly,
+            max: profile.max_nightly
+          };
+        }
+      }
     },
     close() {
       this.$store.commit("setPatientData", null);

@@ -25,11 +25,15 @@
     <v-card id="select-card">
       <v-layout class="pb-2">
         <v-spacer></v-spacer>
+        <vitabox-shell :vitabox="select" ></vitabox-shell>
         <v-menu offset-y bottom left>
           <v-btn slot="activator" icon>
             <v-icon>fas fa-bars</v-icon>
           </v-btn>
           <v-list dense>
+            <v-list-tile @click="shell_sheet=true">
+              <v-list-tile-title>shell</v-list-tile-title>
+            </v-list-tile>
             <v-list-tile @click="settings_sheet=true">
               <v-list-tile-title>settings</v-list-tile-title>
             </v-list-tile>
@@ -41,7 +45,7 @@
       </v-layout>
 
       <v-layout row wrap v-if="select">
-        <v-flex sm6 md8 lg10>
+        <v-flex sm6 md8 lg9 xl10>
           <table class="pl-1 py-1">
             <tr>
               <th class="text-xs-right">
@@ -96,7 +100,7 @@
           </table>
         </v-flex>
 
-        <v-flex sm6 md4 lg2>
+        <v-flex sm6 md4 lg3 xl2>
           <v-list class="transparent">
             <v-list-tile class="pink white--text" @click="patients_sheet=true">
               <v-list-tile-avatar>
@@ -158,6 +162,7 @@ import VitaboxBoards from "@/components/backoffice/board/BoardList.vue";
 import VitaboxUsers from "@/components/backoffice/vitabox/VitaboxUserList.vue";
 import VitaboxSettings from "@/components/backoffice/vitabox/VitaboxSettings.vue";
 import VitaboxReset from "@/components/backoffice/vitabox/VitaboxReset.vue";
+import VitaboxShell from "@/components/backoffice/vitabox/VitaboxShell.vue";
 
 export default {
   name: "vitabox_list",
@@ -256,7 +261,8 @@ export default {
     "vitabox-settings": VitaboxSettings,
     "vitabox-boards": VitaboxBoards,
     "vitabox-users": VitaboxUsers,
-    "vitabox-reset": VitaboxReset
+    "vitabox-reset": VitaboxReset,
+    "vitabox-shell": VitaboxShell
   }
 };
 </script>

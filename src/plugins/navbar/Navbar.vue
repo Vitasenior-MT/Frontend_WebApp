@@ -43,7 +43,7 @@
 
     <div v-else>
       <v-toolbar app fixed class="primary--text raven">
-        <v-toolbar-title>
+        <v-toolbar-title @click="goHome" style="cursor: pointer;">
           <v-avatar size="25px">
             <img src="../../assets/logo.png">
           </v-avatar>Vitasenior-MT
@@ -91,17 +91,14 @@ export default {
     window.removeEventListener("resize", this.resize);
   },
   methods: {
+    goHome() {
+      this.$router.push("/");
+    },
     resize() {
       this.fixed = screen.width > 960 ? true : false;
     },
     switchActivity() {
       this.$store.commit("switchUserRole");
-      event_bus.$emit(
-        "switch_dashboard",
-        this.$store.state.user.as_admin || this.$store.state.user.as_doctor
-          ? false
-          : true
-      );
       if (this.$store.state.user.as_admin) {
         this.$router.push("/backoffice/vitabox/list");
       } else {

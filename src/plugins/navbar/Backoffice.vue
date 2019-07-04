@@ -50,10 +50,20 @@
         </v-list-tile-content>
       </v-list-tile>
     </router-link>
-    <router-link to="/backoffice/utils">
+    <router-link to="/backoffice/analytics">
       <v-list-tile class="office_options office_notchoosen ash--text" @click="select(5)">
         <v-list-tile-action>
-          <v-icon>fas fa-question</v-icon>
+          <v-icon>fas fa-chart-line</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>{{$t('navbar.backoffice.analytics')}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </router-link>
+    <router-link to="/backoffice/utils">
+      <v-list-tile class="office_options office_notchoosen ash--text" @click="select(6)">
+        <v-list-tile-action>
+          <v-icon>fas fa-clipboard</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>{{$t('navbar.backoffice.utils')}}</v-list-tile-title>

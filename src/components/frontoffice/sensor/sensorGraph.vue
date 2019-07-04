@@ -15,7 +15,7 @@ export default {
   data: () => {
     return {
       chart: null,
-      colors: ["#0288D1", "#3F51B5","#9C27B0"]
+      colors: ["#0288D1", "#3F51B5", "#9C27B0"]
     };
   },
   watch: {
@@ -60,13 +60,12 @@ export default {
   methods: {
     designGraph() {
       let datasets = [];
-
       this.records.forEach((record, i) => {
-        let colors = record.values.map(x =>
-          x.value < record.profile.min || x.value > record.profile.max
+        let colors = record.values.map(x => {
+          return x.value < record.profile.min || x.value > record.profile.max
             ? "rgba(206,33, 33,.8)"
-            : "rgba(71, 183, 132,.8)"
-        );
+            : "rgba(71, 183, 132,.8)";
+        });
         datasets.push({
           label:
             record.values.length > 0

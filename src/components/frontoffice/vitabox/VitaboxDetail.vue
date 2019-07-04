@@ -27,11 +27,10 @@
               <p class="grey--text text-xs-center mb-0 body-2">{{ $store.state.vitabox.id}}</p>
             </div>
           </v-flex>
-          <v-flex xs6 md1 class="text-xs-right">
+          <v-flex xs4 md2 class="text-xs-right d-inline-flex">
             <vitabox-map></vitabox-map>
-          </v-flex>
-          <v-flex xs6 md1 class="text-xs-right">
             <send-notification :to_patient="false"></send-notification>
+            <vitabox-edit></vitabox-edit>
           </v-flex>
         </v-layout>
       </v-card-text>
@@ -70,7 +69,6 @@
       <v-icon>fas fa-long-arrow-alt-left</v-icon>
       <span class="pl-1">{{$t('dashboard.back')}}</span>
     </v-btn>
-    
   </v-content>
 </template>
 
@@ -80,6 +78,7 @@ import PatientList from "@/components/frontoffice/patient/PatientList.vue";
 import UserList from "@/components/frontoffice/user/UserList.vue";
 import NotificationSend from "@/components/user/notification/NotificationCreate.vue";
 import VitaboxMap from "@/components/frontoffice/vitabox/VitaboxMap.vue";
+import VitaboxEdit from "@/components/frontoffice/vitabox/VitaboxEdit.vue";
 
 export default {
   components: {
@@ -87,7 +86,8 @@ export default {
     "board-list": BoardList,
     "user-list": UserList,
     "send-notification": NotificationSend,
-    "vitabox-map": VitaboxMap
+    "vitabox-map": VitaboxMap,
+    "vitabox-edit": VitaboxEdit
   }
 };
 </script>

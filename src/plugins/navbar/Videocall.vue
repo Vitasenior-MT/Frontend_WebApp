@@ -19,18 +19,18 @@
             <v-list-tile-avatar>
               <v-icon small color="success">fas fa-bullseye</v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content>{{ item.address }}</v-list-tile-content>
+            <v-list-tile-content>{{ item.name }}</v-list-tile-content>
             <v-list-tile-action>
               <v-btn fab dark small color="primary" @click="startConnection(item.connection)">
                 <v-icon dark>fas fa-video</v-icon>
               </v-btn>
             </v-list-tile-action>
           </v-list-tile>
-          <v-list-tile v-for="item in offlineVitaboxes" :key="item.id">
+          <v-list-tile v-for="item in offlinePeers" :key="item.id">
             <v-list-tile-avatar>
               <v-icon small color="red">fas fa-bullseye</v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content>{{ item.address }}</v-list-tile-content>
+            <v-list-tile-content>{{ item.name }}</v-list-tile-content>
           </v-list-tile>
         </v-list>
       </div>
@@ -99,13 +99,9 @@ export default {
       message: "initializing...",
       ringing: null,
       warningDialog: null,
-      offlineVitaboxes: null
+      offlinePeers: null,
+      acceptablePeers: null
     };
-  },
-  computed: {
-    vitaboxes() {
-      return this.$store.state.vitaboxes;
-    }
   },
   mounted() {
     this.peer = Peer(this.$store.state.user.id, {
@@ -119,44 +115,27 @@ export default {
       port: process.env.NODE_ENV === "production" ? "443" : "9040",
       secure: process.env.NODE_ENV === "production" ? true : false
     });
+    event_bus.$on("update_peers", this.updateAcceptablePeers);
 
     this.listenPeerEvent();
   },
   watch: {
-    vitaboxes(vitaboxes) {
+    acceptablePeers(peers) {
       if (this.peer.open) {
-        //----- prod -----
-        vitaboxes.forEach(vitabox => {
-          if (!this.dataConnections.find(x => x.peer === vitabox.id)) {
-            let dataConnection = this.peer.connect(vitabox.id);
+        peers.forEach(x => {
+          if (!this.dataConnections.find(y => y.peer === x.id)) {
+            let dataConnection = this.peer.connect(x.id);
             dataConnection.on("open", () =>
-              this.listenDataConnection(dataConnection, vitabox)
+              this.listenDataConnection(dataConnection, x)
             );
           }
         });
-        // //---- dev -----
-        // if (vitaboxes.length > 0) {
-        //   if (!this.dataConnections.find(x => x.peer === "1")) {
-        //     let dataConnection = this.peer.connect("1");
-        //     dataConnection.on("open", () => {
-        //       console.log("peer: connection open with 1");
-        //       this.listenDataConnection(dataConnection, vitaboxes[0]);
-        //     });
-        //   }
-        // }
-        // //---------------
       }
     },
     dataConnections(dataConnections) {
-      //----- prod -----
-      this.offlineVitaboxes = this.vitaboxes.filter(
+      this.offlinePeers = this.acceptablePeers.filter(
         x => dataConnections.filter(y => y.peer === x.id).length < 1
       );
-      // //---- dev -----
-      // this.offlineVitaboxes = this.vitaboxes.filter(
-      //   x => dataConnections.filter(y => y.peer === "1").length < 1
-      // );
-      // //--------------
     }
   },
   beforeDestroy() {
@@ -167,8 +146,21 @@ export default {
     }
     this.peer.destroy();
     this.peer = null;
+    event_bus.$off("update_peers");
   },
   methods: {
+    updateAcceptablePeers() {
+      if (this.$store.state.user.as_doctor) {
+        this.acceptablePeers = this.$store.state.patients.map(patient => {
+          return { id: patient.Vitabox.id, name: patient.name };
+        });
+      } else {
+        this.acceptablePeers = this.$store.state.vitaboxes.map(vitabox => {
+          return { id: vitabox.id, name: vitabox.address };
+        });
+      }
+      if (this.acceptablePeers) this.offlinePeers = this.acceptablePeers;
+    },
     listenPeerEvent() {
       this.peer.on("call", mediaConnection => {
         if (this.status === 2 && this.remotePeerID === mediaConnection.peer) {
@@ -186,14 +178,10 @@ export default {
       });
       this.peer.on("connection", dataConnection => {
         console.log("peer connected");
-        //----- prod -----
-        let vitabox = this.vitaboxes.filter(x => x.id === dataConnection.peer);
-        // //---- dev -----
-        // let vitabox = this.vitaboxes.filter(
-        //   x => x.id === "ee41fbb1-da23-422d-8b73-26b0fb07fed4"
-        // );
-        // //--------------
-        this.listenDataConnection(dataConnection, vitabox);
+        let candidate = this.acceptablePeers.find(
+          x => x.id === dataConnection.peer
+        );
+        this.listenDataConnection(dataConnection, candidate);
       });
       this.peer.on("error", error => {
         console.log("peer error: ", error.message);
@@ -252,19 +240,14 @@ export default {
       this.status = 1;
       this.message = "";
     },
-    listenDataConnection(dataConnection, vitabox) {
+    listenDataConnection(dataConnection, candidate) {
       dataConnection.on("data", data => {
         switch (data.type) {
           case "call":
             if (this.status === 1) {
-              //----- prod -----
-              this.remotePeerID = vitabox.id;
-              // //---- dev -----
-              // this.remotePeerID = "1";
-              // //--------------
+              this.remotePeerID = candidate.id;
               this.status = 3;
-              this.message =
-                data.username + " from " + vitabox.address + " is calling";
+              this.message = data.username + " is calling";
               if (!this.openned) this.$emit("open");
               this.startCallSound();
             } else {
@@ -273,8 +256,8 @@ export default {
             break;
           case "accept":
             this.startCamera().then(success => {
+              this.stopCallSound();
               if (success) {
-                this.stopCallSound();
                 this.mediaConnection = this.peer.call(
                   this.remotePeerID,
                   this.streamToSend
@@ -321,20 +304,18 @@ export default {
       dataConnection.on("error", err => {
         console.log("dataConnection error: ", err);
       });
+      dataConnection.on("close", () => {
+        this.dataConnections.splice(
+          this.dataConnections.map(x => x.peer).indexOf(candidate.id),
+          1
+        );
+      });
 
-      //----- prod -----
       this.dataConnections.push({
         connection: dataConnection,
-        peer: vitabox.id,
-        address: vitabox.address
+        peer: candidate.id,
+        name: candidate.name
       });
-      // //---- dev -----
-      // this.dataConnections.push({
-      //   connection: dataConnection,
-      //   peer: "1",
-      //   address: vitabox.address
-      // });
-      // //--------------
     },
     listenMediaConnection() {
       this.mediaConnection.on("stream", stream => {

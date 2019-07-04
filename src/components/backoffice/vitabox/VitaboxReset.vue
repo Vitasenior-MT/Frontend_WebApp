@@ -9,7 +9,7 @@
     </v-card-title>
     <v-card-text
       v-if="vitabox"
-    >Reseting the board will remove all associations to users, patients and equipment as well as generating a new password.
+    >Reseting the board will remove all associations to users, patients and equipment as well as delete all data gathered and generate a new password.
       <v-checkbox label="Are you sure?" v-model="checked" color="raven"></v-checkbox>
     </v-card-text>
     <v-card-actions>

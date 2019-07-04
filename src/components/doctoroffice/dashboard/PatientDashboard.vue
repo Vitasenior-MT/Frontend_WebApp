@@ -25,7 +25,7 @@
                   <v-list-tile-content>
                     <v-list-tile-title
                       class="font-weight-bold"
-                    >{{ device.profile.last_values ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
+                    >{{ (device.profile.last_values && device.profile.last_values.length>0) ? device.profile.last_values[0] + device.sensor.Sensormodel.unit : 'NaN' }}</v-list-tile-title>
                     <v-list-tile-sub-title
                       class="primary--text"
                     >{{ device.sensor.Sensormodel.measure }}</v-list-tile-sub-title>
@@ -86,19 +86,34 @@ export default {
       this.devices = [];
       this.selectedPatient.Boards.forEach(board => {
         board.Sensors.forEach(sensor => {
+          let profile_to_send = null,
+            profile = this.selectedPatient.Profiles.find(
+              x => x.tag === sensor.Sensormodel.tag
+            );
+          if (this.now >= 9 && this.now < 18) {
+            profile_to_send = {
+              min: profile.min_diurnal,
+              max: profile.max_diurnal,
+              last_values: profile.last_values
+            };
+          } else {
+            profile_to_send = {
+              min: profile.min_nightly,
+              max: profile.max_nightly,
+              last_values: profile.last_values
+            };
+          }
           this.devices.push({
             board: board,
             sensor: sensor,
-            profile: this.selectedPatient.Profiles.find(
-              x => x.tag === sensor.Sensormodel.tag
-            ),
+            profile: profile_to_send,
             selected: false,
             values: []
           });
         });
       });
-      this.selectedDevice = this.devices[0];
-      this.getValues();
+      this.selectedDevice = this.devices.length > 0 ? this.devices[0] : null;
+      if (this.selectedDevice) this.getValues();
     },
     selectDevice(item) {
       this.selectedDevice = item;

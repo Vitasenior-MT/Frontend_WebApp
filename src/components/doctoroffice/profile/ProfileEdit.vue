@@ -14,16 +14,31 @@
         <v-layout wrap>
           <v-flex xs12 sm6>
             <v-text-field
-              :label="$t('frontoffice.patient.minimum_acceptable')"
-              v-model="item.min"
+              :label="$t('frontoffice.patient.minimum_acceptable_day')"
+              v-model="item.min_diurnal"
               type="number"
             ></v-text-field>
           </v-flex>
           <v-flex xs12 sm6>
             <v-text-field
-              :rules="[() => parseFloat(item.min) < parseFloat(item.max) || 'Maximum must be greater than Minimum']"
-              :label="$t('frontoffice.patient.maximum_acceptable')"
-              v-model="item.max"
+              :rules="[() => parseFloat(item.min_diurnal) < parseFloat(item.max_diurnal) || 'Maximum must be greater than Minimum']"
+              :label="$t('frontoffice.patient.maximum_acceptable_day')"
+              v-model="item.max_diurnal"
+              type="number"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12 sm6>
+            <v-text-field
+              :label="$t('frontoffice.patient.minimum_acceptable_night')"
+              v-model="item.min_nightly"
+              type="number"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12 sm6>
+            <v-text-field
+              :rules="[() => parseFloat(item.min_nightly) < parseFloat(item.max_nightly) || 'Maximum must be greater than Minimum']"
+              :label="$t('frontoffice.patient.maximum_acceptable_night')"
+              v-model="item.max_nightly"
               type="number"
             ></v-text-field>
           </v-flex>
@@ -50,15 +65,20 @@ export default {
       this.$emit("close");
     },
     save() {
-      if (parseFloat(this.item.max) > parseFloat(this.item.min)) {
+      if (
+        parseFloat(this.item.max_diurnal) > parseFloat(this.item.min_diurnal) &&
+        parseFloat(this.item.max_nightly) > parseFloat(this.item.min_nightly)
+      ) {
         event_bus.$emit("waiting", true);
         event_bus.$data.http
           .put("/patient/" + this.$store.state.patient.id + "/profile", {
             profiles: [
               {
                 id: this.item.id,
-                min: this.item.min,
-                max: this.item.max
+                min_diurnal: this.item.min_diurnal,
+                max_diurnal: this.item.max_diurnal,
+                min_nightly: this.item.min_nightly,
+                max_nightly: this.item.max_nightly
               }
             ],
             description: "Custom"
@@ -67,8 +87,10 @@ export default {
             this.$store.commit("setProfileData", [
               {
                 id: this.item.id,
-                min: this.item.min,
-                max: this.item.max
+                min_diurnal: this.item.min_diurnal,
+                max_diurnal: this.item.max_diurnal,
+                min_nightly: this.item.min_nightly,
+                max_nightly: this.item.max_nightly
               }
             ]);
             let patient = this.$store.state.patient;

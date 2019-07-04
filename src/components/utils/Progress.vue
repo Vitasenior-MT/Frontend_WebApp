@@ -19,6 +19,9 @@ export default {
       if (val) this.complete += 1;
       else if (this.complete) this.complete -= 1;
     });
+  },
+  beforeDestroy() {
+    event_bus.$off("waiting");
   }
 };
 </script>
@@ -49,7 +52,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     top: 50%;
-    width:80%;
+    width: 80%;
   }
 }
 </style>

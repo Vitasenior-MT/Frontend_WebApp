@@ -32,6 +32,7 @@ import BOBoardmodel from '@/components/backoffice/boardmodel/BoardmodelList'
 import BOSensormodel from '@/components/backoffice/sensormodel/SensormodelList'
 import BOProfilemodel from '@/components/backoffice/profilemodel/ProfileList'
 import BOErrorList from '@/components/backoffice/errors/ErrorList'
+import BOListFiles from '@/components/backoffice/analytics/ListFiles'
 import BOUtils from '@/components/backoffice/utils/utils'
 
 Vue.use(Router)
@@ -154,6 +155,11 @@ export default new Router({
       path: '/backoffice/profilemodel',
       name: 'BOProfilemodel',
       component: BOProfilemodel
+    },
+    {
+      path: "/backoffice/analytics",
+      name: 'BOListFiles',
+      component: BOListFiles
     },
     {
       path: '/backoffice/utils',
